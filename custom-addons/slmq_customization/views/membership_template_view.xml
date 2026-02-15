@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="membership_form" name="Membership Registration">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
+                        <h2 class="text-center mb-4">Join SLMQ</h2>
+                        
+                        <!-- Description Section -->
+                        <div class="mb-4 text-center">
+                            <p>
+                                All Sri Lankan Families residing in the state of Qatar are eligible 
+                                to become a member of the SLMQ.
+                            </p>
+                            <p><strong>Please follow these steps to register for membership:</strong></p>
+                            <p><strong>Step 1:</strong> Fill in the below membership form.</p>
+                            <p><strong>Step 2:</strong> You will be contacted by a member of the executive committee or expect an email with details.</p>
+                            <p><strong>Step 3:</strong> Upon the payment of the membership fee, you will be registered as part of our members and will be added to our official group (WhatsApp).</p>
+                        </div>
+                        
+                        <!-- Alert Messages -->
+                        <t t-if="error">
+                            <div class="alert alert-danger text-center">
+                                Email or Phone already registered.
+                            </div>
+                        </t>
+                        
+                        <t t-if="success">
+                            <div class="alert alert-success text-center">
+                                Registered successfully!
+                            </div>
+                        </t>
+                        
+                        <!-- Form Section - CHANGE ACTION URL -->
+                        <form action="/register/member" method="post" class="border p-4 rounded shadow-sm bg-light">
+                            <div class="mb-3">
+                                <label class="form-label">Name *</label>
+                                <input type="text" name="name" class="form-control" required="required"
+                                       t-att-value="form_data.get('name', '') if form_data else ''"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Phone *</label>
+                                <input type="text" name="phone" class="form-control" required="required"
+                                       t-att-value="form_data.get('phone', '') if form_data else ''"/>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" name="email" class="form-control" required="required"
+                                       t-att-value="form_data.get('email', '') if form_data else ''"/>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-5">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
