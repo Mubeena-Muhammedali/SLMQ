@@ -26,9 +26,9 @@
                             </div>
                         </t>
                         
-                        <t t-if="success">
+                       <t t-if="success">
                             <div class="alert alert-success text-center">
-                                Registered successfully!
+                                Your registration has been completed successfully. Thank you for becoming a valued member of our organization.
                             </div>
                         </t>
                         

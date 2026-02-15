@@ -23,7 +23,8 @@
                 <xpath expr="//field[@name='partner_id']" position="replace"/>
 
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="partner_id"/>
+                    <field name="is_member_only" invisible="1"/>
+                    <field name="partner_id" required="is_member_only"/>
                 </xpath>
                 
             </field>

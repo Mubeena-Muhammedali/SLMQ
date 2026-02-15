@@ -15,7 +15,6 @@ class webController(http.Controller):
             })
         
         # POST request - your existing logic
-        print("Received registration data:", post)
         email = post.get('email')
         phone = post.get('phone')
         

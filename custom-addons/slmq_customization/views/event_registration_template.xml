@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <template id="registration_event_question_phone_mandatory" 
+                  name="Registration Event Question - Phone Mandatory" 
+                  inherit_id="website_event.registration_event_question">
+            
+        <!-- Replace the asterisk span to show * for phone fields -->
+        <xpath expr="//span[@t-if='question.is_mandatory_answer']" position="replace">
+            <span t-if="question.is_mandatory_answer or question.question_type == 'phone'">*</span>
+        </xpath>
+        
+        <!-- Replace the input field to add required attribute for phone -->
+        <xpath expr="//input[@class='form-control']" position="replace">
+            <input class="form-control" t-att-type="input_type_by_question_type[question.question_type]"
+                    t-attf-name="#{registration_index}-#{question.question_type}-#{question.id}"
+                    t-att-required="question.is_mandatory_answer or question.question_type == 'phone'" 
+                    t-att-value="default_first_attendee.get(question.question_type, '') if counter in (0,1) else ''"/>
+        </xpath>
+        
+    </template>
+</odoo>

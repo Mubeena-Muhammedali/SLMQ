@@ -13,6 +13,7 @@ class ResPartner(models.Model):
     ], default='new', string="Member Category")
 
     is_committee_member = fields.Boolean(default=True, string="Is Committee Member?")
+    
 
     @api.constrains('email', 'phone')
     def _check_duplicate_member(self):
@@ -26,6 +27,7 @@ class ResPartner(models.Model):
                 ]
                 if self.search(domain, limit=1):
                     raise ValidationError("Email or Phone already registered.")
+
     
     @api.onchange('is_committee_member')
     def _onchange_is_committee_member(self):

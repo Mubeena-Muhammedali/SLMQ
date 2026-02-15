@@ -11,7 +11,9 @@
     'data': [ 
         'views/res_partner_view.xml', 
         'views/event_registration_view.xml',
-        'views/membership_template_view.xml'
+        'views/event_event_view.xml',
+        'views/membership_template_view.xml',
+        'views/event_registration_template.xml',
     ], 
     'assets': {},
     'test': [],
