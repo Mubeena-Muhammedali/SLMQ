@@ -30,8 +30,8 @@ class EventRegistration(models.Model):
             # If still no partner → No membership
             if not partner:
                 raise ValidationError(
-                    _("Membership is required to register for this event. "
-                      "Please complete your membership registration first.")
+                    _("No registered member found with the provided Email or Phone number. "
+                    "Please complete your membership registration first.")
                 )
 
             # Check member category
