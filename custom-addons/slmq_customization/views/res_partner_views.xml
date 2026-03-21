@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_membership" model="ir.ui.view">
+        <field name="name">res.partner.membership.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+                <page string="Membership" name="membership" invisible="not is_member">
+                    <group>
+                        <field name="is_member" readonly="1" force_save="1"/>
+                        <field name="member_type"/>
+                        <field name="membership_id" readonly="1" force_save="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

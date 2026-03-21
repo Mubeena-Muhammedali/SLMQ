@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_membership_form" model="ir.ui.view">
+        <field name="name">membership.form</field>
+        <field name="model">membership.membership</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_confirm" type="object" string="Confirm" invisible="state != 'draft'"/>
+                </header>
+                <sheet>
+                   <div class="oe_button_box">
+                        <button type="object" name="action_view_children"
+                                class="oe_stat_button" icon="fa-users">
+                            <field name="child_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_name"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="member_type"/>
+                            <field name="is_child"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_membership_tree" model="ir.ui.view">
+        <field name="name">membership.list</field>
+        <field name="model">membership.membership</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="member_type"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_membership" model="ir.actions.act_window">
+        <field name="name">Membership</field>
+        <field name="res_model">membership.membership</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_root" name="Membership"/>
+    <menuitem id="menu_members" name="Members" parent="menu_root" action="action_membership"/>
+</odoo>

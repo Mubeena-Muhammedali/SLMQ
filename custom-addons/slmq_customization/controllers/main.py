@@ -1,45 +1,24 @@
 from odoo import http
 from odoo.http import request
 
+class MembershipController(http.Controller):
 
-class webController(http.Controller):
-    
-    
-    @http.route(['/register/member'], type='http', auth='public', methods=['GET', 'POST'], website=True, csrf=False)
-    def member_submit(self, **post):
-        # GET request - show form
-        if request.httprequest.method == 'GET':
-            return request.render('slmq_customization.membership_form', {
-                'error': False,
-                'success': False
-            })
-        
-        # POST request - your existing logic
-        email = post.get('email')
-        phone = post.get('phone')
-        
-        existing = request.env['res.partner'].sudo().search([
-            '|',
-            ('email', '=', email),
-            ('phone', '=', phone)
-        ], limit=1)
-        
-        if existing:
-            return request.render('slmq_customization.membership_form', {
-                'error': True,
-                'success': False,
-                'form_data': post
-            })
-        
-        request.env['res.partner'].sudo().create({
-            'name': post.get('name'),
-            'email': email,
-            'phone': phone,
-            'member_category': 'new',
-            'is_committee_member': True,
+    @http.route('/membership/register', type='http', auth='public', website=True)
+    def register(self, **post):
+
+        parent = False
+        if post.get('is_child') and post.get('parent_reg_no'):
+            parent = request.env['membership.membership'].sudo().search([
+                ('name','=',post.get('parent_reg_no'))
+            ], limit=1)
+
+        request.env['membership.membership'].sudo().create({
+            'partner_name': post.get('name'),
+            'email': post.get('email'),
+            'phone': post.get('phone'),
+            'member_type': post.get('member_type'),
+            'is_child': bool(post.get('is_child')),
+            'parent_id': parent.id if parent else False,
         })
-        
-        return request.render('slmq_customization.membership_form', {
-            'error': False,
-            'success': True
-        })
+
+        return "Registered Successfully"
