@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="group_membership_manager" model="res.groups">
+   <record id="group_membership_manager" model="res.groups">
         <field name="name">Membership Manager</field>
     </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('slmq_customization.group_membership_manager'))]"/>
+    </record>
+
+    
 </odoo>

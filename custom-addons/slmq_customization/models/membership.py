@@ -11,7 +11,7 @@ class Membership(models.Model):
 
     member_type = fields.Selection([
         ('member','Member'),('founder','Founder'),('past','Past')
-    ], required=True)
+    ], default='member', required=True)
 
     state = fields.Selection([
         ('draft','Draft'),('confirmed','Confirmed')
@@ -28,15 +28,17 @@ class Membership(models.Model):
         for rec in self:
             rec.child_count = len(rec.child_ids)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('is_child') and vals.get('parent_id'):
-            parent = self.browse(vals['parent_id'])
-            count = len(parent.child_ids) + 1
-            vals['name'] = f"{parent.name}/{count}"
-        else:
-            vals['name'] = self.env['ir.sequence'].next_by_code('membership.sequence')
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('is_child') and vals.get('parent_id'):
+                parent = self.browse(vals['parent_id'])
+                count = len(parent.child_ids) + 1
+                vals['name'] = f"{parent.name}/{count}"
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('membership.sequence')
+
+        return super().create(vals_list)
 
     @api.constrains('email','phone','is_child')
     def _check_unique(self):
