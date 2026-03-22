@@ -4,22 +4,22 @@ from odoo.exceptions import ValidationError
 class Membership(models.Model):
     _name = 'membership.membership'
 
-    name = fields.Char(default='New', readonly=True)
-    partner_name = fields.Char(required=True)
-    email = fields.Char(required=True)
-    phone = fields.Char(required=True)
+    name = fields.Char("Registration No.", default='New', readonly=True)
+    partner_name = fields.Char("Partner Name", required=True)
+    email = fields.Char("Email", required=True)
+    phone = fields.Char("Phone", required=True)
 
     member_type = fields.Selection([
         ('member','Member'),('founder','Founder'),('past','Past')
-    ], default='member', required=True)
+    ], string="Member Type", default='member', required=True)
 
     state = fields.Selection([
-        ('draft','Draft'),('confirm','Confirm')
-    ], default='draft')
+        ('draft','Draft'),('confirm','Confirmed'),('reject','Rejected')
+    ], string="Status", default='draft')
 
-    parent_id = fields.Many2one('membership.membership')
-    child_ids = fields.One2many('membership.membership','parent_id')
-    is_child = fields.Boolean()
+    parent_id = fields.Many2one('membership.membership', string="Parent")
+    child_ids = fields.One2many('membership.membership','parent_id', string="Child")
+    is_child = fields.Boolean("Is Child?")
 
     partner_id = fields.Many2one('res.partner', string="Contact")
     child_count = fields.Integer(compute="_compute_child_count")
@@ -39,6 +39,18 @@ class Membership(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('membership.sequence')
 
         return super().create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+
+        for rec in self:
+            # Case: is_child is set to True AFTER creation
+            if vals.get('is_child',False) and rec.parent_id:
+                parent = rec.parent_id
+                count = len(parent.child_ids)
+                rec.name = f"{parent.name}/{count}"
+
+        return res
 
     @api.constrains('email','phone','is_child')
     def _check_unique(self):
@@ -68,8 +80,15 @@ class Membership(models.Model):
                     'type': 'other'
                 })
             partner = self.env['res.partner'].create(vals)
-            rec.partner_id = partner.id
-            rec.state = 'confirm'
+            rec.write({'partner_id':partner.id,'state':'confirm'})
+
+    def action_draft(self):
+        for rec in self:
+            rec.write({'state':'draft'})
+    
+    def action_reject(self):
+        for rec in self:
+            rec.write({'state':'reject'})
 
     def action_view_children(self):
         self.ensure_one()

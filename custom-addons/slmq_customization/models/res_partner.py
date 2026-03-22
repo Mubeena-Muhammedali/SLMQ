@@ -31,3 +31,11 @@ class ResPartner(models.Model):
             if rec.phone:
                 if self.search(domain + [('phone', '=', rec.phone)], limit=1):
                     raise ValidationError("Email already exists!")
+
+    def unlink(self):
+        for rec in self:
+            # Prevent deleting member contacts
+            if rec.is_member:
+                raise ValidationError("You cannot delete a member contact.")
+
+        return super().unlink()
