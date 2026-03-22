@@ -14,14 +14,14 @@ class Membership(models.Model):
     ], default='member', required=True)
 
     state = fields.Selection([
-        ('draft','Draft'),('confirmed','Confirmed')
+        ('draft','Draft'),('confirm','Confirm')
     ], default='draft')
 
     parent_id = fields.Many2one('membership.membership')
     child_ids = fields.One2many('membership.membership','parent_id')
     is_child = fields.Boolean()
 
-    partner_id = fields.Many2one('res.partner')
+    partner_id = fields.Many2one('res.partner', string="Contact")
     child_count = fields.Integer(compute="_compute_child_count")
 
     def _compute_child_count(self):
@@ -69,7 +69,7 @@ class Membership(models.Model):
                 })
             partner = self.env['res.partner'].create(vals)
             rec.partner_id = partner.id
-            rec.state = 'confirmed'
+            rec.state = 'confirm'
 
     def action_view_children(self):
         self.ensure_one()
