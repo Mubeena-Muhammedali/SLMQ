@@ -50,8 +50,36 @@ class Membership(models.Model):
                 vals['name'] = f"{parent.name}/{count}"
             else:
                 vals['name'] = self.env['ir.sequence'].next_by_code('membership.sequence')
+        
+        records = super().create(vals_list)
 
-        return super().create(vals_list)
+        group = self.env.ref('slmq_customization.group_membership_manager')
+        manager_template = self.env.ref('slmq_customization.email_template_membership_manager')
+        partner_template = self.env.ref('slmq_customization.email_template_membership_created')
+
+        for rec in records:
+
+            # ✅ Send mail to managers
+            for user in group.user_ids:
+                if user.email:
+                    manager_template.send_mail(
+                        rec.id,
+                        email_values={'email_to': user.email},
+                        force_send=True
+                    )
+
+            # ✅ Send mail to partner (creation info)
+            if rec.email:
+                partner_template.send_mail(rec.id, force_send=True)
+
+            if rec.parent_id and rec.parent_id.email:
+                partner_template.with_context(is_parent=True).send_mail(
+                    rec.id,
+                    email_values={'email_to': rec.parent_id.email},
+                    force_send=True
+                )
+
+        return records
 
     def write(self, vals):
         res = super().write(vals)
@@ -95,6 +123,16 @@ class Membership(models.Model):
             partner = self.env['res.partner'].create(vals)
             rec.write({'partner_id':partner.id,'state':'confirm'})
 
+            template = self.env.ref('slmq_customization.email_template_membership_confirm')
+            template.send_mail(rec.id, force_send=True)
+
+            if rec.parent_id and rec.parent_id.email:
+                template.with_context(is_parent=True).send_mail(
+                    rec.id,
+                    email_values={'email_to': rec.parent_id.email},
+                    force_send=True
+                )
+
     def action_draft(self):
         for rec in self:
             rec.write({'state':'draft'})
@@ -102,6 +140,16 @@ class Membership(models.Model):
     def action_reject(self):
         for rec in self:
             rec.write({'state':'reject'})
+
+            template = self.env.ref('slmq_customization.email_template_membership_reject')
+            template.send_mail(rec.id, force_send=True)
+            
+            if rec.parent_id and rec.parent_id.email:
+                template.with_context(is_parent=True).send_mail(
+                    rec.id,
+                    email_values={'email_to': rec.parent_id.email},
+                    force_send=True
+                )
 
     def action_view_children(self):
         self.ensure_one()
