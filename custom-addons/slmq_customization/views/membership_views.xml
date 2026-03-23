@@ -65,10 +65,7 @@
             <search string="Search Membership">
 
                 <!-- Search Fields -->
-                <field name="name"/>
-                <field name="partner_name"/>
-                <field name="email"/>
-                <field name="phone"/>
+                <field name="display_name" string="Name"/>
 
                 <!-- Filters -->
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>

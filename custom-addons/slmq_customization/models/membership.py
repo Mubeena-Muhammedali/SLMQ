@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 
 class Membership(models.Model):
     _name = 'membership.membership'
+    _rec_names_search = ['name', 'email', 'partner_name', 'phone']
 
     name = fields.Char("Registration No.", default='New', readonly=True)
     partner_name = fields.Char("Partner Name", required=True)
@@ -23,6 +24,18 @@ class Membership(models.Model):
 
     partner_id = fields.Many2one('res.partner', string="Contact")
     child_count = fields.Integer(compute="_compute_child_count")
+
+    @api.depends('name', 'partner_name', 'phone', 'email')
+    def _compute_display_name(self):
+        for rec in self:
+            name = f"{rec.name or ''} - {rec.partner_name or ''}"
+
+            if rec.phone:
+                name += f" [{rec.phone}]"
+            if rec.email:
+                name += f" [{rec.email}]"
+
+            rec.display_name = name.strip()
 
     def _compute_child_count(self):
         for rec in self:
