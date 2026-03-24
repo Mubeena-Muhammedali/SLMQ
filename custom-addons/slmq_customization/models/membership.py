@@ -70,7 +70,9 @@ class Membership(models.Model):
 
             # ✅ Send mail to partner (creation info)
             if rec.email:
-                partner_template.send_mail(rec.id, force_send=True)
+                partner_template.send_mail(rec.id, 
+                        email_values={'email_to': rec.email},
+                        force_send=True)
 
             if rec.parent_id and rec.parent_id.email:
                 partner_template.with_context(is_parent=True).send_mail(
@@ -124,7 +126,9 @@ class Membership(models.Model):
             rec.write({'partner_id':partner.id,'state':'confirm'})
 
             template = self.env.ref('slmq_customization.email_template_membership_confirm')
-            template.send_mail(rec.id, force_send=True)
+            template.send_mail(rec.id, 
+                                email_values={'email_to': rec.email},
+                                force_send=True)
 
             if rec.parent_id and rec.parent_id.email:
                 template.with_context(is_parent=True).send_mail(
@@ -142,7 +146,9 @@ class Membership(models.Model):
             rec.write({'state':'reject'})
 
             template = self.env.ref('slmq_customization.email_template_membership_reject')
-            template.send_mail(rec.id, force_send=True)
+            template.send_mail(rec.id, 
+                                email_values={'email_to': rec.email},
+                                force_send=True)
             
             if rec.parent_id and rec.parent_id.email:
                 template.with_context(is_parent=True).send_mail(
