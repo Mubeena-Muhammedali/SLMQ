@@ -73,32 +73,15 @@
             <field name="subject">Membership Approved - {{object.name}}</field>
             <field name="body_html" type="html">
 
-                <t t-if="ctx.get('is_parent')">
-                    <p>Dear <t t-out="object.parent_id.partner_name"/>,</p>
+                <p>Dear <t t-out="object.partner_name"/>,</p>
 
-                    <p>
-                        The membership for 
-                        <b><t t-out="object.partner_name"/></b> has been <b>approved</b>.
-                    </p>
+                <p>Your membership has been <b>approved</b>.</p>
 
-                    <p>
-                        <b>Name:</b> <t t-out="object.partner_name"/><br/>
-                        <b>Registration No:</b> <t t-out="object.name"/>
-                    </p>
+                <p>
+                    <b>Registration No:</b> <t t-out="object.name"/>
+                </p>
 
-                    <p>Thank you!</p>
-                </t>
-                <t t-else="">
-                    <p>Dear <t t-out="object.partner_name"/>,</p>
-
-                    <p>Your membership has been <b>approved</b>.</p>
-
-                    <p>
-                        <b>Registration No:</b> <t t-out="object.name"/>
-                    </p>
-
-                    <p>Thank you!</p>
-                </t>
+                <p>Thank you!</p>
 
             </field>
         </record>
@@ -111,28 +94,13 @@
             <field name="subject">Membership Rejected - {{object.name or 'N/A'}}</field>
             <field name="body_html" type="html">
 
-                <t t-if="ctx.get('is_parent')">
-                    <p>Dear <t t-out="object.parent_id.partner_name"/>,</p>
+                <p>Dear <t t-out="object.partner_name"/>,</p>
 
-                    <p>
-                        The membership for 
-                        <b><t t-out="object.partner_name"/></b> has been <b>rejected</b>.
-                    </p>
+                <p>Your membership request has been <b>rejected</b>.</p>
 
-                    <p>
-                        <b>Name:</b> <t t-out="object.partner_name"/><br/>
-                        <b>Registration No:</b> <t t-out="object.name"/>
-                    </p>
-                </t>
-                <t t-else="">
-                    <p>Dear <t t-out="object.partner_name"/>,</p>
-
-                    <p>Your membership request has been <b>rejected</b>.</p>
-
-                    <p>
-                        <b>Registration No:</b> <t t-out="object.name"/>
-                    </p>
-                </t>
+                <p>
+                    <b>Registration No:</b> <t t-out="object.name"/>
+                </p>
 
             </field>
         </record>

@@ -129,13 +129,7 @@ class Membership(models.Model):
             template.send_mail(rec.id, 
                                 email_values={'email_to': rec.email},
                                 force_send=True)
-
-            if rec.parent_id and rec.parent_id.email:
-                template.with_context(is_parent=True).send_mail(
-                    rec.id,
-                    email_values={'email_to': rec.parent_id.email},
-                    force_send=True
-                )
+                                
 
     def action_draft(self):
         for rec in self:
@@ -149,13 +143,7 @@ class Membership(models.Model):
             template.send_mail(rec.id, 
                                 email_values={'email_to': rec.email},
                                 force_send=True)
-            
-            if rec.parent_id and rec.parent_id.email:
-                template.with_context(is_parent=True).send_mail(
-                    rec.id,
-                    email_values={'email_to': rec.parent_id.email},
-                    force_send=True
-                )
+
 
     def action_view_children(self):
         self.ensure_one()
