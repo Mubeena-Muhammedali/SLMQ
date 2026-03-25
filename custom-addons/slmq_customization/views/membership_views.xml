@@ -7,9 +7,14 @@
             <form>
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
-                    <button name="action_draft" type="object" string="Reset to Draft" class="btn-primary" invisible="state != 'reject'"/>
-                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_reject" type="object" string="Reject" invisible="state != 'draft'"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" 
+                            class="btn-primary" invisible="state != 'reject'"
+                            groups="slmq_customization.group_membership_manager"/>
+                    <button name="action_confirm" type="object" string="Confirm" 
+                            class="btn-primary" invisible="state != 'draft'"
+                            groups="slmq_customization.group_membership_manager"/>
+                    <button name="action_reject" type="object" string="Reject" invisible="state != 'draft'"
+                            groups="slmq_customization.group_membership_manager"/>
                 </header>
                 <sheet>
                    <div class="oe_button_box" name="button_box">
@@ -84,12 +89,18 @@
         </field>
     </record>
 
-    <record id="action_membership" model="ir.actions.act_window">
-        <field name="name">Membership</field>
+    <record id="action_membership_registration" model="ir.actions.act_window">
+        <field name="name">Registrations</field>
         <field name="res_model">membership.membership</field>
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_root" name="Membership" web_icon="slmq_customization,static/description/icon.png"/>
-    <menuitem id="menu_members" name="Members" parent="menu_root" action="action_membership"/>
+    <menuitem id="menu_membership_root" name="Membership" 
+            web_icon="slmq_customization,static/description/icon.png"
+            groups="slmq_customization.group_membership_user"/>
+    
+    <menuitem id="menu_registration"
+          name="Registrations"
+          parent="menu_membership_root"
+          action="action_membership_registration"/>
 </odoo>

@@ -11,18 +11,14 @@ class ResPartner(models.Model):
     membership_id = fields.Many2one('membership.membership')
 
 
-    @api.constrains('email', 'phone', 'parent_id')
+    @api.constrains('email', 'phone','parent_id')
     def _check_unique_email_phone(self):
         for rec in self:
 
-            # Skip all child contacts
-            if rec.parent_id:
-                continue
+            domain = [('id', '!=', rec.id)]
 
-            domain = [
-                ('id', '!=', rec.id),
-                ('parent_id', '=', False)
-            ]
+            if rec.parent_id:
+                domain.append(('id', '!=', rec.parent_id.id))
 
             if rec.email:
                 if self.search(domain + [('email', '=', rec.email)], limit=1):
@@ -30,7 +26,7 @@ class ResPartner(models.Model):
 
             if rec.phone:
                 if self.search(domain + [('phone', '=', rec.phone)], limit=1):
-                    raise ValidationError("Email already exists!")
+                    raise ValidationError("Phone already exists!")
 
     def unlink(self):
         for rec in self:

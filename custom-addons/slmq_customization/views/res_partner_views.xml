@@ -28,4 +28,16 @@
         </field>
     </record>
 
+    <record id="action_members_only" model="ir.actions.act_window">
+        <field name="name">Members</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_member','=',True)]</field>
+    </record>
+
+    <menuitem id="menu_members_partner"
+            name="Members"
+            parent="menu_membership_root"
+            action="action_members_only"/>
+
 </odoo>

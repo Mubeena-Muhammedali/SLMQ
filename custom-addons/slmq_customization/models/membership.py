@@ -95,17 +95,30 @@ class Membership(models.Model):
 
         return res
 
-    @api.constrains('email','phone','is_child')
-    def _check_unique(self):
+    def unlink(self):
         for rec in self:
-            if not rec.is_child:
-                existing = self.search([
-                    ('id','!=',rec.id),
-                    ('is_child','=',False),
-                    '|',('email','=',rec.email),('phone','=',rec.phone)
-                ])
-                if existing:
-                    raise ValidationError("Email or Phone exists!")
+            if rec.state == 'confirm':
+                raise ValidationError("You cannot delete a confirmed membership.")
+        return super().unlink()
+
+
+    @api.constrains('email', 'phone','parent_id')
+    def _check_unique_email_phone(self):
+        for rec in self:
+
+            domain = [('id', '!=', rec.id)]
+
+            if rec.parent_id:
+                domain.append(('id', '!=', rec.parent_id.id))
+
+            if rec.email:
+                if self.search(domain + [('email', '=', rec.email)], limit=1):
+                    raise ValidationError("Email already exists!")
+
+            if rec.phone:
+                if self.search(domain + [('phone', '=', rec.phone)], limit=1):
+                    raise ValidationError("Phone already exists!")
+                    
 
     def action_confirm(self):
         for rec in self:
