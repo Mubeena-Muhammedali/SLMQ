@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 
 class Membership(models.Model):
     _name = 'membership.membership'
+    _order = "id desc"
     _rec_names_search = ['name', 'email', 'partner_name', 'phone']
 
     name = fields.Char("Registration No.", default='New', readonly=True)
@@ -135,8 +136,21 @@ class Membership(models.Model):
                     'parent_id': rec.parent_id.partner_id.id,
                     'type': 'other'
                 })
-            partner = self.env['res.partner'].create(vals)
+            partner = self.env['res.partner'].sudo().create(vals)
             rec.write({'partner_id':partner.id,'state':'confirm'})
+
+            user_vals = {
+                'name': rec.partner_name,
+                'login': rec.name,
+                'password':"1234",
+                'email': rec.email,
+                'partner_id': partner.id,
+                'group_ids': [(6, 0, [
+                    self.env.ref('slmq_customization.group_membership_user').id,
+                    self.env.ref('base.group_user').id  
+                ])]
+            }
+            self.env['res.users'].sudo().create(user_vals)
 
             template = self.env.ref('slmq_customization.email_template_membership_confirm')
             template.send_mail(rec.id, 

@@ -40,7 +40,8 @@
                             <field name="member_type" readonly="state != 'draft'"/>
                             <field name="partner_id" readonly="1" force_save="1" invisible="not partner_id"/>
                             <field name="is_child" readonly="state != 'draft'"/>
-                            <field name="parent_id" invisible="not is_child" required="is_child" readonly="state != 'draft'"/>
+                            <field name="parent_id" invisible="not is_child" required="is_child" 
+                                    domain="[('is_child','=',False)]" readonly="state != 'draft'"/>
                         </group>
                     </group>
                 </sheet>
