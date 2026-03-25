@@ -8,6 +8,9 @@
             <field name="model_id" ref="slmq_customization.model_membership_membership"/>
             <field name="subject">New Membership - {{object.name}}</field>
             <field name="body_html" type="html">
+            
+                <p>Hi,</p>
+
                 <p><b>A new membership application has been submitted with the following details:</b></p>
 
                 <p>
