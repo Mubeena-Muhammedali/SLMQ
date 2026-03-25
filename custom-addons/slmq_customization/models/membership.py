@@ -60,14 +60,14 @@ class Membership(models.Model):
 
         for rec in records:
 
-            # ✅ Send mail to managers
-            for user in group.user_ids:
-                if user.email:
-                    manager_template.send_mail(
-                        rec.id,
-                        email_values={'email_to': user.email},
-                        force_send=True
-                    )
+            emails = ','.join(group.user_ids.filtered(lambda u: u.email).mapped('email'))
+
+            if emails:
+                manager_template.send_mail(
+                    rec.id,
+                    email_values={'email_to': emails},
+                    force_send=True
+                )
 
             # ✅ Send mail to partner (creation info)
             if rec.email:
