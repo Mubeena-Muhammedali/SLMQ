@@ -23,6 +23,12 @@
                             View Membership
                     </a>
                 </p>
+
+                <br/>
+
+                <p>Thank you,<br/>
+                <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b></p>
+
             </field>
         </record>
 
@@ -35,10 +41,10 @@
             <field name="body_html" type="html">
 
                 <t t-if="ctx.get('is_parent')">
-                    <p>Dear <t t-out="object.parent_id.partner_name"/>,</p>
+                    <p>Dear <t t-out="object.parent_id.partner_name or 'Member'"/>,</p>
 
                     <p>
-                        A membership request has been created for 
+                        A membership request has been submitted for 
                         <b><t t-out="object.partner_name or 'Member'"/></b> under your membership.
                     </p>
 
@@ -47,8 +53,16 @@
                         <b>Registration No:</b> <t t-out="object.name"/>
                     </p>
 
-                    <p>We will review and update you soon.</p>
+                    <p>Our team will review the request and keep you informed.</p>
+
+                    <br/>
+
+                    <p>
+                        Thank you,<br/>
+                        <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b>
+                    </p>
                 </t>
+
                 <t t-else="">
                     <p>Dear <t t-out="object.partner_name"/>,</p>
 
@@ -59,7 +73,11 @@
                     </p>
 
                     <p>We will review your request and get back to you soon.</p>
-                    <p>Thank you!</p>
+
+                    <br/>
+
+                    <p>Thank you,<br/>
+                    <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b></p>
                 </t>
 
             </field>
@@ -81,7 +99,19 @@
                     <b>Registration No:</b> <t t-out="object.name"/>
                 </p>
 
-                <p>Thank you!</p>
+                <p>
+                    <b>Username:</b> <t t-out="ctx.get('login')"/><br/>
+                    <b>Password:</b> <t t-out="ctx.get('password')"/>
+                </p>
+
+                <p>Please use these credentials to log in to the system.</p>
+
+                <br/>
+
+                <p>
+                    Thank you,<br/>
+                    <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b>
+                </p>
 
             </field>
         </record>
@@ -94,12 +124,27 @@
             <field name="subject">Membership Rejected - {{object.name or 'N/A'}}</field>
             <field name="body_html" type="html">
 
-                <p>Dear <t t-out="object.partner_name"/>,</p>
+                <p>Dear <t t-out="object.partner_name or 'Member'"/>,</p>
 
-                <p>Your membership request has been <b>rejected</b>.</p>
+                <p>
+                    We regret to inform you that your membership request has been 
+                    <b>rejected</b>.
+                </p>
 
                 <p>
                     <b>Registration No:</b> <t t-out="object.name"/>
+                </p>
+
+                <p>
+                    If you have any questions or would like further clarification, 
+                    please feel free to contact us.
+                </p>
+
+                <br/>
+
+                <p>
+                    Thank you,<br/>
+                    <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b>
                 </p>
 
             </field>

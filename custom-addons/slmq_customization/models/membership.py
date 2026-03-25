@@ -150,10 +150,13 @@ class Membership(models.Model):
                     self.env.ref('base.group_user').id  
                 ])]
             }
-            self.env['res.users'].sudo().create(user_vals)
+            user = self.env['res.users'].sudo().create(user_vals)
 
             template = self.env.ref('slmq_customization.email_template_membership_confirm')
-            template.send_mail(rec.id, 
+            template.with_context(
+                        login=user.login,
+                        password="1234"
+                        ).send_mail(rec.id, 
                                 email_values={'email_to': rec.email},
                                 force_send=True)
                                 
