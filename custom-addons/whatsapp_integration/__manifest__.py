@@ -31,7 +31,7 @@
     'license': 'LGPL-3',
     'author': 'FSIB',
 
-    'depends': ['base'],
+    'depends': ['base_setup'],
 
     'data': [
         'views/res_config_settings_view.xml',
