@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 
 class Membership(models.Model):
     _name = 'membership.membership'
+    _description = 'Membership' 
     _order = "id desc"
     _rec_names_search = ['name', 'email', 'partner_name', 'phone']
 

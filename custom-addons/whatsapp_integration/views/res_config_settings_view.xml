@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_twilio_settings" model="ir.ui.view">
+        <field name="name">twilio.settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add inside Integrations section -->
+            <xpath expr="//app[@name='general_settings']" position="inside">
+
+                <block title="Twilio WhatsApp">
+
+                    <setting string="Twilio Configuration">
+                        <group>
+                            <field name="twilio_sid"/>
+                            <field name="twilio_token"/>
+                            <field name="twilio_whatsapp_number"/>
+                        </group>
+                    </setting>
+
+                </block>
+
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
