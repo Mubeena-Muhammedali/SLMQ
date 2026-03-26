@@ -48,21 +48,34 @@ class Membership(models.Model):
         for vals in vals_list:
             if vals.get('is_child') and vals.get('parent_id'):
                 parent = self.browse(vals['parent_id'])
-                count = len(parent.child_ids) + 1
-                vals['name'] = f"{parent.name}/{count}"
+
+                # Get existing child numbers
+                child_names = parent.child_ids.mapped('name')
+                numbers = []
+                for name in child_names:
+                    if name and '/' in name:
+                        try:
+                            numbers.append(int(name.split('/')[-1]))
+                        except:
+                            continue
+
+                next_number = max(numbers) + 1 if numbers else 1
+                vals['name'] = f"{parent.name}/{next_number}"
+
             else:
                 vals['name'] = self.env['ir.sequence'].next_by_code('membership.sequence')
-        
+
         records = super().create(vals_list)
 
+        # 🔹 Send Emails
         group = self.env.ref('slmq_customization.group_membership_manager')
         manager_template = self.env.ref('slmq_customization.email_template_membership_manager')
         partner_template = self.env.ref('slmq_customization.email_template_membership_created')
 
+        emails = ','.join(group.user_ids.filtered(lambda u: u.email).mapped('email'))
+
         for rec in records:
-
-            emails = ','.join(group.user_ids.filtered(lambda u: u.email).mapped('email'))
-
+            # Manager mail (single send per record)
             if emails:
                 manager_template.send_mail(
                     rec.id,
@@ -70,12 +83,15 @@ class Membership(models.Model):
                     force_send=True
                 )
 
-            # ✅ Send mail to partner (creation info)
+            # Partner mail
             if rec.email:
-                partner_template.send_mail(rec.id, 
-                        email_values={'email_to': rec.email},
-                        force_send=True)
+                partner_template.send_mail(
+                    rec.id,
+                    email_values={'email_to': rec.email},
+                    force_send=True
+                )
 
+            # Parent mail
             if rec.parent_id and rec.parent_id.email:
                 partner_template.with_context(is_parent=True).send_mail(
                     rec.id,
@@ -85,15 +101,32 @@ class Membership(models.Model):
 
         return records
 
+    
     def write(self, vals):
         res = super().write(vals)
 
         for rec in self:
-            # Case: is_child is set to True AFTER creation
-            if vals.get('is_child',False) and rec.parent_id:
+            # Trigger if:
+            # - parent changed OR
+            # - is_child set to True
+            if (vals.get('parent_id') or vals.get('is_child')) and rec.is_child and rec.parent_id:
+
                 parent = rec.parent_id
-                count = len(parent.child_ids)
-                rec.name = f"{parent.name}/{count}"
+
+                # Exclude current record
+                siblings = parent.child_ids.filtered(lambda c: c.id != rec.id)
+
+                numbers = []
+                for name in siblings.mapped('name'):
+                    if name and '/' in name:
+                        try:
+                            numbers.append(int(name.split('/')[-1]))
+                        except:
+                            continue
+
+                next_number = max(numbers) + 1 if numbers else 1
+
+                rec.name = f"{parent.name}/{next_number}"
 
         return res
 
