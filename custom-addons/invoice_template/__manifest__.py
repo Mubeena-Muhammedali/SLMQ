@@ -7,6 +7,7 @@
     'category': 'Accounting',
     'depends': ['account'],
     'data': [
+        'security/ir.model.access.csv',
         'report/report_tax_invoice.xml',
         'report/report_action.xml',
         'views/res_company_view.xml',
