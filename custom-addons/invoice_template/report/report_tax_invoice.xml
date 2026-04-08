@@ -17,7 +17,7 @@
                             </td>
                             <td style="text-align: right; vertical-align: middle;">
                                 <div style="font-size: 16pt; font-weight: bold; font-style: italic;"><t t-esc="o.company_id.name"/></div>
-                                <div style="font-size: 12pt;"><t t-esc="o.company_id.website or ''"/></div>
+                                <div style="font-size: 12pt;">www.avssgroup.com</div>
                             </td>
                         </tr>
                     </table>
@@ -211,7 +211,7 @@
                     </table>
 
                     <!-- Amount in Words -->
-                    <div style="margin: 10px 0 5px 0; font-size: 8pt;">
+                    <div style="margin: 10px 0 5px 0; font-size: 10pt;">
                         <strong>Amount In Words (AED) :</strong>
                         <span style="margin-left: 5px;">
                             <strong><t t-esc="o._get_amount_in_words()"/></strong>
@@ -319,7 +319,7 @@
                         text-align: center;
                         font-size: 10pt;">
                         <div style="height: 1px; background-color: black; margin: 3px 0;"></div>
-                        <strong><t t-esc="o.company_id.name"/></strong><br/>
+                        <strong><t t-esc="o.company_id.name"/><br/>
                         <t t-esc="o.company_id.street or ''"/>
                         <t t-if="o.company_id.street2">, <t t-esc="o.company_id.street2"/></t>
                         <t t-if="o.company_id.city">, <t t-esc="o.company_id.city"/></t>
@@ -327,7 +327,7 @@
                         <t t-if="o.company_id.country_id">, <t t-esc="o.company_id.country_id.name"/></t><br/>
                         Tel: <t t-esc="o.company_id.phone or ''"/>
                         , Fax: <t t-esc="o.company_id.fax_no or ''"/>
-                        , E-Mail: <t t-esc="o.company_id.email or ''"/>
+                        , E-Mail: <t t-esc="o.company_id.email or ''"/></strong>
                     </div>
 
                 </div>
