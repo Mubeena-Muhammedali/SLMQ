@@ -124,7 +124,7 @@
                     </table>
 
                     <!-- LINE ITEMS TABLE -->
-                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 4px; table-layout: fixed;">
+                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 2px; table-layout: fixed;">
                         <colgroup>
                             <col style="width: 4%;"/>
                             <col style="width: 33%;"/>
@@ -218,7 +218,7 @@
                         </span>
                     </div>
 
-                    <table width="100%" style="border-collapse: collapse; margin-top: 5px;">
+                    <table width="100%" style="border-collapse: collapse; margin-top: 5px;margin-bottom: 3px;">
 
                         <tr>
                             <!-- LEFT SIDE : BANK DETAILS -->
@@ -292,9 +292,6 @@
 
                     </table>
 
-                    <!-- SPACE -->
-                    <div style="height: 10px;"></div>
-
                     <!-- SIGN SECTION -->
                     <table width="100%" style="border-collapse: collapse; font-size: 10pt;">
                         <tr>
@@ -321,7 +318,7 @@
                         right: 0;
                         text-align: center;
                         font-size: 10pt;">
-                        <hr style="border: none; border-top: 1px solid black; margin: 3px 0;"/>
+                        <div style="height: 1px; background-color: black; margin: 3px 0;"></div>
                         <strong><t t-esc="o.company_id.name"/></strong><br/>
                         <t t-esc="o.company_id.street or ''"/>
                         <t t-if="o.company_id.street2">, <t t-esc="o.company_id.street2"/></t>
