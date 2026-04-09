@@ -189,7 +189,7 @@
                             <t t-set="line_count" t-value="len(filled_lines)"/>
 
                             <!-- Define max rows allowed in single page -->
-                            <t t-set="max_rows" t-value="10"/>
+                            <t t-set="max_rows" t-value="15"/>
 
                             <!-- Only add empty rows if product lines are less -->
                             <t t-if="line_count &lt;= max_rows">
