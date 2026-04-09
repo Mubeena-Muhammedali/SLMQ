@@ -8,7 +8,7 @@
                 <div class="page" style="font-family: Arial, sans-serif; font-size: 9.5pt; padding: 2mm 6mm 6mm 6mm; margin:0;">
 
                     <!-- HEADER -->
-                    <table width="100%" style="border-collapse: collapse; margin-bottom: 3px;">
+                    <table width="100%" style="border-collapse: collapse; margin-bottom: 2px;">
                         <tr>
                             <td style="width: 90px; vertical-align: middle;">
                                 <t t-if="o.company_id.logo">
@@ -23,7 +23,7 @@
                     </table>
 
                     <!-- TITLE + TRN -->
-                    <table width="100%" style="margin-bottom: 3px;">
+                    <table width="100%" style="margin-bottom: 2px;">
                         <tr>
                             <td style="font-size: 14pt; font-weight: bold;">Tax Invoice</td>
                             <td style="text-align: right; font-size: 12pt; font-weight: bold;">TRN : <t t-esc="o.company_id.vat or ''"/></td>
@@ -31,7 +31,7 @@
                     </table>
 
                     <!-- CUSTOMER + INVOICE DETAILS -->
-                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 5px; table-layout: fixed; font-size: 11pt;">
+                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 4px; table-layout: fixed; font-size: 11pt;">
                         <colgroup><col style="width: 55%;"/><col style="width: 45%;"/></colgroup>
                         <tr>
                             <td style="vertical-align: top; padding: 0; border-right: 1px solid black;">
@@ -124,7 +124,7 @@
                     </table>
 
                     <!-- LINE ITEMS TABLE -->
-                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 2px; table-layout: fixed;">
+                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 1px; table-layout: fixed;">
                         <colgroup>
                             <col style="width: 4%;"/>
                             <col style="width: 33%;"/>
@@ -189,7 +189,7 @@
                             <t t-set="line_count" t-value="len(filled_lines)"/>
 
                             <!-- Define max rows allowed in single page -->
-                            <t t-set="max_rows" t-value="15"/>
+                            <t t-set="max_rows" t-value="10"/>
 
                             <!-- Only add empty rows if product lines are less -->
                             <t t-if="line_count &lt;= max_rows">
@@ -211,14 +211,14 @@
                     </table>
 
                     <!-- Amount in Words -->
-                    <div style="margin: 10px 0 5px 0; font-size: 10pt;">
+                    <div style="margin: 10px 0 5px 0; font-size: 10pt; margin-bottom: 1px;">
                         <strong>Amount In Words (AED) :</strong>
                         <span style="margin-left: 5px;">
                             <strong><t t-esc="o._get_amount_in_words()"/></strong>
                         </span>
                     </div>
 
-                    <table width="100%" style="border-collapse: collapse; margin-top: 5px;margin-bottom: 3px;">
+                    <table width="100%" style="border-collapse: collapse; margin-top: 5px;margin-bottom: 2px;">
 
                         <tr>
                             <!-- LEFT SIDE : BANK DETAILS -->

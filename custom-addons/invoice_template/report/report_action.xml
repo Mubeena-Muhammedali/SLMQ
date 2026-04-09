@@ -8,10 +8,11 @@
         <field name="format">A4</field>
 
         <!-- REMOVE TOP SPACE -->
-        <field name="margin_top">3</field>
-        <field name="margin_bottom">3</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
         <field name="margin_left">6</field>
         <field name="margin_right">6</field>
+        <field name="orientation">Landscape</field>
 
         <!-- HEADER/FOOTER CONTROL -->
         <field name="header_line" eval="False"/>
