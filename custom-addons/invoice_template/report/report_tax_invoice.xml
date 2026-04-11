@@ -299,7 +299,7 @@
                     </table>
 
                     <!-- ── Signature Section ── -->
-                    <table width="100%" style="border-collapse:collapse; font-size:10pt; margin-top:4px;">
+                    <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important; font-size:10pt; margin-top:4px;">
                         <tr>
                             <td style="padding:6px 0; width:50%;">Receiver Name :</td>
                             <td></td>
