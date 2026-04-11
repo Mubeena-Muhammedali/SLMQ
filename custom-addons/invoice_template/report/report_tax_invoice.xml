@@ -110,12 +110,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:5px 8px; border-bottom:1px solid black;">
+                                        <td style="padding:5px 8px; border-bottom:1px solid black; border-right:none;">
                                             <strong>Tel : <t t-esc="o.partner_id.phone or ''"/></strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:5px 8px; border-bottom:1px solid black;">
+                                        <td style="padding:5px 8px; border-bottom:1px solid black; border-right:none;">
                                             <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
                                                 <tr>
                                                     <td style="width:55%;"><strong>TRN : <t t-esc="o.partner_id.vat or ''"/></strong></td>
