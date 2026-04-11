@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- Custom Paper Format -->
+   
+    <!-- ============================================================
+         PAPER FORMAT
+    ============================================================ -->
     <record id="paperformat_tax_invoice" model="report.paperformat">
         <field name="name">Tax Invoice Paper</field>
         <field name="default" eval="False"/>
         <field name="format">A4</field>
-
-        <!-- REMOVE TOP SPACE -->
-        <field name="margin_top">2</field>
-        <field name="margin_bottom">2</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">15</field>
         <field name="margin_left">6</field>
         <field name="margin_right">6</field>
         <field name="orientation">Portrait</field>
-
-        <!-- HEADER/FOOTER CONTROL -->
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">2</field>
-
-        <!-- DPI -->
+        <field name="header_spacing">22</field>
         <field name="dpi">90</field>
     </record>
+
+
     
     <!--  Register the PDF report action  -->
     <record id="tax_invoice_report_action" model="ir.actions.report">

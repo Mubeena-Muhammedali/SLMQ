@@ -1,200 +1,249 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    
 
+   <template id="avss_external_layout">
+
+    <t t-set="company" t-value="o.company_id"/>
+
+    <!-- WRAPPER -->
+    <div style="width:100%;">
+
+        <!-- ================= HEADER ================= -->
+        <div class="header" style="display:block; width:100%; margin-bottom:15px;">
+            
+            <table width="100%">
+                <tr>
+                    <td style="width:90px;">
+                        <t t-if="company.logo">
+                            <img t-att-src="image_data_uri(company.logo)" style="height:65px;"/>
+                        </t>
+                    </td>
+                    <td style="text-align:right;">
+                        <div style="font-size:16pt; font-weight:bold;">
+                            <t t-esc="company.name"/>
+                        </div>
+                        <div style="font-size:12pt;">www.avssgroup.com</div>
+                    </td>
+                </tr>
+            </table>
+
+            <table width="100%">
+                <tr>
+                    <td style="font-size:14pt; font-weight:bold;">Tax Invoice</td>
+                    <td style="text-align:right; font-weight:bold;">
+                        TRN : <t t-esc="company.vat or ''"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <!-- ================= BODY ================= -->
+        <div class="article"
+             style="display:block; width:100%; clear:both;">
+            
+            <t t-out="0"/>
+        </div>
+
+
+        <!-- ================= FOOTER ================= -->
+        <div class="footer"
+             style="display:block; width:100%; margin-top:10px;">
+            
+            <div style="border-top:1px solid black;"></div>
+
+            <div style="text-align:center; font-size:9pt;">
+                <strong>
+                    <t t-esc="company.name"/><br/>
+                    <t t-esc="company.street or ''"/>
+                    <t t-if="company.street2">, <t t-esc="company.street2"/></t>
+                    <t t-if="company.city">, <t t-esc="company.city"/></t>
+                    <t t-if="company.state_id">, <t t-esc="company.state_id.name"/></t>
+                    <t t-if="company.country_id">, <t t-esc="company.country_id.name"/></t>
+                    <br/>
+                    Tel: <t t-esc="company.phone or ''"/>
+                    , Fax: <t t-esc="company.fax_no or ''"/>
+                    , E-Mail: <t t-esc="company.email or ''"/>
+                </strong>
+            </div>
+        </div>
+
+    </div>
+
+</template>
+
+
+    <!-- ============================================================
+         MAIN INVOICE TEMPLATE
+    ============================================================ -->
     <template id="tax_invoice_document">
         <t t-call="web.html_container">
+            
             <t t-foreach="docs" t-as="o">
-
-                <div class="page" style="font-family: Arial, sans-serif; font-size: 9.5pt; padding: 2mm 6mm 6mm 6mm; margin:0;">
-
-                    <!-- HEADER -->
-                    <table width="100%" style="border-collapse: collapse; margin-bottom: 2px;">
+                
+                <t t-call="invoice_template.avss_external_layout">
+                    <div class="page">
+                    <!-- ── Customer + Invoice Details ── -->
+                    <table width="100%" style="border-collapse:collapse; border:1px solid black; margin-bottom:4px; table-layout:fixed; font-size:11pt;">
+                        <colgroup><col style="width:55%;"/><col style="width:45%;"/></colgroup>
                         <tr>
-                            <td style="width: 90px; vertical-align: middle;">
-                                <t t-if="o.company_id.logo">
-                                    <img t-att-src="image_data_uri(o.company_id.logo)" style="height: 65px; width: auto;"/>
-                                </t>
-                            </td>
-                            <td style="text-align: right; vertical-align: middle;">
-                                <div style="font-size: 16pt; font-weight: bold; font-style: italic;"><t t-esc="o.company_id.name"/></div>
-                                <div style="font-size: 12pt;">www.avssgroup.com</div>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <!-- TITLE + TRN -->
-                    <table width="100%" style="margin-bottom: 2px;">
-                        <tr>
-                            <td style="font-size: 14pt; font-weight: bold;">Tax Invoice</td>
-                            <td style="text-align: right; font-size: 12pt; font-weight: bold;">TRN : <t t-esc="o.company_id.vat or ''"/></td>
-                        </tr>
-                    </table>
-
-                    <!-- CUSTOMER + INVOICE DETAILS -->
-                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 4px; table-layout: fixed; font-size: 11pt;">
-                        <colgroup><col style="width: 55%;"/><col style="width: 45%;"/></colgroup>
-                        <tr>
-                            <td style="vertical-align: top; padding: 0; border-right: 1px solid black;">
-                                <table width="100%" style="border-collapse: collapse; height: 100%;">
-                                    <!-- Company Name + Address - NO border between them -->
+                            <td style="vertical-align:top; padding:0; border-right:1px solid black;">
+                                <table width="100%" style="border-collapse:collapse;">
                                     <tr>
-                                        <td style="padding: 5px 8px; font-size: 11pt;">
+                                        <td style="padding:5px 8px;">
                                             <strong>Company Name : <t t-esc="o.partner_id.name or ''"/></strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 5px 8px; font-size: 11pt; border-bottom: 1px solid black; vertical-align: top; height: 80px;">
-                                            <table width="100%" style="border-collapse: collapse;">
+                                        <td style="padding:5px 8px; border-bottom:1px solid black; vertical-align:top; height:80px;">
+                                            <table width="100%" style="border-collapse:collapse;">
                                                 <tr>
-                                                    <td style="font-size: 11pt; width: 90px; vertical-align: top;"><strong>Address</strong></td>
-                                                    <td style="font-size: 11pt; vertical-align: top;"><strong>:
+                                                    <td style="width:90px; vertical-align:top;"><strong>Address</strong></td>
+                                                    <td style="vertical-align:top;"><strong>:
                                                         <t t-esc="o.partner_id.street or ''"/>
                                                         <t t-if="o.partner_id.street2">, <t t-esc="o.partner_id.street2"/></t>
                                                         <t t-if="o.partner_id.city">, <t t-esc="o.partner_id.city"/></t>
                                                         <t t-if="o.partner_id.state_id">, <t t-esc="o.partner_id.state_id.name"/></t>
-                                                        <t t-if="o.partner_id.country_id">, <t t-esc="o.partner_id.country_id.name"/></t></strong>
-                                                    </td>
+                                                        <t t-if="o.partner_id.country_id">, <t t-esc="o.partner_id.country_id.name"/></t>
+                                                    </strong></td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                    <!-- Tel row with border bottom -->
                                     <tr>
-                                        <td style="padding: 5px 8px; font-size: 11pt; border-bottom: 1px solid black;">
+                                        <td style="padding:5px 8px; border-bottom:1px solid black;">
                                             <strong>Tel : <t t-esc="o.partner_id.phone or ''"/></strong>
                                         </td>
                                     </tr>
-                                    <!-- TRN + Payment on same row with border bottom -->
                                     <tr>
-                                        <td style="padding: 5px 8px; font-size: 11pt; border-bottom: 1px solid black;">
-                                            <table width="100%" style="border-collapse: collapse;">
+                                        <td style="padding:5px 8px; border-bottom:1px solid black;">
+                                            <table width="100%" style="border-collapse:collapse;">
                                                 <tr>
-                                                    <td style="font-size: 11pt; width: 55%;"><strong>TRN : <t t-esc="o.partner_id.vat or ''"/></strong></td>
-                                                    <td style="font-size: 11pt;"><strong>Payment : <t t-esc="o.invoice_payment_term_id.name or ''"/></strong></td>
+                                                    <td style="width:55%;"><strong>TRN : <t t-esc="o.partner_id.vat or ''"/></strong></td>
+                                                    <td><strong>Payment : <t t-esc="o.invoice_payment_term_id.name or ''"/></strong></td>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                    <!-- Project - no bottom border -->
                                     <tr>
-                                        <td style="padding: 5px 8px; font-size: 11pt;">
-                                            <strong>Project : <t t-esc="o.narration or o.ref or ''"/></strong>
+                                        <td style="padding:5px 8px;">
+                                            <strong>Project : </strong>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
-                            <td style="vertical-align: top; padding: 0;">
-                                <table width="100%" style="border-collapse: collapse; table-layout: fixed;">
-                                    <colgroup><col style="width: 48%;"/><col style="width: 52%;"/></colgroup>
+                            <td style="vertical-align:top; padding:0;">
+                                <table width="100%" style="border-collapse:collapse; table-layout:fixed;">
+                                    <colgroup><col style="width:48%;"/><col style="width:52%;"/></colgroup>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">Invoice No</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"><t t-esc="o.name or ''"/></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">Invoice No</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"><t t-esc="o.name or ''"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">Date</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"><t t-esc="o.invoice_date and o.invoice_date.strftime('%d/%m/%Y') or ''"/></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">Date</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"><t t-esc="o.invoice_date and o.invoice_date.strftime('%d/%m/%Y') or ''"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">JBIN No</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">JBIN No</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"><t t-esc="o.ref or ''"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">Delivery / PPM No</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">Delivery / PPM No</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">LPO No</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"><t t-esc="o.ref or ''"/></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">LPO No</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">Qut / AMC Ref#</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">Qut / AMC Ref#</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">Customer ID</td>
-                                        <td style="border-bottom:1px solid black; padding:5px 8px; font-size: 11pt;"></td>
+                                        <td style="border-bottom:1px solid black; border-right:1px solid black; padding:5px 8px; font-weight:bold;">Customer ID</td>
+                                        <td style="border-bottom:1px solid black; padding:5px 8px;"><t t-esc="o.partner_id.company_registry or ''"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-right:1px solid black; padding:5px 8px; font-weight:bold; font-size: 11pt;">GRN No</td>
-                                        <td style="padding:5px 8px; font-size: 11pt;"></td>
+                                        <td style="border-right:1px solid black; padding:5px 8px; font-weight:bold;">GRN No</td>
+                                        <td style="padding:5px 8px;"></td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
                     </table>
 
-                    <!-- LINE ITEMS TABLE -->
-                    <table width="100%" style="border-collapse: collapse; border: 1px solid black; margin-bottom: 1px; table-layout: fixed;">
+                    <!-- ── Line Items Table ──
+                         NOTE: NO <thead> here — removing thead prevents
+                         the column header row from repeating on page 2
+                    ── -->
+                    <table width="100%" style="border-collapse:collapse; border:1px solid black; margin-bottom:1px; table-layout:fixed;">
                         <colgroup>
-                            <col style="width: 4%;"/>
-                            <col style="width: 33%;"/>
-                            <col style="width: 5%;"/>
-                            <col style="width: 6%;"/>
-                            <col style="width: 10%;"/>
-                            <col style="width: 13%;"/>
-                            <col style="width: 6%;"/>
-                            <col style="width: 10%;"/>
-                            <col style="width: 13%;"/>
+                            <col style="width:4%;"/>
+                            <col style="width:33%;"/>
+                            <col style="width:5%;"/>
+                            <col style="width:6%;"/>
+                            <col style="width:10%;"/>
+                            <col style="width:13%;"/>
+                            <col style="width:6%;"/>
+                            <col style="width:10%;"/>
+                            <col style="width:13%;"/>
                         </colgroup>
-                        <thead>
-                            <tr>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>Sr.<br/>No.</strong></th>
-                                <th style="border:1px solid black; padding:3px 4px; text-align:center; font-size:11pt;"><strong>Particular</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>QTY</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>Unit</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>Rate</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>Amount<br/>Excl. of<br/>VAT (AED)</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>VAT<br/>(%)</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>VAT<br/>Amt<br/>(AED)</strong></th>
-                                <th style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt;"><strong>Amount<br/>Inc. of<br/>VAT (AED)</strong></th>
-                            </tr>
-                        </thead>
                         <tbody>
+                            <!-- Column header row inside tbody (won't auto-repeat) -->
+                            <tr>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Sr.<br/>No.</td>
+                                <td style="border:1px solid black; padding:3px 4px; text-align:center; font-size:11pt; font-weight:bold;">Particular</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">QTY</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Unit</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Rate</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Amount<br/>Excl. of<br/>VAT (AED)</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">VAT<br/>(%)</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">VAT<br/>Amt<br/>(AED)</td>
+                                <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Amount<br/>Inc. of<br/>VAT (AED)</td>
+                            </tr>
+
                             <t t-set="sr_no" t-value="0"/>
                             <t t-foreach="o.invoice_line_ids" t-as="line">
                                 <t t-if="line.display_type == 'product'">
                                     <t t-set="sr_no" t-value="sr_no + 1"/>
                                     <tr>
-                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top;font-size: 10pt;"><t t-esc="sr_no"/></td>
-                                        <td style="border:1px solid black; padding:3px 4px; vertical-align:top;font-size: 10pt;"><t t-esc="line.name"/></td>
-                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top; font-size:10pt;"><t t-esc="sr_no"/></td>
+                                        <td style="border:1px solid black; padding:3px 4px; vertical-align:top; font-size:10pt;"><t t-esc="line.name"/></td>
+                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top; font-size:10pt;">
                                             <t t-esc="int(line.quantity) if line.quantity == int(line.quantity) else line.quantity"/>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top; font-size:10pt;">
                                             <t t-esc="line.product_uom_id.name if line.product_uom_id else ''"/>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top; font-size:10pt;">
                                             <t t-esc="'{:,.2f}'.format(line.price_unit)"/>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top; font-size:10pt;">
                                             <t t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 2px; text-align:center; vertical-align:top; font-size:10pt;">
                                             <t t-if="line.tax_ids">
                                                 <t t-esc="'{:.0f} %'.format(sum(t.amount for t in line.tax_ids))"/>
                                             </t>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top; font-size:10pt;">
                                             <t t-esc="'{:,.2f}'.format(line.price_total - line.price_subtotal)"/>
                                         </td>
-                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top;font-size: 10pt;">
+                                        <td style="border:1px solid black; padding:3px 4px; text-align:right; vertical-align:top; font-size:10pt;">
                                             <t t-esc="'{:,.2f}'.format(line.price_total)"/>
                                         </td>
                                     </tr>
                                 </t>
                             </t>
-                            
+
+                            <!-- Empty filler rows (only when lines ≤ 15) -->
                             <t t-set="filled_lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')"/>
-
                             <t t-set="line_count" t-value="len(filled_lines)"/>
-
-                            <!-- Define max rows allowed in single page -->
                             <t t-set="max_rows" t-value="15"/>
-
-                            <!-- Only add empty rows if product lines are less -->
                             <t t-if="line_count &lt;= max_rows">
                                 <t t-foreach="range(max_rows - line_count)" t-as="empty_row">
-                                    <tr style="height: 20px;">
+                                    <tr style="height:20px;">
                                         <td style="border-left:1px solid black; border-right:1px solid black;"></td>
                                         <td style="border-right:1px solid black;"></td>
                                         <td style="border-right:1px solid black;"></td>
@@ -210,127 +259,66 @@
                         </tbody>
                     </table>
 
-                    <!-- Amount in Words -->
-                    <div style="margin: 10px 0 5px 0; font-size: 10pt; margin-bottom: 1px;">
+                    <!-- ── Amount in Words ── -->
+                    <div style="margin:6px 0 4px 0; font-size:10pt;">
                         <strong>Amount In Words (AED) :</strong>
-                        <span style="margin-left: 5px;">
+                        <span style="margin-left:5px;">
                             <strong><t t-esc="o._get_amount_in_words()"/></strong>
                         </span>
                     </div>
 
-                    <table width="100%" style="border-collapse: collapse; margin-top: 5px;margin-bottom: 2px;">
-
+                    <!-- ── Bank Details + Totals ── -->
+                    <table width="100%" style="border-collapse:collapse; margin-top:5px; margin-bottom:2px;">
                         <tr>
-                            <!-- LEFT SIDE : BANK DETAILS -->
-                            <td style="width: 60%; vertical-align: top; font-size: 10pt; padding-right: 10px;">
-
-                                <div>
-                                    <strong><u>Bank Details :</u></strong>
-                                </div>
-
-                                <div style="margin-top: 5px; line-height: 1.6;">
+                            <td style="width:60%; vertical-align:top; font-size:10pt; padding-right:10px;">
+                                <div><strong><u>Bank Details :</u></strong></div>
+                                <div style="margin-top:5px; line-height:1.6;">
                                     <div t-if="o.company_id.bank_details_html"
-                                        t-out="o.company_id.bank_details_html"/>
+                                         t-out="o.company_id.bank_details_html"/>
                                 </div>
-
                             </td>
-
-                            <!-- RIGHT SIDE : TOTALS -->
-                            <td style="width: 40%; vertical-align: top;">
-
-                                <table width="100%" style="border-collapse: collapse; border: 1px solid black; font-size: 10pt;">
-
+                            <td style="width:40%; vertical-align:top;">
+                                <table width="100%" style="border-collapse:collapse; border:1px solid black; font-size:10pt;">
                                     <tr>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">
-                                            Sub Total (AED)
-                                        </td>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;">
-                                            <t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/>
-                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">Sub Total (AED)</td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;"><t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></td>
                                     </tr>
-
                                     <tr>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">
-                                            Discount
-                                        </td>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;">
-                                            0.00
-                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">Discount</td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;">0.00</td>
                                     </tr>
-
                                     <tr>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">
-                                            Gross Total (AED)
-                                        </td>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;">
-                                            <t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/>
-                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">Gross Total (AED)</td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;"><t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/></td>
                                     </tr>
-
                                     <tr>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">
-                                            VAT 5% (AED)
-                                        </td>
-                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;">
-                                            <t t-esc="'{:,.2f}'.format(o.amount_tax)"/>
-                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; border-right:1px solid black;">VAT 5% (AED)</td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;"><t t-esc="'{:,.2f}'.format(o.amount_tax)"/></td>
                                     </tr>
-
                                     <tr>
-                                        <td style="padding:8px; border-right:1px solid black;">
-                                            <strong>Net Amount (AED)</strong>
-                                        </td>
-                                        <td style="padding:8px; text-align:right;">
-                                            <strong><t t-esc="'{:,.2f}'.format(o.amount_total)"/></strong>
-                                        </td>
+                                        <td style="padding:8px; border-right:1px solid black;"><strong>Net Amount (AED)</strong></td>
+                                        <td style="padding:8px; text-align:right;"><strong><t t-esc="'{:,.2f}'.format(o.amount_total)"/></strong></td>
                                     </tr>
-
                                 </table>
-
                             </td>
                         </tr>
-
                     </table>
 
-                    <!-- SIGN SECTION -->
-                    <table width="100%" style="border-collapse: collapse; font-size: 10pt;">
+                    <!-- ── Signature Section ── -->
+                    <table width="100%" style="border-collapse:collapse; font-size:10pt; margin-top:4px;">
                         <tr>
-                            <td style="padding:6px 0; width:50%;">
-                                Receiver Name :
-                            </td>
+                            <td style="padding:6px 0; width:50%;">Receiver Name :</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td style="padding:6px 0;">
-                                Receiver Sign &amp; Stamp :
-                            </td>
-                            <td style="text-align:right;">
-                                For <strong><t t-esc="o.company_id.name"/></strong>
-                            </td>
+                            <td style="padding:6px 0;">Receiver Sign &amp; Stamp :</td>
+                            <td style="text-align:right;">For <strong><t t-esc="o.company_id.name"/></strong></td>
                         </tr>
                     </table>
-
-
-                    <div style="
-                        position: fixed;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        text-align: center;
-                        font-size: 10pt;">
-                        <div style="height: 1px; background-color: black; margin: 3px 0;"></div>
-                        <strong><t t-esc="o.company_id.name"/><br/>
-                        <t t-esc="o.company_id.street or ''"/>
-                        <t t-if="o.company_id.street2">, <t t-esc="o.company_id.street2"/></t>
-                        <t t-if="o.company_id.city">, <t t-esc="o.company_id.city"/></t>
-                        <t t-if="o.company_id.state_id">, <t t-esc="o.company_id.state_id.name"/></t>
-                        <t t-if="o.company_id.country_id">, <t t-esc="o.company_id.country_id.name"/></t><br/>
-                        Tel: <t t-esc="o.company_id.phone or ''"/>
-                        , Fax: <t t-esc="o.company_id.fax_no or ''"/>
-                        , E-Mail: <t t-esc="o.company_id.email or ''"/></strong>
                     </div>
 
-                </div>
+                </t>
+                
             </t>
         </t>
     </template>
