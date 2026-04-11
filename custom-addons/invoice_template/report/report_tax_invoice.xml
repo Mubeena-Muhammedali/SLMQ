@@ -87,14 +87,14 @@
                         <colgroup><col style="width:55%;"/><col style="width:45%;"/></colgroup>
                         <tr>
                             <td style="vertical-align:top; padding:0; border-right:1px solid black;">
-                                <table width="100%" style="border-collapse:collapse;">
+                                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
                                     <tr>
                                         <td style="padding:5px 8px;">
                                             <strong>Company Name : <t t-esc="o.partner_id.name or ''"/></strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:5px 8px; border-bottom:1px solid black; vertical-align:top; height:80px;">
+                                        <td style="padding:5px 8px; vertical-align:top; height:80px;">
                                             <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
                                                 <tr>
                                                     <td style="width:90px; vertical-align:top;"><strong>Address</strong></td>
@@ -262,13 +262,13 @@
                     </div>
 
                     <!-- ── Bank Details + Totals ── -->
-                    <table width="100%" style="border-collapse:collapse; margin-top:5px; margin-bottom:2px;">
+                    <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important; margin-top:5px; margin-bottom:2px;">
                         <tr>
                             <td style="width:60%; vertical-align:top; font-size:10pt; padding-right:10px;">
                                 <div><strong><u>Bank Details :</u></strong></div>
                                 <div style="margin-top:5px; line-height:1.6;">
                                     <div t-if="o.company_id.bank_details_html"
-                                         t-out="o.company_id.bank_details_html"/>
+                                    t-out="o.company_id.bank_details_html"/>
                                 </div>
                             </td>
                             <td style="width:40%; vertical-align:top;">
