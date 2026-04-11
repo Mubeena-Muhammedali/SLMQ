@@ -3,22 +3,7 @@
     
     <template id="avss_external_layout">
 
-    <t t-set="company" t-value="o.company_id"/>
-
-        <style>
-        /* Remove ALL table borders from Odoo */
-        .table, .table-bordered, .table-bordered td, .table-bordered th {
-            border: none !important;
-        }
-
-        table td, table th {
-            border: none !important;
-        }
-
-        table {
-            border-collapse: collapse !important;
-        }
-        </style>
+        <t t-set="company" t-value="o.company_id"/>
 
         <!-- WRAPPER -->
         <div style="width:100%;">
@@ -26,14 +11,14 @@
             <!-- ================= HEADER ================= -->
             <div class="header" style="display:block; width:100%; margin-bottom:15px;">
 
-                <table width="100%">
-                    <tr>
-                        <td style="width:90px;">
+                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
+                    <tr style="border-collapse:separate !important; border-spacing:0 !important;">
+                        <td style="border-collapse:separate !important; border-spacing:0 !important;width:90px;">
                             <t t-if="company.logo">
                                 <img t-att-src="image_data_uri(company.logo)" style="height:65px;"/>
                             </t>
                         </td>
-                        <td style="text-align:right;">
+                        <td style="text-align:right;border-collapse:separate !important; border-spacing:0 !important;">
                             <div style="font-size:16pt; font-weight:bold;">
                                 <t t-esc="company.name"/>
                             </div>
@@ -42,12 +27,12 @@
                     </tr>
                 </table>
 
-                <table width="100%">
-                    <tr>
-                        <td style="font-size:14pt; font-weight:bold;">
+                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
+                    <tr style="border-collapse:separate !important; border-spacing:0 !important;">
+                        <td style="font-size:14pt; font-weight:bold;border-collapse:separate !important; border-spacing:0 !important;">
                             Tax Invoice
                         </td>
-                        <td style="text-align:right; font-weight:bold;">
+                        <td style="text-align:right; font-weight:bold;border-collapse:separate !important; border-spacing:0 !important;">
                             TRN : <t t-esc="company.vat or ''"/>
                         </td>
                     </tr>
@@ -110,7 +95,7 @@
                                     </tr>
                                     <tr>
                                         <td style="padding:5px 8px; border-bottom:1px solid black; vertical-align:top; height:80px;">
-                                            <table width="100%" style="border-collapse:collapse;">
+                                            <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
                                                 <tr>
                                                     <td style="width:90px; vertical-align:top;"><strong>Address</strong></td>
                                                     <td style="vertical-align:top;"><strong>:
@@ -131,7 +116,7 @@
                                     </tr>
                                     <tr>
                                         <td style="padding:5px 8px; border-bottom:1px solid black;">
-                                            <table width="100%" style="border-collapse:collapse;">
+                                            <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
                                                 <tr>
                                                     <td style="width:55%;"><strong>TRN : <t t-esc="o.partner_id.vat or ''"/></strong></td>
                                                     <td><strong>Payment : <t t-esc="o.invoice_payment_term_id.name or ''"/></strong></td>
