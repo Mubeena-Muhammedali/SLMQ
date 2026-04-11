@@ -1,57 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     
-
-   <template id="avss_external_layout">
+    <template id="avss_external_layout">
 
     <t t-set="company" t-value="o.company_id"/>
 
-    <!-- WRAPPER -->
-    <div style="width:100%;">
+        <style>
+        /* Remove ALL table borders from Odoo */
+        .table, .table-bordered, .table-bordered td, .table-bordered th {
+            border: none !important;
+        }
 
-        <!-- ================= HEADER ================= -->
-        <div class="header" style="display:block; width:100%; margin-bottom:15px;">
-            
-            <table width="100%">
-                <tr>
-                    <td style="width:90px;">
-                        <t t-if="company.logo">
-                            <img t-att-src="image_data_uri(company.logo)" style="height:65px;"/>
-                        </t>
-                    </td>
-                    <td style="text-align:right;">
-                        <div style="font-size:16pt; font-weight:bold;">
-                            <t t-esc="company.name"/>
-                        </div>
-                        <div style="font-size:12pt;">www.avssgroup.com</div>
-                    </td>
-                </tr>
-            </table>
+        table td, table th {
+            border: none !important;
+        }
 
-            <table width="100%">
-                <tr>
-                    <td style="font-size:14pt; font-weight:bold;">Tax Invoice</td>
-                    <td style="text-align:right; font-weight:bold;">
-                        TRN : <t t-esc="company.vat or ''"/>
-                    </td>
-                </tr>
-            </table>
+        table {
+            border-collapse: collapse !important;
+        }
+        </style>
+
+        <!-- WRAPPER -->
+        <div style="width:100%;">
+
+            <!-- ================= HEADER ================= -->
+            <div class="header" style="display:block; width:100%; margin-bottom:15px;">
+
+                <table width="100%">
+                    <tr>
+                        <td style="width:90px;">
+                            <t t-if="company.logo">
+                                <img t-att-src="image_data_uri(company.logo)" style="height:65px;"/>
+                            </t>
+                        </td>
+                        <td style="text-align:right;">
+                            <div style="font-size:16pt; font-weight:bold;">
+                                <t t-esc="company.name"/>
+                            </div>
+                            <div style="font-size:12pt;">www.avssgroup.com</div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table width="100%">
+                    <tr>
+                        <td style="font-size:14pt; font-weight:bold;">
+                            Tax Invoice
+                        </td>
+                        <td style="text-align:right; font-weight:bold;">
+                            TRN : <t t-esc="company.vat or ''"/>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
         </div>
 
-
         <!-- ================= BODY ================= -->
-        <div class="article"
-             style="display:block; width:100%; clear:both;">
-            
+        <div class="article" style="display:block; width:100%; clear:both;">
             <t t-out="0"/>
         </div>
 
-
         <!-- ================= FOOTER ================= -->
-        <div class="footer"
-             style="display:block; width:100%; margin-top:10px;">
+        <div class="footer" style="display:block; width:100%; margin-top:10px;">
             
-            <div style="border-top:1px solid black;"></div>
+            <!-- ⚠️ THIS IS NOT TABLE BORDER -->
+            <!-- If you want no line, remove this -->
+            <div style="border-top:1px solid black;background-color: black;"></div>
 
             <div style="text-align:center; font-size:9pt;">
                 <strong>
@@ -69,9 +84,7 @@
             </div>
         </div>
 
-    </div>
-
-</template>
+    </template>
 
 
     <!-- ============================================================
@@ -173,10 +186,6 @@
                         </tr>
                     </table>
 
-                    <!-- ── Line Items Table ──
-                         NOTE: NO <thead> here — removing thead prevents
-                         the column header row from repeating on page 2
-                    ── -->
                     <table width="100%" style="border-collapse:collapse; border:1px solid black; margin-bottom:1px; table-layout:fixed;">
                         <colgroup>
                             <col style="width:4%;"/>
@@ -189,8 +198,7 @@
                             <col style="width:10%;"/>
                             <col style="width:13%;"/>
                         </colgroup>
-                        <tbody>
-                            <!-- Column header row inside tbody (won't auto-repeat) -->
+                        <thead>
                             <tr>
                                 <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Sr.<br/>No.</td>
                                 <td style="border:1px solid black; padding:3px 4px; text-align:center; font-size:11pt; font-weight:bold;">Particular</td>
@@ -202,7 +210,8 @@
                                 <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">VAT<br/>Amt<br/>(AED)</td>
                                 <td style="border:1px solid black; padding:3px 2px; text-align:center; font-size:11pt; font-weight:bold;">Amount<br/>Inc. of<br/>VAT (AED)</td>
                             </tr>
-
+                        </thead>
+                        <tbody>
                             <t t-set="sr_no" t-value="0"/>
                             <t t-foreach="o.invoice_line_ids" t-as="line">
                                 <t t-if="line.display_type == 'product'">
