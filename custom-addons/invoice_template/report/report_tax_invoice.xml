@@ -127,6 +127,10 @@
                                     <tr>
                                         <td style="padding:5px 8px;">
                                             <strong>Project : </strong>
+                                            <t t-set="sale_orders" t-value="o.invoice_line_ids.mapped('sale_line_ids.order_id')"/>
+                                            <t t-if="sale_orders">
+                                                <t t-esc="sale_orders[0].project_id.name or ''"/>
+                                            </t>
                                         </td>
                                     </tr>
                                 </table>

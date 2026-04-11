@@ -5,7 +5,7 @@
     'summary': 'Custom Tax Invoice format',
     'description': 'Replaces the default invoice PDF report with the Tax Invoice format.',
     'category': 'Accounting',
-    'depends': ['account'],
+    'depends': ['sale_project'],
     'data': [
         'security/ir.model.access.csv',
         'report/report_tax_invoice.xml',
