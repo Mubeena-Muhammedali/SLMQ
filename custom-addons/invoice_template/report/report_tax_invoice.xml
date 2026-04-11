@@ -271,8 +271,20 @@
                             <td style="width:60%; vertical-align:top; font-size:10pt; padding-right:10px;">
                                 <div><strong><u>Bank Details :</u></strong></div>
                                 <div style="margin-top:5px; line-height:1.6;">
-                                    <div t-if="o.company_id.bank_details_html"
-                                    t-out="o.company_id.bank_details_html"/>
+                                    <div>
+                                        <t t-set="bank" t-value="o.company_id.partner_id.bank_ids[0] if o.company_id.partner_id.bank_ids else False"/>
+                                        <t t-if="bank">
+                                            <div>Account Name: <t t-esc="bank.acc_holder_name or o.company_id.name"/></div>
+                                            <div>Account Number: <t t-esc="bank.acc_number"/></div>
+                                            <div>IBAN:</div>
+                                            <div>Swift Code: <t t-esc="bank.bank_bic or ''"/></div>
+                                            <div>Bank Name: <t t-esc="bank.bank_id.name or ''"/></div>
+                                            <div>Branch and Bank Address: <t t-esc="bank.bank_id.city or ''"/>
+                                                <t t-if="bank.bank_id.city and bank.bank_id.state.name">, </t>
+                                                <t t-esc="bank.bank_id.state.name or ''"/>
+                                            </div>
+                                        </t>
+                                    </div>
                                 </div>
                             </td>
                             <td style="width:40%; vertical-align:top;">
