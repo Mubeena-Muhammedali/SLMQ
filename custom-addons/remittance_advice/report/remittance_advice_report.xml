@@ -53,6 +53,52 @@
     <template id="remittance_advice_document">
         <t t-call="web.html_container">
 
+            <!-- Embed custom fonts directly so wkhtmltopdf always loads them -->
+            <style>
+                @font-face {
+                    font-family: 'Magneto';
+                    src: url('/remittance_advice/static/src/fonts/MAGNETOB.TTF') format('truetype');
+                    font-weight: bold;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRI.TTF') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRIB.TTF') format('truetype');
+                    font-weight: bold;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRII.TTF') format('truetype');
+                    font-weight: normal;
+                    font-style: italic;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRIL.TTF') format('truetype');
+                    font-weight: 300;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRILI.TTF') format('truetype');
+                    font-weight: 300;
+                    font-style: italic;
+                }
+                @font-face {
+                    font-family: 'Calibri';
+                    src: url('/remittance_advice/static/src/fonts/CALIBRIZ.TTF') format('truetype');
+                    font-weight: 800;
+                    font-style: normal;
+                }
+            </style>
+
             <t t-foreach="docs" t-as="o">
 
                 <t t-call="remittance_advice.remittance_layout">

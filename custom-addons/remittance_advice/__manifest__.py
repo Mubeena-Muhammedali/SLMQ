@@ -16,6 +16,20 @@
         'report/remittance_advice_report.xml',
         'report/remittance_advice_action.xml',
     ],
+    'assets': {
+        'web.assets_common': [
+            'remittance_advice/static/src/css/custom_fonts.css',
+        ],
+        'account_reports.assets_pdf_export': [
+            'remittance_advice/static/src/css/custom_fonts.css',
+        ],
+        'web.report_assets_common': [
+            'remittance_advice/static/src/css/custom_fonts.css',
+        ],
+        'web.report_assets_pdf': [
+            'remittance_advice/static/src/css/custom_fonts.css',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,
