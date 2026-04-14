@@ -4,7 +4,7 @@
 #
 #    Cybrosys Technologies Pvt. Ltd.
 #
-#    Copyright (C) 2024-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
 #    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
 #
 #    You can modify it under the terms of the GNU LESSER
@@ -21,7 +21,6 @@
 #
 #############################################################################
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -42,18 +41,18 @@ class HrPayslipLine(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee',
                                   required=True,
                                   help="Choose Employee for line")
-    contract_id = fields.Many2one('hr.contract', string='Contract',
+    contract_id = fields.Many2one('hr.version', string='Contract',
                                   required=True, index=True,
                                   help="Choose Contract for line")
     rate = fields.Float(string='Rate (%)', help="Set Rate for payslip",
-                        digits=dp.get_precision('Payroll Rate'), default=100.0)
-    amount = fields.Float(digits=dp.get_precision('Payroll'), string="Amount",
+                        digits='Payroll Rate', default=100.0)
+    amount = fields.Float(digits='Payroll', string="Amount",
                           help="Set Amount for line")
-    quantity = fields.Float(digits=dp.get_precision('Payroll'), default=1.0,
+    quantity = fields.Float(digits='Payroll', default=1.0,
                             string="Quantity", help="Set Qty for line")
     total = fields.Float(compute='_compute_total', string='Total',
                          help="Total amount for Payslip",
-                         digits=dp.get_precision('Payroll'), store=True)
+                         digits='Payroll', store=True)
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):

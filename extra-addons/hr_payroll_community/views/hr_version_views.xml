@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Root Menus -->
-    <menuitem id="menu_hr_payroll_community_root" name="Payroll" sequence="45"
+    <menuitem id="menu_hr_payroll_community_root" name="Payroll" sequence="5"
               web_icon="hr_payroll_community,static/description/icon.png"/>
+
     <menuitem id="menu_hr_payroll_community_configuration" name="Configuration"
               parent="menu_hr_payroll_community_root"
               sequence="100"
               groups="hr_payroll_community.group_hr_payroll_community_manager"/>
     <!-- Contract View -->
-    <record id="hr_contract_view_form" model="ir.ui.view">
-        <field name="name">hr.contract.view.form.inherit</field>
-        <field name="model">hr.contract</field>
-        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+    <record id="hr_contract_template_form_view" model="ir.ui.view">
+        <field name="name">hr.version.view.form.inherit</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="struct_id" required="1"/>
@@ -24,7 +25,7 @@
                    position="after">
                 <field name="schedule_pay"/>
             </xpath>
-            <xpath expr="//group[@name='salary']" position="after">
+            <xpath expr="//group[@name='contract']" position="after">
                 <group string="Monthly Advantages in Cash" name='allowances'>
                     <label for="hra"/>
                     <div class="o_row">

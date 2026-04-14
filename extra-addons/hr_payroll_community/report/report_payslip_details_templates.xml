@@ -76,18 +76,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['level'] == False">
-								    <td>
-								        <span t-esc="h['code']"/>
-								    </td>
-								    <td>
-								        <span t-esc="h['rule_category']"/>
-								    </td>
-								    <td class="text-right">
-								        <span t-esc="h['total']"
-								              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-								    </td>
-								</tr>
+                                <tr t-foreach="get_details_by_rule_category.get(o.id, [])"
+                                    t-as="h">
+                                    <td>
+                                        <span t-esc="h['code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'..'*h['level']"/>
+                                        <span t-esc="h['rule_category']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="h['total']"
+                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <h3>Payslip Lines by Contribution Register</h3>

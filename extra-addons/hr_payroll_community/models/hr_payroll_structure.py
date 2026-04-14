@@ -4,7 +4,7 @@
 #
 #    Cybrosys Technologies Pvt. Ltd.
 #
-#    Copyright (C) 2024-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
 #    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
 #
 #    You can modify it under the terms of the GNU LESSER
@@ -44,9 +44,11 @@ class HrPayrollStructure(models.Model):
     code = fields.Char(string='Reference', required=True,
                        help="Code for Payroll Structure")
     company_id = fields.Many2one(
-        comodel_name='res.company', string='Company', required=True,
-        help="Choose Company for Payroll Structure", copy=False,
-        default=lambda self: self.env['res.company']._company_default_get())
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company.id
+    )
     note = fields.Text(string='Description',
                        help="Description for Payroll Structure")
     parent_id = fields.Many2one('hr.payroll.structure',
@@ -70,7 +72,6 @@ class HrPayrollStructure(models.Model):
             raise ValidationError(
                 _('You cannot create a recursive salary structure.'))
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """Function for return Payroll Structure"""
         self.ensure_one()

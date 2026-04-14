@@ -4,7 +4,7 @@
 #
 #    Cybrosys Technologies Pvt. Ltd.
 #
-#    Copyright (C) 2024-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
 #    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
 #
 #    You can modify it under the terms of the GNU LESSER
@@ -21,7 +21,7 @@
 #
 #############################################################################
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
+# from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -63,10 +63,12 @@ class HrSalaryRule(models.Model):
     parent_rule_id = fields.Many2one('hr.salary.rule',
                                      string='Parent Salary Rule', index=True,
                                      help="Choose Hr Salary Rule")
-    company_id = fields.Many2one('res.company', string='Company',
-                                 help="Choose Company",
-                                 default=lambda self:
-                                 self.env['res.company']._company_default_get())
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company.id
+    )
     condition_select = fields.Selection([
         ('none', 'Always True'),
         ('range', 'Range'),
@@ -87,7 +89,7 @@ class HrSalaryRule(models.Model):
     #----------------------
     # payslip: object containing the payslips
     # employee: hr.employee object
-    # contract: hr.contract object
+    # contract: hr.version object
     # rules: object containing the rules code (previously computed)
     # categories: object containing the computed salary rule categories 
     # (sum of amount of all rules belonging to that category).
@@ -112,20 +114,27 @@ class HrSalaryRule(models.Model):
         ('code', 'Python Code'),
     ], string='Amount Type', index=True, required=True, default='fix',
         help="The computation method for the rule amount.")
+
     amount_fix = fields.Float(string='Fixed Amount',
-                              digits=dp.get_precision('Payroll'),
+                              digits='Payroll',
                               help="Set a Fixed Amount")
+
     amount_percentage = fields.Float(string='Percentage (%)',
-                                     digits=dp.get_precision('Payroll Rate'),
+                                     digits='Payroll Rate',
                                      help='For example, enter 50.0 to apply '
                                           'a percentage of 50%')
+    amount_percentage = fields.Float(string='Percentage (%)',
+                                     digits='Payroll Rate',
+                                     help='For example, enter 50.0 to apply '
+                                          'a percentage of 50%')
+
     amount_python_compute = fields.Text(string='Python Code',
                                         default='''
             # Available variables:
             #----------------------
             # payslip: object containing the payslips
             # employee: hr.employee object
-            # contract: hr.contract object
+            # contract: hr.version object
             # rules: object containing the rules code (previously computed)
             # categories: object containing the computed salary rule categories 
             # (sum of amount of all rules belonging to that category).
@@ -201,8 +210,8 @@ class HrSalaryRule(models.Model):
                             rec.name, rec.code))
             else:
                 try:
-                    safe_eval(rec.amount_python_compute, localdict, mode='exec',
-                              nocopy=True)
+
+                    safe_eval(rec.amount_python_compute, localdict, mode='exec')
                     return (float(localdict['result']),
                             'result_qty' in localdict and
                             localdict['result_qty'] or 1.0, 'result_rate'
