@@ -8,44 +8,42 @@
 
         <t t-set="company" t-value="o.company_id"/>
 
-        <div style="width:100%; font-family:'Calibri', sans-serif;">
-
-            <!-- ================= HEADER ================= -->
-            <div class="header" style="display:block; width:100%; margin-bottom:15px;">
-                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
-                    <tr>
-                        <!-- Logo -->
-                        <td style="width:130px; vertical-align:middle;">
-                            <t t-if="company.logo">
-                                <img t-att-src="image_data_uri(company.logo)" style="height:70px;"/>
-                            </t>
-                        </td>
-                        <!-- Company Name + Contact -->
-                        <td style="text-align:right; vertical-align:middle;">
-                            <div style="font-size:22pt; line-height:1.2;">
-                                <!--
-                                    "AVS" is hard-coded in Magneto font style.
-                                    "Security Systems LLC" in Calibri as per requirement.
-                                -->
-                                <span style="font-family:'Magneto', 'Brush Script MT', cursive; font-weight:bold; letter-spacing:2px;">AVS</span>
-                                <span style="font-family:'Calibri', sans-serif; font-weight:bold; font-size:18pt; margin-left:8px;">Security Systems LLC</span>
-                            </div>
-                            <div style="font-family:'Calibri', sans-serif; font-size:10pt; margin-top:5px; color:#333;font-weight:bold;">
-                                Tel: <t t-esc="company.phone or ''"/>
-                                <t t-if="company.fax_no">, Fax: <t t-esc="company.fax_no"/></t>
-                                , <t t-esc="company.website or 'www.avssgroup.com'"/>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- ================= BODY ================= -->
-            <div class="article" style="display:block; width:100%; clear:both;">
-                <t t-out="0"/>
-            </div>
-
+        <!-- ================= HEADER ================= -->
+        <div class="header" style="display:block; width:100%; margin-bottom:15px;">
+            <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
+                <tr>
+                    <!-- Logo -->
+                    <td style="width:130px; vertical-align:middle;">
+                        <t t-if="company.logo">
+                            <img t-att-src="image_data_uri(company.logo)" style="height:70px;"/>
+                        </t>
+                    </td>
+                    <!-- Company Name + Contact -->
+                    <td style="text-align:right; vertical-align:middle;">
+                        <div style="font-size:22pt; line-height:1.2;">
+                            <!--
+                                "AVS" is hard-coded in Magneto font style.
+                                "Security Systems LLC" in Calibri as per requirement.
+                            -->
+                            <span style="font-family:'Magneto', 'Brush Script MT', cursive; font-weight:bold; letter-spacing:2px;">AVS</span>
+                            <span style="font-family:'Calibri', sans-serif; font-weight:bold; font-size:18pt; margin-left:8px;">Security Systems LLC</span>
+                        </div>
+                        <div style="font-family:'Calibri', sans-serif; font-size:10pt; margin-top:5px; color:#333;font-weight:bold;">
+                            Tel: <t t-esc="company.phone or ''"/>
+                            <t t-if="company.fax_no">, Fax: <t t-esc="company.fax_no"/></t>
+                            , <t t-esc="company.website or 'www.avssgroup.com'"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
+
+        <!-- ================= BODY ================= -->
+        <div class="article" style="display:block; width:100%; clear:both;">
+            <t t-out="0"/>
+        </div>
+
+        
     </template>
 
 
