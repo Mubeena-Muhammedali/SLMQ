@@ -31,7 +31,7 @@
                         <div style="font-family:'Calibri', sans-serif; font-size:10pt; margin-top:5px; color:#333;font-weight:bold;">
                             Tel: <t t-esc="company.phone or ''"/>
                             <t t-if="company.fax_no">, Fax: <t t-esc="company.fax_no"/></t>
-                            , <t t-esc="company.website or 'www.avssgroup.com'"/>
+                            , www.avssgroup.com
                         </div>
                     </td>
                 </tr>
