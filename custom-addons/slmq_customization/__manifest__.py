@@ -27,7 +27,7 @@
             with minimal manual intervention.
     """,
 
-    'depends': ['website','contacts'],
+    'depends': ['website','contacts','project'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
