@@ -154,21 +154,27 @@
         </record>
 
         <!-- Task Assigned Template -->
-        <record id="task_assign_mail_template" model="mail.template">
-            <field name="name">Task Assigned Notification</field>
+        <record id="task_notify_pm_template" model="mail.template">
+            <field name="name">Task Created Notification (PM)</field>
             <field name="model_id" ref="project.model_project_task"/>
-            <field name="subject">Task Assigned: {{object.name or 'N/A'}}</field>
+            <field name="subject">New Task Created: {{ object.name }}</field>
             <field name="body_html" type="html">
-                <p>Hi <t t-out="ctx.get('user_name') or 'User'"/>,</p>
+                <p>Dear Team,</p>
 
-                <p>You have been assigned a new task.</p>
+                <p>A new task has been created in the project management system. Please review the details below.</p>
 
-                <ul>
-                    <li><b>Task:</b> <t t-out="object.name or 'N/A'"/></li>
-                    <li><b>Project:</b> <t t-out="object.project_id.name or 'N/A'"/></li>
-                </ul>
+                <p>
+                    <strong>Task:</strong> <t t-out="object.name"/><br/>
+                    <strong>Project:</strong> <t t-out="object.project_id.name"/>
+                </p>
 
-                <p>Please check and start working.</p>
+                 <p>
+                    <a t-att-href="'/web#id=%s&amp;model=project.task&amp;view_type=form' % object.id"
+                        style="padding:10px;background-color:#875A7B;color:white;text-decoration:none;border-radius:5px;">
+                            View Task
+                    </a>
+                </p>
+                <br/>
 
                 <p>
                     Thank you,<br/>
@@ -184,7 +190,7 @@
             <field name="model_id" ref="project.model_project_task"/>
             <field name="subject">Task Completed: {{object.name or 'N/A'}}</field>
             <field name="body_html" type="html">
-                <p>Hi <t t-out="object.project_id.user_id.name or 'User'"/>,</p>
+                <p>Dear Team,</p>
 
                 <p>The following task has been marked as completed:</p>
 
@@ -195,6 +201,14 @@
 
                 <p>Please review the task.</p>
 
+                 <p>
+                    <a t-att-href="'/web#id=%s&amp;model=project.task&amp;view_type=form' % object.id"
+                        style="padding:10px;background-color:#875A7B;color:white;text-decoration:none;border-radius:5px;">
+                            View Task
+                    </a>
+                </p>
+                <br/>
+                
                 <p>
                     Thank you,<br/>
                     <b>SRI LANKAN MAJLIS – QATAR (SLMQ)</b>
