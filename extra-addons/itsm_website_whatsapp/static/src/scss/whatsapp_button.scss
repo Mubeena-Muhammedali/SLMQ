@@ -1,0 +1,252 @@
+// ============================================================
+// WhatsApp Floating Button - ITSM
+// ============================================================
+
+// --- Variables ---
+$wa-green: #25D366;
+$wa-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+$wa-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// --- Size map ---
+$wa-sizes: (
+  "small": 48px,
+  "medium": 60px,
+  "large": 72px,
+);
+$wa-icon-sizes: (
+  "small": 24px,
+  "medium": 30px,
+  "large": 36px,
+);
+
+// --- Container ---
+.itsm-wa-float {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: itsmWaSlideIn 0.5s ease-out forwards;
+
+  // --- Positions ---
+  &.itsm-wa-bottom-right {
+    bottom: 24px;
+    right: 24px;
+    flex-direction: row-reverse;
+  }
+  &.itsm-wa-bottom-left {
+    bottom: 24px;
+    left: 24px;
+    flex-direction: row;
+  }
+  &.itsm-wa-bottom-center {
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row-reverse;
+  }
+  &.itsm-wa-mid-right {
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: row-reverse;
+  }
+  &.itsm-wa-mid-left {
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: row;
+  }
+}
+
+// --- Button ---
+.itsm-wa-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: $wa-green;
+  color: #fff;
+  box-shadow: $wa-shadow;
+  cursor: pointer;
+  transition: $wa-transition;
+  text-decoration: none !important;
+  border: none;
+  outline: none;
+  z-index: 2;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// --- Icon ---
+.itsm-wa-icon {
+  fill: #fff;
+  flex-shrink: 0;
+}
+
+// --- Sizes ---
+@each $name, $size in $wa-sizes {
+  .itsm-wa-#{$name} {
+    .itsm-wa-btn {
+      width: $size;
+      height: $size;
+    }
+    .itsm-wa-icon {
+      width: map-get($wa-icon-sizes, $name);
+      height: map-get($wa-icon-sizes, $name);
+    }
+    .itsm-wa-pulse {
+      width: $size;
+      height: $size;
+    }
+  }
+}
+
+// --- Tooltip ---
+.itsm-wa-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  color: #333;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  animation: itsmWaFadeIn 0.4s ease-out 0.8s both;
+  cursor: default;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itsm-wa-tooltip-close {
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: #999;
+  margin-left: 4px;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+// --- Pulse animation ---
+.itsm-wa-pulse {
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  // Position is set relative to the container; the button is z-index: 2
+  top: 0;
+  // Adjust based on direction
+  .itsm-wa-bottom-right &,
+  .itsm-wa-mid-right & {
+    right: 0;
+  }
+  .itsm-wa-bottom-left &,
+  .itsm-wa-mid-left & {
+    left: 0;
+  }
+  .itsm-wa-bottom-center & {
+    right: 0;
+  }
+
+  animation: itsmWaPulse 2s ease-out infinite;
+}
+
+// --- Animations ---
+@keyframes itsmWaSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Fix for centered / mid positions
+.itsm-wa-bottom-center {
+  @keyframes itsmWaSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+}
+
+.itsm-wa-mid-right,
+.itsm-wa-mid-left {
+  animation-name: itsmWaSlideInHoriz;
+}
+
+@keyframes itsmWaSlideInHoriz {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@keyframes itsmWaFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes itsmWaPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+// --- Mobile responsive ---
+@media (max-width: 768px) {
+  .itsm-wa-float {
+    // On mobile, tooltip is hidden and button is slightly smaller
+    .itsm-wa-tooltip {
+      display: none;
+    }
+  }
+  // Ensure button doesn't overlap mobile nav
+  .itsm-wa-bottom-right,
+  .itsm-wa-bottom-left,
+  .itsm-wa-bottom-center {
+    bottom: 80px !important;
+  }
+}

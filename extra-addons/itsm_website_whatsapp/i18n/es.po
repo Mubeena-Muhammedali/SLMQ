@@ -1,0 +1,259 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* itsm_website_whatsapp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20260107\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-25 08:23+0000\n"
+"PO-Revision-Date: 2026-03-25 08:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "+261340000000"
+msgstr ""
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "1,2,3,4,5"
+msgstr ""
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.whatsapp_float_button
+msgid "<span class=\"itsm-wa-tooltip-close\">\u00d7</span>"
+msgstr ""
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "<span class=\"o_form_label\">Appearance</span>"
+msgstr "<span class=\"o_form_label\">Apariencia</span>"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_position__bottom-center
+msgid "Bottom Center"
+msgstr "Abajo centro"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_position__bottom-left
+msgid "Bottom Left"
+msgstr "Abajo izquierda"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_position__bottom-right
+msgid "Bottom Right"
+msgstr "Abajo derecha"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_days
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_days
+msgid "Business Days"
+msgstr "Días laborables"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_business_hours
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_business_hours
+msgid "Business Hours Only"
+msgstr "Solo en horario laboral"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_color
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_color
+msgid "Button Color"
+msgstr "Color del botón"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_position
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_position
+msgid "Button Position"
+msgstr "Posición del botón"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_size
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_size
+msgid "Button Size"
+msgstr "Tamaño del botón"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.whatsapp_float_button
+msgid "Chat on WhatsApp"
+msgstr "Chatear en WhatsApp"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Chat with us on WhatsApp"
+msgstr "Chatea con nosotros en WhatsApp"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_days
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_days
+msgid "Comma-separated day numbers (1=Monday, 7=Sunday). Default: Mon-Fri."
+msgstr ""
+"Números de días separados por comas (1=Lunes, 7=Domingo). Por defecto: Lun-Vie."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model,name:itsm_website_whatsapp.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Customize the button look and position"
+msgstr "Personalizar la apariencia y posición del botón"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Days: 1=Monday, 2=Tuesday, ..., 7=Sunday"
+msgstr "Días: 1=Lunes, 2=Martes, ..., 7=Domingo"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_default_message
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_default_message
+msgid "Default Message"
+msgstr "Mensaje predeterminado"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Display a floating WhatsApp chat button on your website"
+msgstr "Mostrar un botón flotante de chat de WhatsApp en su sitio web"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_enabled
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_enabled
+msgid "Enable WhatsApp Button"
+msgstr "Activar botón de WhatsApp"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_hour_to
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_hour_to
+msgid "End hour in 24h format (e.g. 18.0 for 6:00 PM)."
+msgstr "Hora de fin en formato 24h (ej. 18.0 para las 18:00)."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_hour_from
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_hour_from
+msgid "From (Hour)"
+msgstr "Desde (Hora)"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Hello! I have a question."
+msgstr "¡Hola! Tengo una pregunta."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_color
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_color
+msgid "Hex color code for the button background."
+msgstr "Código de color hexadecimal para el fondo del botón."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__id
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_size__large
+msgid "Large"
+msgstr "Grande"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_size__medium
+msgid "Medium"
+msgstr "Mediano"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_position__mid-left
+msgid "Middle Left"
+msgstr "Centro izquierda"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_position__mid-right
+msgid "Middle Right"
+msgstr "Centro derecha"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "Only show the button during business hours"
+msgstr "Mostrar el botón solo durante el horario laboral"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_phone
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_phone
+msgid "Phone number with country code, e.g. +261340000000"
+msgstr "Número de teléfono con código de país, ej. +261340000000"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_default_message
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_default_message
+msgid "Pre-filled message when the visitor opens WhatsApp."
+msgstr "Mensaje prellenado cuando el visitante abre WhatsApp."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_pulse
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_pulse
+msgid "Pulse Animation"
+msgstr "Animación de pulso"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_pulse
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_pulse
+msgid "Show a pulse animation to attract visitor attention."
+msgstr "Mostrar una animación de pulso para atraer la atención del visitante."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_business_hours
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_business_hours
+msgid "Show the button only during business hours."
+msgstr "Mostrar el botón solo durante el horario laboral."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields.selection,name:itsm_website_whatsapp.selection__website__wa_size__small
+msgid "Small"
+msgstr "Pequeño"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_res_config_settings__wa_hour_from
+#: model:ir.model.fields,help:itsm_website_whatsapp.field_website__wa_hour_from
+msgid "Start hour in 24h format (e.g. 8.0 for 8:00 AM)."
+msgstr "Hora de inicio en formato 24h (ej. 8.0 para las 08:00)."
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_hour_to
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_hour_to
+msgid "To (Hour)"
+msgstr "Hasta (Hora)"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_tooltip
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_tooltip
+msgid "Tooltip Text"
+msgstr "Texto de información"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model,name:itsm_website_whatsapp.model_website
+msgid "Website"
+msgstr "Sitio web"
+
+#. module: itsm_website_whatsapp
+#: model_terms:ir.ui.view,arch_db:itsm_website_whatsapp.res_config_settings_view_form_whatsapp
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#. module: itsm_website_whatsapp
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_res_config_settings__wa_phone
+#: model:ir.model.fields,field_description:itsm_website_whatsapp.field_website__wa_phone
+msgid "WhatsApp Number"
+msgstr "Número de WhatsApp"
