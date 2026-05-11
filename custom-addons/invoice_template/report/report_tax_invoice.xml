@@ -1,73 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+
     
     <template id="avss_external_layout">
-
-        <t t-set="company" t-value="o.company_id"/>
-
-        <!-- WRAPPER -->
-        <div style="width:100%;">
-
-            <!-- ================= HEADER ================= -->
-            <div class="header" style="display:block; width:100%; margin-bottom:15px;">
-
-                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
-                    <tr style="border-collapse:separate !important; border-spacing:0 !important;">
-                        <td style="border-collapse:separate !important; border-spacing:0 !important;width:90px;">
-                            <t t-if="company.logo">
-                                <img t-att-src="image_data_uri(company.logo)" style="height:65px;"/>
-                            </t>
-                        </td>
-                        <td style="text-align:right;border-collapse:separate !important; border-spacing:0 !important;">
-                            <div style="font-size:16pt; font-weight:bold;">
-                                <t t-esc="company.name"/>
-                            </div>
-                            <div style="font-size:12pt;">www.avssgroup.com</div>
-                        </td>
-                    </tr>
-                </table>
-
-                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important;">
-                    <tr style="border-collapse:separate !important; border-spacing:0 !important;">
-                        <td style="font-size:14pt; font-weight:bold;border-collapse:separate !important; border-spacing:0 !important;">
-                            Tax Invoice
-                        </td>
-                        <td style="text-align:right; font-weight:bold;border-collapse:separate !important; border-spacing:0 !important;">
-                            TRN : <t t-esc="company.vat or ''"/>
-                        </td>
-                    </tr>
-                </table>
-
-            </div>
-        </div>
-
-        <!-- ================= BODY ================= -->
         <div class="article" style="display:block; width:100%; clear:both;">
             <t t-out="0"/>
         </div>
 
-        <!-- ================= FOOTER ================= -->
-        <div class="footer" style="display:block; width:100%; margin-top:10px;">
-            
-            <!-- ⚠️ THIS IS NOT TABLE BORDER -->
-            <!-- If you want no line, remove this -->
-            <div style="border-top:1px solid black;background-color: black;"></div>
-
-            <div style="text-align:center; font-size:9pt;">
-                <strong>
-                    <t t-esc="company.name"/><br/>
-                    <t t-esc="company.street or ''"/>
-                    <t t-if="company.street2">, <t t-esc="company.street2"/></t>
-                    <t t-if="company.city">, <t t-esc="company.city"/></t>
-                    <t t-if="company.state_id">, <t t-esc="company.state_id.name"/></t>
-                    <t t-if="company.country_id">, <t t-esc="company.country_id.name"/></t>
-                    <br/>
-                    Tel: <t t-esc="company.phone or ''"/>
-                    , Fax: <t t-esc="company.fax_no or ''"/>
-                    , E-Mail: <t t-esc="company.email or ''"/>
-                </strong>
-            </div>
-        </div>
 
     </template>
 
@@ -76,12 +16,18 @@
          MAIN INVOICE TEMPLATE
     ============================================================ -->
     <template id="tax_invoice_document">
+
+
         <t t-call="web.html_container">
-            
+
+
             <t t-foreach="docs" t-as="o">
                 
                 <t t-call="invoice_template.avss_external_layout">
                     <div class="page">
+                        <div class="page-content">
+
+                                <!-- ── Customer + Invoice Details ── -->
                     <!-- ── Customer + Invoice Details ── -->
                     <table width="100%" style="border-collapse:collapse; border:1px solid black; margin-bottom:4px; table-layout:fixed; font-size:11pt;">
                         <colgroup><col style="width:55%;"/><col style="width:45%;"/></colgroup>
@@ -235,7 +181,7 @@
                                 </t>
                             </t>
 
-                            <!-- Empty filler rows (only when lines ≤ 15) -->
+                            <!-- Empty filler rows (only when lines ≤ 15)
                             <t t-set="filled_lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')"/>
                             <t t-set="line_count" t-value="len(filled_lines)"/>
                             <t t-set="max_rows" t-value="15"/>
@@ -253,7 +199,7 @@
                                         <td style="border-right:1px solid black;"></td>
                                     </tr>
                                 </t>
-                            </t>
+                            </t> -->
                         </tbody>
                     </table>
 
@@ -276,12 +222,30 @@
                                         <t t-if="bank">
                                             <div>Account Name: <t t-esc="bank.acc_holder_name or o.company_id.name"/></div>
                                             <div>Account Number: <t t-esc="bank.acc_number"/></div>
-                                            <div>IBAN:</div>
+                                            <div>IBAN: <t t-esc="bank.iban or ''"/></div>
                                             <div>Swift Code: <t t-esc="bank.bank_bic or ''"/></div>
                                             <div>Bank Name: <t t-esc="bank.bank_id.name or ''"/></div>
                                             <div>Branch and Bank Address: <t t-esc="bank.bank_id.city or ''"/>
-                                                <t t-if="bank.bank_id.city and bank.bank_id.state.name">, </t>
-                                                <t t-esc="bank.bank_id.state.name or ''"/>
+                                                <t t-if="bank.bank_id">
+
+                                                    <t t-esc="bank.bank_id.street or ''"/>
+                                                    <t t-if="bank.bank_id.street and bank.bank_id.street2">, </t>
+
+                                                    <t t-esc="bank.bank_id.street2 or ''"/>
+                                                    <t t-if="bank.bank_id.street2 and bank.bank_id.city">, </t>
+
+                                                    <t t-esc="bank.bank_id.city or ''"/>
+                                                    <t t-if="bank.bank_id.city and bank.bank_id.state">, </t>
+
+                                                    <t t-esc="bank.bank_id.state or ''"/>
+                                                    <t t-if="bank.bank_id.state and bank.bank_id.zip">, </t>
+
+                                                    <t t-esc="bank.bank_id.zip or ''"/>
+                                                    <t t-if="bank.bank_id.zip and bank.bank_id.country">, </t>
+
+                                                    <t t-esc="bank.bank_id.country.name or ''"/>
+
+                                                </t>
                                             </div>
                                         </t>
                                     </div>
@@ -306,8 +270,8 @@
                                         <td style="padding:6px 8px; border-bottom:1px solid black; text-align:right;"><t t-esc="'{:,.2f}'.format(o.amount_tax)"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:8px; border-right:1px solid black;"><strong>Net Amount (AED)</strong></td>
-                                        <td style="padding:8px; text-align:right;"><strong><t t-esc="'{:,.2f}'.format(o.amount_total)"/></strong></td>
+                                        <td style="padding:6px 8px; border-right:1px solid black;"><strong>Net Amount (AED)</strong></td>
+                                        <td style="padding:6px 8px; text-align:right;"><strong><t t-esc="'{:,.2f}'.format(o.amount_total)"/></strong></td>
                                     </tr>
                                 </table>
                             </td>
@@ -315,22 +279,28 @@
                     </table>
 
                     <!-- ── Signature Section ── -->
-                    <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important; font-size:10pt; margin-top:4px;">
-                        <tr>
-                            <td style="padding:6px 0; width:50%;">Receiver Name :</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="padding:6px 0;">Receiver Sign &amp; Stamp :</td>
-                            <td style="text-align:right;">For <strong><t t-esc="o.company_id.name"/></strong></td>
-                        </tr>
-                    </table>
+                            <div style="page-break-inside: avoid; margin-top:10px; margin-bottom:10px;">
+                                <table width="100%" style="border-collapse:separate !important; border-spacing:0 !important; font-size:10pt; margin-top:4px;">
+                                    <tr>
+                                        <td style="padding:6px 0; width:50%;">Receiver Name :</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:6px 0;">Receiver Sign &amp; Stamp :</td>
+                                        <td style="text-align:right;">For <strong><t t-esc="o.company_id.name"/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                    </div>
                     </div>
 
                 </t>
                 
             </t>
+
         </t>
+
+
     </template>
 
 </odoo>

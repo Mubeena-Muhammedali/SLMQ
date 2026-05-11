@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================
+         SALE ORDER DOCUMENT
+    ============================================================ -->
+    <template id="sale_order_document">
+
+        <t t-call="web.html_container">
+            <script>
+                var totalPages = document.getElementById('pagecount');
+                if (totalPages) {
+                    totalPages.textContent = window.document.querySelectorAll('.page').length;
+                }
+            </script>
+
+            <t t-foreach="docs" t-as="o">
+
+                <t t-call="invoice_template.avss_external_layout">
+
+                    <div class="page">
+                        <div class="page-content">
+
+                            <!-- =========================
+                                 CUSTOMER INFORMATION
+                            ========================== -->
+
+                            <table width="100%"
+                                style="border-collapse:collapse;
+                                        border:1px solid black;
+                                        margin-bottom:8px;
+                                        font-size:10pt;">
+
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>DATE</strong>
+                                    </td>
+                                    <td style="padding:4px 5px;">
+                                        <t t-esc="o.date_order.strftime('%d/%m/%Y') if o.date_order else ''"/>
+                                    </td>
+                                    <td style="padding:4px 5px;">
+                                        <strong>REF NO</strong>
+                                    </td>
+                                    <td style="padding:4px 5px;">
+                                        <t t-esc="o.name"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>ATTENTION</strong>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <strong><t t-esc="o.partner_id.name"/></strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>COMPANY</strong>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <t t-esc="o.partner_id.parent_id.name or o.partner_id.name"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>MOB, TEL</strong>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <t t-esc="o.partner_id.phone or ''"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>E-MAIL</strong>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <t t-esc="o.partner_id.email or ''"/>
+                                    </td>
+                                </tr>
+
+                                <!-- NO OF PAGES row -->
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>NO OF PAGES</strong>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <t t-esc="o.report_total_pages"/>
+                                    </td>
+                                </tr>
+
+                                <!-- SUBJECT attached -->
+                                <tr>
+                                    <td style="padding:4px 5px;">
+                                        <strong>SUBJECT</strong>
+                                        <t t-esc="o.note or ''"/>
+                                    </td>
+                                    <td colspan="3" style="padding:4px 5px;">
+                                        <t t-esc="o.note or ''"/>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <div style="margin-bottom:10px; font-size:10pt;">
+                                Dear Sir,
+                                <br/>
+                                We have pleasure in quoting as follows:
+                            </div>
+
+                            <!-- =========================
+                                 ORDER LINES
+                            ========================== -->
+
+                            <table width="100%"
+                                   style="border-collapse:collapse;
+                                          border:1px solid black;
+                                          font-size:10pt;">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th style="border:1px solid black;
+                                                   padding:5px;
+                                                   width:5%;">
+                                            S/NO
+                                        </th>
+
+                                        <th style="border:1px solid black;
+                                                   padding:5px;
+                                                   width:55%;">
+                                            DESCRIPTION
+                                        </th>
+
+                                        <th style="border:1px solid black;
+                                                   padding:5px;
+                                                   width:10%;">
+                                            QTY
+                                        </th>
+
+                                        <th style="border:1px solid black;
+                                                   padding:5px;
+                                                   width:15%;">
+                                            UNIT PRICE
+                                        </th>
+
+                                        <th style="border:1px solid black;
+                                                   padding:5px;
+                                                   width:15%;">
+                                            TOTAL
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-set="sr_no" t-value="0"/>
+
+                                    <t t-foreach="o.order_line" t-as="line">
+
+                                        <t t-if="not line.display_type">
+
+                                            <t t-set="sr_no" t-value="sr_no + 1"/>
+
+                                            <tr>
+
+                                                <td style="border:1px solid black;
+                                                           padding:4px;
+                                                           text-align:center;
+                                                           vertical-align:top;">
+
+                                                    <t t-esc="sr_no"/>
+
+                                                </td>
+
+                                                <td style="border:1px solid black;
+                                                           padding:4px;
+                                                           vertical-align:top;">
+
+                                                    <t t-esc="line.name"/>
+
+                                                </td>
+
+                                                <td style="border:1px solid black;
+                                                           padding:4px;
+                                                           text-align:center;
+                                                           vertical-align:top;">
+
+                                                    <t t-esc="line.product_uom_qty"/>
+
+                                                </td>
+
+                                                <td style="border:1px solid black;
+                                                           padding:4px;
+                                                           text-align:right;
+                                                           vertical-align:top;">
+
+                                                    <t t-esc="'{:,.2f}'.format(line.price_unit)"/>
+
+                                                </td>
+
+                                                <td style="border:1px solid black;
+                                                           padding:4px;
+                                                           text-align:right;
+                                                           vertical-align:top;">
+
+                                                    <t t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+                                    </t>
+
+                                    <tr>
+                                        <td colspan="3"
+                                            style="border:1px solid black;
+                                                padding:5px;
+                                                font-size:10pt;">
+                                            <strong>
+                                                <t t-esc="o.currency_id.name"/>:
+                                                <t t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>   
+                                                ONLY
+                                            </strong>
+                                        </td>
+                                        <td style="border:1px solid black;
+                                                padding:5px;
+                                                text-align:center;
+                                                font-size:10pt;">
+                                            <strong>
+                                                TOTAL
+                                            </strong>
+                                        </td>
+                                        <td style="border:1px solid black;
+                                                padding:5px;
+                                                text-align:right;
+                                                font-size:10pt;">
+                                            <strong>
+                                                <t t-esc="o.currency_id.symbol"/>
+                                                <t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                            <!-- =========================
+                                 TOTAL
+                            ========================== -->
+
+                            <!-- <div style="margin-top:10px;
+                                        text-align:right;
+                                        font-size:11pt;">
+
+                                <strong>
+                                    TOTAL :
+                                    <t t-esc="o.currency_id.symbol"/>
+                                    <t t-esc="'{:,.2f}'.format(o.amount_untaxed)"/>
+                                </strong>
+
+                            </div> -->
+
+                            <!-- =========================
+                                 NOTES
+                            ========================== -->
+
+                            <div style="margin-top:15px;
+                                        font-size:10pt;">
+
+                                <strong>NOTE :-</strong>
+
+                                <br/><br/>
+
+                                <div>
+                                    • VAT (
+                                    <t t-esc="'{:.0f}'.format(o.amount_tax and ((o.amount_tax / o.amount_untaxed) * 100) or 0)"/>
+                                    %) IS EXCLUDED FROM THE ABOVE ORDER VALUE.
+                                </div>
+
+                                <div style="margin-top:5px;">
+                                    • OUR SCOPE IS LIMITED TO ABOVE-MENTIONED BOQ ONLY,
+                                    ANY VARIATION FROM THE ABOVE WILL CHARGE ADDITIONALLY.
+                                </div>
+
+                            </div>
+
+                            <!-- =========================
+                                 TERMS & CONDITIONS
+                            ========================== -->
+
+                            <div style="margin-top:20px;
+                                        font-size:10pt;">
+
+                                <strong>
+                                    TERMS &amp; CONDITIONS:
+                                </strong>
+
+                                <div style="margin-top:5px;">
+
+                                    <t t-raw="o.note"/>
+
+                                </div>
+
+                            </div>
+
+                            <!-- =========================
+                                 THANKS SECTION
+                            ========================== -->
+
+                            <div style="margin-top:40px;
+                                        font-size:10pt;">
+
+                                THANKS &amp; REGARDS,
+
+                                <br/><br/>
+
+                                <strong>
+                                    <t t-esc="o.user_id.name or ''"/>
+                                </strong>
+
+                                <br/>
+
+                                <t t-esc="o.user_id.company_id.name or ''"/>
+
+                                <br/>
+
+                                <t t-esc="o.user_id.phone or ''"/>
+
+                                <br/>
+
+                                <t t-esc="o.user_id.email or ''"/>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </t>
+
+            </t>
+
+        </t>
+
+    </template>
+
+</odoo>
