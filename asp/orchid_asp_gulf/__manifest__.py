@@ -9,7 +9,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale_management','sale_crm','purchase'],
+    'depends': ['sale_project','sale_crm','purchase'],
 
     # always loaded
     'data': [

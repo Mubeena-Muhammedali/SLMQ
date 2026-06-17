@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from datetime import date
 
 class SaleOrder(models.Model):
 	_inherit = 'sale.order'
@@ -37,153 +37,115 @@ class SaleOrder(models.Model):
 					order.od_exchange_rate=3.68
 				else:
 					order.od_exchange_rate=1
-					
 
 	def od_open_contracts(self):
 		contract_id = self.mapped('od_contract_id')
-		get_qry = '''SELECT od_asp_contract_id FROM od_asp_contract_sale_order_rel WHERE sale_order_id=%s'''%(self.id)
-		self._cr.execute(get_qry)
-		contract_ids = []
-		contract_ids = self._cr.fetchall()
-		if contract_ids:
-			contract_ids = [z[0] for z in contract_ids]
-		contract_ids.append(contract_id.id)
+
+		get_qry = '''SELECT od_asp_contract_id FROM od_asp_contract_sale_order_rel WHERE sale_order_id=%s'''
+		self._cr.execute(get_qry, (self.id,))
+		contract_ids = [z[0] for z in self._cr.fetchall()]
+
+		if contract_id.id:
+			contract_ids.append(contract_id.id)
 		contract_ids = list(set(contract_ids))
 
 		action = self.env["ir.actions.actions"]._for_xml_id("orchid_asp_gulf.action_od_asp_contract_view")
+		context = {}
+
+		def _get_line_vals(line):
+			return {
+				'sequence': line.sequence,
+				'effective_date': date.today(),
+				'billing_from': date.today(),
+				'acculde': False if line.od_frequency == 1 else True,
+				'billing_to': contract_id.date_to,
+				'billing_cycle': 'one_time' if line.od_frequency == 1 else False,
+				'product_id': line.product_id.id,
+				'name': line.name,
+				'price_unit': line.price_unit,
+				'price_subtotal': line.price_subtotal,
+				'price_total': line.price_total,
+				'price_tax': line.price_tax,
+				'tax_id': [(6, 0, line.tax_ids.ids)],
+				'discount': line.discount,
+				'product_uom_qty': line.product_uom_qty,
+				'product_uom': line.product_uom_id.id,
+				'order_line_id': line.id,
+				'frequency': line.od_frequency,
+				'order_id': contract_id.id,
+			}
+
+		def _sync_contract_lines_and_orders():
+			existing_line_ids = [line.order_line_id.id for line in contract_id.contract_line_ids]
+			existing_order_ids = [o.id for o in contract_id.sale_order_ids]
+
+			if contract_id.state not in ('inactive', 'terminate'):
+				for line in self.order_line.filtered(
+					lambda r: r.display_type == False and r.product_uom_qty > 0
+				):
+					if line.id not in existing_line_ids:
+						self.env['od.asp.contract.line'].create(_get_line_vals(line))
+
+				if self.id not in existing_order_ids:
+					existing_order_ids.append(self.id)
+					contract_id.sale_order_ids = [(6, 0, existing_order_ids)]
+
 		if len(contract_ids) == 1:
 			form_view = [(self.env.ref('orchid_asp_gulf.od_asp_contract_form_view').id, 'form')]
-			if 'views' in action:
-				action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
-			else:
-				action['views'] = form_view
+			action['views'] = form_view + [
+				(state, view) for state, view in action.get('views', []) if view != 'form'
+			]
 			action['res_id'] = contract_id.id
+			_sync_contract_lines_and_orders()
 
-			# checking if sale_line_ids is present in the contract ,if not link
-			line_ids=[line.order_line_id.id for line in contract_id.contract_line_ids]
-			order_ids = [o.id for o in contract_id.sale_order_ids]
-			if contract_id.state not in ('inactive','terminate'):
-				for line in self.order_line.filtered(lambda r: r.display_type==False and r.product_uom_qty>0):
-					if line.id not in line_ids:
-						tax_ls=[]
-						for t in line.tax_ids:
-							tax_ls.append(t.id)
-
-						vals={
-						'sequence':line.sequence,
-						'effective_date':fields.date.today(),
-						'billing_from':fields.date.today(),
-						'acculde':False if line.od_frequency==1 else True,
-						'billing_to':contract_id.date_to,
-						'billing_cycle':'one_time' if line.od_frequency==1 else False,
-						'product_id':line.product_id.id,
-						'name':line.name,
-						'price_unit':line.price_unit,
-						'price_subtotal':line.price_subtotal,
-						'price_total':line.price_total,
-						'price_tax':line.price_tax,
-						'tax_ids':[(6,0,tax_ls)],
-						'discount':line.discount,
-						'product_uom_qty':line.product_uom_qty,
-						'product_uom':line.product_uom.id,
-						'order_line_id':line.id,
-						'frequency':line.od_frequency,
-						'order_id':contract_id.id,
-						}
-						self.env['od.asp.contract.line'].create(vals)
-				if self.id not in order_ids:
-					order_ids.append(self.id)
-					contract_id.sale_order_ids=[(6,0,order_ids)]
-
-		elif len(contract_ids)>1:
-
+		elif len(contract_ids) > 1:
 			action['domain'] = [('id', 'in', contract_ids)]
+			_sync_contract_lines_and_orders()
 
-			# create lines in progress contract
-			# checking if sale_line_ids is present in the contract ,if not link
-			line_ids=[line.order_line_id.id for line in contract_id.contract_line_ids]
-			order_ids = [o.id for o in contract_id.sale_order_ids]
-			if contract_id.state not in ('inactive','terminate'):
-				for line in self.order_line.filtered(lambda r: r.display_type==False and r.product_uom_qty>0):
-					if line.id not in line_ids:
-						tax_ls=[]
-						for t in line.tax_ids:
-							tax_ls.append(t.id)
-
-						vals={
-						'sequence':line.sequence,
-						'effective_date':fields.date.today(),
-						'billing_from':fields.date.today(),
-						'acculde':False if line.od_frequency==1 else True,
-						'billing_to':contract_id.date_to,
-						'billing_cycle':'one_time' if line.od_frequency==1 else False,
-						'product_id':line.product_id.id,
-						'name':line.name,
-						'price_unit':line.price_unit,
-						'price_subtotal':line.price_subtotal,
-						'price_total':line.price_total,
-						'price_tax':line.price_tax,
-						'tax_ids':[(6,0,tax_ls)],
-						'discount':line.discount,
-						'product_uom_qty':line.product_uom_qty,
-						'product_uom':line.product_uom.id,
-						'order_line_id':line.id,
-						'frequency':line.od_frequency,
-						'order_id':contract_id.id,
-						}
-						self.env['od.asp.contract.line'].create(vals)
-				if self.id not in order_ids:
-					order_ids.append(self.id)
-					contract_id.sale_order_ids=[(6,0,order_ids)]
 		else:
 			form_view = [(self.env.ref('orchid_asp_gulf.od_asp_contract_form_view').id, 'form')]
-			if 'views' in action:
-				action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
-			else:
-				action['views'] = form_view
+			action['views'] = form_view + [
+				(state, view) for state, view in action.get('views', []) if view != 'form'
+			]
+
 		if len(self) == 1:
-			line_ids=[]
-			for line in self.order_line.filtered(lambda r: r.display_type==False and r.product_uom_qty>0):
-				tax_ls=[]
-				for t in line.tax_ids:
-					tax_ls.append(t.id)
-
-				vals={
-				'sequence':line.sequence,
-				'product_id':line.product_id.id,
-				'name':line.name,
-				'price_unit':line.price_unit,
-				'price_subtotal':line.price_subtotal,
-				'price_total':line.price_total,
-				'price_tax':line.price_tax,
-				'tax_ids':[(6,0,tax_ls)],
-				'discount':line.discount,
-				'product_uom_qty':line.product_uom_qty,
-				'product_uom':line.product_uom.id,
-				'order_line_id':line.id,
-				'frequency':line.od_frequency,
-				'billing_cycle':'one_time' if line.od_frequency==1 else False,
-				'acculde':False if line.od_frequency==1 else True,
+			line_ids = []
+			for line in self.order_line.filtered(
+				lambda r: r.display_type == False and r.product_uom_qty > 0
+			):
+				vals = {
+					'sequence': line.sequence,
+					'product_id': line.product_id.id,
+					'name': line.name,
+					'price_unit': line.price_unit,
+					'price_subtotal': line.price_subtotal,
+					'price_total': line.price_total,
+					'price_tax': line.price_tax,
+					'tax_id': [(6, 0, line.tax_ids.ids)],
+					'discount': line.discount,
+					'product_uom_qty': line.product_uom_qty,
+					'product_uom': line.product_uom_id.id,
+					'order_line_id': line.id,
+					'frequency': line.od_frequency,
+					'billing_cycle': 'one_time' if line.od_frequency == 1 else False,
+					'acculde': False if line.od_frequency == 1 else True,
 				}
-				line_ids.append((0,0,vals))
+				line_ids.append((0, 0, vals))
 
-			context={
-				'default_partner_id':self.partner_id.id,
-				'default_contact_id':self.od_contact_id.id,
-				'default_currency_id':self.currency_id.id,
-				'default_client_order_ref':self.client_order_ref,
-				'default_sam_id':self.user_id.id,
-				'default_sale_order_ids':[(6,0,[self.id])],
-				'default_contract_line_ids':line_ids,
-				'default_od_exchange_rate':self.od_exchange_rate,
-				'default_analytic_account_id':self.analytic_account_id.id,
+			context = {
+				'default_partner_id': self.partner_id.id,
+				'default_contact_id': self.od_contact_id.id,
+				'default_currency_id': self.currency_id.id,
+				'default_client_order_ref': self.client_order_ref,
+				'default_sam_id': self.user_id.id,
+				'default_sale_order_ids': [(6, 0, [self.id])],
+				'default_contract_line_ids': line_ids,
+				'default_od_exchange_rate': self.od_exchange_rate,
+				'default_analytic_account_id': self.project_account_id.id,
 			}
 
 		action['context'] = context
 		return action
-
-
-
 
 
 	def action_cancel(self):
@@ -232,9 +194,9 @@ class SaleOrder(models.Model):
 				self.opportunity_id.expected_revenue = self.amount_total
 			self.opportunity_id.action_set_won_rainbowman()
 		# create analyrtic account
-		if not self.analytic_account_id:
-			analytic_id = self._create_analytic_account()
-			self.analytic_account_id.update({'code':self.name})
+		if not self.project_account_id:
+			analytic_id = self.action_create_project()
+			self.project_account_id.update({'code':self.name})
 		return result
 
 	#fto correct discount	
@@ -283,6 +245,7 @@ class SaleOrderLine(models.Model):
 	od_description_sale = fields.Html(string="Description")
 	od_frequency = fields.Integer(string="Frequency", default=1)
 	od_disc_amount = fields.Float(string="Disc. Amount", digits='Discount')
+	
 
 	@api.onchange('od_disc_amount','price_unit','product_uom_qty')
 	def onchange_disc_amt(self):
@@ -294,8 +257,8 @@ class SaleOrderLine(models.Model):
 
 
 	@api.onchange('product_id')
-	def product_id_change(self):
-		res= super(SaleOrderLine, self).product_id_change()
+	def _onchange_product_id(self):
+		res= super(SaleOrderLine, self)._onchange_product_id()
 		if self.product_id:
 			self.od_description_sale=self.name.replace(' ', "&nbsp;")
 			self.od_description_sale=self.od_description_sale.replace('\n', "<br/>")

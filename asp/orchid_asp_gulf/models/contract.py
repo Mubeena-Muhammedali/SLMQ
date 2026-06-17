@@ -248,22 +248,36 @@ class OrchidASPContract(models.Model):
 				self.email=self.partner_id.email
 			self.sam_id = self.partner_id.user_id and self.partner_id.user_id.id
 
-	@api.model
-	def create(self,vals):
-		if not vals['sale_order_ids']:
-			raise UserError(_('Contract Can be created from Sale order Only'))
-		ls = [sale for sale in vals['sale_order_ids']]
-		if ls==[(6, 0, [])]:
-			raise UserError(_('Contract Can be created from Sale order Only'))
-		
-		vals['name']=self.env['ir.sequence'].next_by_code('od.asp.contract')
-		res=super(OrchidASPContract,self).create(vals)
-		active_id=self.env.context.get('active_id')
-		active_model=self.env.context.get('active_model')
-		if active_id and active_model=='sale.order':
-			sale_id = self.env['sale.order'].browse(active_id)
-			sale_id.od_contract_id=res.id
-		return res
+	@api.model_create_multi
+	def create(self, vals_list):
+
+		for vals in vals_list:
+
+			sale_order_ids = []
+
+			if vals.get('sale_order_ids'):
+				for command in vals['sale_order_ids']:
+					if command[0] == 6:
+						sale_order_ids = command[2]
+					elif command[0] == 4:
+						sale_order_ids.append(command[1])
+
+			if not sale_order_ids:
+				raise UserError(_('Contract can be created from Sale Order only'))
+
+			vals['name'] = self.env['ir.sequence'].next_by_code('od.asp.contract')
+
+		records = super().create(vals_list)
+
+		active_id = self.env.context.get('active_id')
+		active_model = self.env.context.get('active_model')
+
+		if active_id and active_model == 'sale.order':
+			sale_order = self.env['sale.order'].browse(active_id)
+			# if multiple records, assign first one (or adjust logic if needed)
+			sale_order.od_contract_id = records[0].id
+
+		return records
 
 	def action_view_invoice(self):
 		invoices = self.mapped('invoice_ids')
