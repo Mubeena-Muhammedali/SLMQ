@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <record id="paperformat_a4_so_format" model="report.paperformat">
+        <field name="name">A4 SO Format ASPGULF</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">10</field>
+        <field name="dpi">100</field>
+    </record> -->
+    <record id="paperformat_a4_so_format" model="report.paperformat">
+        <field name="name">A4 SO Format ASPGULF</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">27</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">25</field>
+        <field name="dpi">90</field>
+    </record>
+    <data noupdate="1">
+        <record id="od_enbd_check_paper_format" model="report.paperformat">
+            <field name="name">Orchid ENBD Check</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">100</field>
+            <field name="page_width">240</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">100</field>
+        </record>
+        <record id="od_fab_check_paper_format" model="report.paperformat">
+            <field name="name">Orchid FAB Check</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">100</field>
+            <field name="page_width">240</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">100</field>
+        </record>
+    </data>
+</odoo>

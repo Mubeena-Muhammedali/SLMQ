@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_lead_assign_user_view_form" model="ir.ui.view">
+        <field name="name">od.lead.assign.user.form</field>
+        <field name="model">od.lead.assign.user</field>
+        <field name="arch" type="xml">
+            <form string="Assign Salesperson">
+                <group>
+                    <field name="lead_id" readonly="1"/>
+                    <field name="user_id" required="1"/>
+                </group>
+                <footer>
+                    <button name="assign_user" string="Assign" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_lead_assign_user_action" model="ir.actions.act_window">
+        <field name="name">Assign Salesperson</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.lead.assign.user</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_lead_assign_user_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

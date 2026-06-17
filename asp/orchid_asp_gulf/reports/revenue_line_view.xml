@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_od_revenue_line_view_pivot" model="ir.ui.view">
+            <field name="name">od.revenue.line.view.pivot</field>
+            <field name="model">od.revenue.line.view</field>
+            <field name="arch" type="xml">
+                <pivot string="Revenue Recognition Analysis">
+                    <field name = "partner_id" type ="row"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_od_revenue_line_view_search" model="ir.ui.view">
+            <field name="name">od.revenue.line.view.search</field>
+            <field name="model">od.revenue.line.view</field>
+            <field name="arch" type="xml">
+                <search string="Revenue Recognition Analysis">
+                    <field name="partner_id"/>
+                    <field name="period_from"/>
+                    <field name="period_to"/>
+                    <filter string="Due" name="due" domain="[('due','=',True),('invoiced','=',False)]"/>
+                    <filter string="Posted" name="posted" domain="[('invoiced','=',True)]"/>
+
+                    <group>
+                        <filter string="Partner" name='partner_id' context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="menu_action_od_revenue_line_view" model="ir.actions.act_window">
+            <field name="name">Revenue Recognition Analysis</field>
+            <field name="res_model">od.revenue.line.view</field>
+            <field name="view_mode">pivot,graph,tree</field> 
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_od_contract_analysis_pivot" model="ir.ui.view">
+            <field name="name">od.contract.analysis.view.pivot</field>
+            <field name="model">od.contract.analysis.view</field>
+            <field name="arch" type="xml">
+                <pivot string="Contract Analysis">
+                    <field name = "name" type ="row"/>
+                    <field name="price_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        
+
+        <record id="view_od_contract_analysis_search" model="ir.ui.view">
+            <field name="name">orchid.entry.report.search</field>
+            <field name="model">od.contract.analysis.view</field>
+            <field name="arch" type="xml">
+                <search string="Contract Analysis">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    
+                    <filter string="Current Year" name="year" domain="[('date_from','&lt;=', time.strftime('%%Y-12-31')),('date_from','&gt;=',time.strftime('%%Y-01-01'))]"/>
+
+                    <group>
+                        <filter string="state" name="state" context="{'group_by':'state'}"/>
+                        <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
+                        <filter string="Product" name='product_id' context="{'group_by':'product_id'}"/>
+                        <filter string="Partner" name='partner_id' context="{'group_by':'partner_id'}"/>
+                        <filter string="Currency" name='currency_id' context="{'group_by':'currency_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="menu_action_od_contract_analysis" model="ir.actions.act_window">
+            <field name="name">Contract Analysis</field>
+            <field name="res_model">od.contract.analysis.view</field>
+            <field name="view_mode">pivot,graph,tree</field> 
+            <field name="context">{"search_default_year":1}</field>      
+        </record>
+
+            
+    </data>
+</odoo>

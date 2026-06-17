@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="crm_lead_view_form_asp_gulf" model="ir.ui.view">
+      <field name="name">crm.lead.form.aspgulf</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+      <field name="arch" type="xml">
+        <button name="action_set_won_rainbowman" position="after">
+          <button name="%(orchid_asp_gulf.od_lead_assign_user_action)d" string="Assign Salesperson" type="action" help="Assign to different salesperson" class="oe_highlight" invisible="type == 'opportunity' or not active"/>
+        </button>
+        <button name="action_set_won_rainbowman"  position="replace">
+          <button name="action_set_won_rainbowman" string="Mark Won" type="object" class="oe_highlight" invisible="1"/>
+        </button>
+        <button name="%(crm.crm_lead_lost_action)d" position="replace">
+          <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost" type="action" class="oe_highlight" context="{'default_lead_id': id}" invisible="not od_show_mark_lost_wiz"/>
+        </button>
+        
+        <field name="expected_revenue" position="replace">
+          <field name="expected_revenue" class="oe_inline"/>
+        </field>
+        <field name="date_deadline" position="after">
+          <field name="od_deal_closing_date" force_save="1" readonly="1"/>
+        </field>
+
+        <field name="recurring_revenue" position="replace">
+          <div class="col" invisible="type == 'lead'" groups="crm.group_use_recurring_revenues">
+            <label for="recurring_revenue" class="oe_edit_only" />
+            <div class="o_row">
+              <field name="recurring_revenue" class="pr-2 oe_inline"/>
+            </div>
+          </div>
+        </field>
+        
+        <field name="user_id" position="after">
+          <field name="od_show_mark_lost_wiz" invisible="1"/>
+        </field>
+        
+        <field name="tag_ids" position="after">
+          <field name="od_type"/>
+        </field>
+
+        <group name="categorization" position="replace">
+        </group>
+        
+        <group name="lead_info" position="after">
+          <group string="Tracking" name="categorization_new" invisible="type == 'opportunity'">
+            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+            <field name="campaign_id" required="1" string="Channel"/>
+            <field name="source_id" required="1" domain="[('od_channel_id','=',campaign_id)]"/>
+            <field name="medium_id" required="1" domain="[('od_channel_id','=',campaign_id)]"/>
+            <field name="referred"/>
+          </group>
+        </group>
+        <xpath expr="//form/sheet/notebook/page[@name='lead']/group[1]/group[3]/field[@name='campaign_id']" position="attributes">
+          <attribute name="required">1</attribute>
+          <attribute name="string">Channel</attribute>
+        </xpath>
+        <xpath expr="//form/sheet/notebook/page[@name='lead']/group[1]/group[3]/field[@name='medium_id']" position="attributes">
+          <attribute name="required">1</attribute>
+          <attribute name="domain">[('od_channel_id','=',campaign_id)]</attribute>
+        </xpath>
+        <xpath expr="//form/sheet/notebook/page[@name='lead']/group[1]/group[3]/field[@name='source_id']" position="attributes">
+          <attribute name="required">1</attribute>
+          <attribute name="domain">[('od_channel_id','=',campaign_id)]</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="crm_case_tree_view_oppor_asp_gulf" model="ir.ui.view">
+      <field name="name">crm.lead.tree.opportunity.aspgulf</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+      <field name="arch" type="xml">
+        <field name="expected_revenue" position="before">
+          <field name="od_deal_closing_date" readonly="1" force_save="1"/>
+        </field>
+        <field name="expected_revenue" position="replace">
+          <field name="expected_revenue" sum="Expected Revenues" optional="show"/>
+        </field>
+        <field name="recurring_revenue" position="replace">
+          <field name="recurring_revenue" sum="Expected Revenues" optional="show"/>
+        </field>
+        <field name="recurring_revenue_monthly" position="replace">
+          <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show"/>
+        </field>
+      </field>
+    </record>
+
+
+    <record id="quick_create_opportunity_form_asp_gulf" model="ir.ui.view">
+      <field name="name">crm.lead.form.quick_create.aspgulf</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+      <field name="arch" type="xml">
+        <field name="expected_revenue"  position="replace">
+          <field name="expected_revenue" class="oe_inline mr-5"/>
+        </field>
+        <field name="recurring_revenue"  position="replace">
+          <field name="recurring_revenue" class="oe_inline mr-5"/>
+        </field>
+
+      </field>
+    </record>
+
+    <record id="crm_case_form_view_oppor_asp_gulf" model="ir.ui.view">
+      <field name="name">crm.lead.oppor.inherited.crm.aspgulf</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+      <field name="arch" type="xml">
+
+        <button name="action_sale_quotations_new" position="replace">
+            <button string="New Quotation"
+                    name="action_sale_quotations_new"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="type == 'lead' or (probability == 0 and not active) or stage_id not in [2, 3]"/>
+        </button>
+
+        <button name="action_view_sale_quotation" position="replace">
+            <button class="oe_stat_button"
+                    type="object"
+                    name="action_view_sale_quotation"
+                    icon="fa-pencil-square-o"
+                    invisible="type == 'lead' or quotation_count == 0">
+                <field name="quotation_count"
+                      widget="statinfo"
+                      string="Quotations"/>
+            </button>
+        </button>
+
+        <button name="action_view_sale_order" position="replace">
+            <button class="oe_stat_button"
+                    type="object"
+                    name="action_view_sale_order"
+                    icon="fa-usd"
+                    invisible="sale_order_count == 0 or type == 'lead'">
+                <div class="o_field_widget o_stat_info">
+                    <field name="sale_order_count" invisible="1"/>
+                </div>
+            </button>
+        </button>
+
+      </field>
+    </record>
+  </data>
+</odoo>

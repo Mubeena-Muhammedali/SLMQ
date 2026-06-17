@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="orchid_azzurance_cluster_tree_view">
+            <field name="name">od.azzurance.cluster.tree</field>
+            <field name="model">od.azzurance.cluster</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <list string="tree_string">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orchid_azzurance_cluster_form_view">
+            <field name="name">od.azzurance.cluster.form</field>
+            <field name="model">od.azzurance.cluster</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_azzurance_cluster_tree_view">
+            <field name="name">Azzurance Cluster</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.azzurance.cluster</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="orchid_azzurance_cluster_tree_view"/>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="orchid_disk_master_tree_view">
+            <field name="name">od.disk.master.tree</field>
+            <field name="model">od.disk.master</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <list string="tree_string">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orchid_disk_master_form_view">
+            <field name="name">od.disk.master.form</field>
+            <field name="model">od.disk.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_disk_master_tree_view">
+            <field name="name">Disk</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.disk.master</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="orchid_disk_master_tree_view"/>
+        </record>
+
+
+
+        
+        <record model="ir.ui.view" id="orchid_os_master_tree_view">
+            <field name="name">od.os.master.tree</field>
+            <field name="model">od.os.master</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <list string="tree_string">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orchid_os_form_view">
+            <field name="name">od.os.master.form</field>
+            <field name="model">od.os.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_os_master_tree_view">
+            <field name="name">OS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.os.master</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="orchid_os_master_tree_view"/>
+        </record>
+
+
+
+         <record model="ir.ui.view" id="orchid_license_tree_view">
+            <field name="name">od.license.tree</field>
+            <field name="model">od.license</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <list string="tree_string">
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orchid_license_form_view">
+            <field name="name">od.license.form</field>
+            <field name="model">od.license</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_license_tree_view">
+            <field name="name">License </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.license</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="orchid_license_tree_view"/>
+        </record>
+
+        <record id="utm_medium_view_form" model="ir.ui.view">
+            <field name="name">utm.medium.view.form</field>
+            <field name="model">utm.medium</field>
+            <field name="inherit_id" ref="utm.utm_medium_view_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="od_channel_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="utm_source_view_form" model="ir.ui.view">
+            <field name="name">utm.source.view.form</field>
+            <field name="model">utm.source</field>
+            <field name="inherit_id" ref="utm.utm_source_view_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="od_channel_id"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_utm_campaign_view_search">
+            <field name="name">utm.campaign.view.search</field>
+            <field name="model">utm.campaign</field>
+            <field name="inherit_id" ref="utm.view_utm_campaign_view_search"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_utm_campaign_view_search">
+            <field name="name">utm.campaign.view.search</field>
+            <field name="model">utm.campaign</field>
+            <field name="inherit_id" ref="utm.view_utm_campaign_view_search"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </field>
+            </field>
+        </record>
+        <record id="od_utm_source_view_search" model="ir.ui.view">
+            <field name="name">od.utm.source.view.search</field>
+            <field name="model">utm.source</field>
+            <field name="arch" type="xml">
+                <search string="Search UTM Source">
+                    <field name="name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="purchase_order_view_form_inherit_asp_gulf" model="ir.ui.view">
+      <field name="name">purchase.order.form.aspgulf</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="arch" type="xml">
+        <field name="partner_id" position="after">
+          <field name="od_contact_id" readonly="state != 'draft'" context="{'default_parent_id':partner_id}"/>
+        </field>
+        <field name="currency_id" position="after">
+          <field name="od_exchange_rate" readonly="state != 'draft'" digits="[12,12]"/>
+          <field name="od_print_po_currency" string="Show PO in USD"/>
+        </field>
+        <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="after">
+          <field name="company_currency_id" invisible="1"/>
+          <field name="od_frequency" invisible="0"/>
+          <field name="od_cost_per_month" optional="hide" readonly="1" force_save="1"/>
+          <field name="od_start_date" invisible="0" required="od_frequency > 0"/>
+          <field name="od_to_date" optional="hide" readonly="1" force_save="1"/>
+        </xpath>
+        <page name="products" position="after">
+          <page name="od_coting_line" string="Costing Line">
+            <field name="od_po_costing_line_ids" >
+              <list string="Costing Lines" create="false" default_order="purchase_line_id">
+                <field name="purchase_id" invisible="1"/>
+                <field name="period_from" readonly="1" optional="hide"/>
+                <field name="period_to" readonly="1"/>
+                <field name="product_id" readonly="1"/>
+                <field name="amount" sum="Total" readonly="invoiced"/>
+                <field name="purchase_line_id" readonly="1" optional="hide"/>
+                <field name="invoiced" readonly="1"/>
+                <field name="move_id" readonly="1" optional="hide"/>
+                <field name="purchase_status" invisible="1"/>
+              </list>
+            </field>
+          </page>
+        </page>
+      </field>
+    </record>
+  </data>
+</odoo>

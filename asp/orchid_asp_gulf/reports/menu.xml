@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <data>
+		
+		<record id="report_asp_sale_print" model="ir.actions.report">
+			<field name="name">Quotation/Proforma</field>
+			<field name="model">sale.order</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_sale_print</field>
+			<field name="report_file">orchid_asp_gulf.asp_sale_print</field>
+			<field name="print_report_name">'Quotation - %s' % (object.name)</field>
+			<field name="binding_model_id" ref="model_sale_order"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+		<record id="report_asp_tax_invoice_print" model="ir.actions.report">
+			<field name="name">REGULAR VAT FORMAT</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_tax_invoice_print</field>
+			<field name="report_file">orchid_asp_gulf.asp_tax_invoice_print</field>
+			<field name="print_report_name">'%s - %s' % (object.partner_id.name,object.name)</field>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+		<record id="report_asp_tax_invoice_print_aed" model="ir.actions.report">
+			<field name="name">FTA AED</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_tax_invoice_print_aed</field>
+			<field name="report_file">orchid_asp_gulf.asp_tax_invoice_print_aed</field>
+			<field name="print_report_name">'%s - %s' % (object.partner_id.name,object.name)</field>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+		<record id="report_asp_tax_invoice_usd_vat" model="ir.actions.report">
+			<field name="name">USD INVOICE</field>
+			<field name="model">account.move</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_tax_invoice_usd_vat</field>
+			<field name="report_file">orchid_asp_gulf.asp_tax_invoice_usd_vat</field>
+			<field name="print_report_name">'%s - %s' % (object.partner_id.name,object.name)</field>
+			<field name="binding_model_id" ref="account.model_account_move"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+		<record id="report_asp_purchase_requisition" model="ir.actions.report">
+			<field name="name">Purchase Requisition</field>
+			<field name="model">purchase.order</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_purchase_requisition</field>
+			<field name="report_file">orchid_asp_gulf.asp_purchase_requisition</field>
+			<field name="print_report_name">'%s - %s' % (object.partner_id.name,object.name)</field>
+			<field name="binding_model_id" ref="purchase.model_purchase_order"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+
+		<record id="report_asp_purchase_order" model="ir.actions.report">
+			<field name="name">Purchase Order</field>
+			<field name="model">purchase.order</field>
+			<field name="report_type">qweb-pdf</field>
+			<field name="report_name">orchid_asp_gulf.asp_purchase_order</field>
+			<field name="report_file">orchid_asp_gulf.asp_purchase_order</field>
+			<field name="print_report_name">'%s - %s' % (object.partner_id.name,object.name)</field>
+			<field name="binding_model_id" ref="purchase.model_purchase_order"/>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="orchid_asp_gulf.paperformat_a4_so_format"/>
+		</record>
+
+		<record id="action_report_enbd_cheque_print" model="ir.actions.report">
+      <field name="name">Mashreq Cheque</field>
+      <field name="model">account.move</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">orchid_asp_gulf.report_enbd_cheque_print</field>
+      <field name="report_file">orchid_asp_gulf.report_enbd_cheque_print</field>
+      <field name="binding_model_id" ref="account.model_account_move"/>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" ref="od_enbd_check_paper_format"/>
+    </record>
+    <record id="action_report_fab_cheque_print" model="ir.actions.report">
+      <field name="name">ADCB Cheque</field>
+      <field name="model">account.move</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">orchid_asp_gulf.report_fab_cheque_print</field>
+      <field name="report_file">orchid_asp_gulf.report_fab_cheque_print</field>
+      <field name="binding_model_id" ref="account.model_account_move"/>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" ref="od_fab_check_paper_format"/>
+    </record>
+
+    <record id="action_report_enbd_cheque_payment_print" model="ir.actions.report">
+      <field name="name">Mashreq Cheque</field>
+      <field name="model">account.payment</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">orchid_asp_gulf.report_enbd_cheque_payment_print</field>
+      <field name="report_file">orchid_asp_gulf.report_enbd_cheque_payment_print</field>
+      <field name="binding_model_id" ref="account.model_account_payment"/>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" ref="od_enbd_check_paper_format"/>
+    </record>
+    <record id="action_report_fab_cheque_payment_print" model="ir.actions.report">
+      <field name="name">ADCB Cheque</field>
+      <field name="model">account.payment</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">orchid_asp_gulf.report_fab_cheque_payment_print</field>
+      <field name="report_file">orchid_asp_gulf.report_fab_cheque_payment_print</field>
+      <field name="binding_model_id" ref="account.model_account_payment"/>
+      <field name="binding_type">report</field>
+      <field name="paperformat_id" ref="od_fab_check_paper_format"/>
+    </record>
+		<menuitem id="action_od_contract_analysis" name="Contract Analysis" action="menu_action_od_contract_analysis" parent="sale.menu_sale_report" sequence="2"/>
+		<menuitem id="menu_od_po_costing_view" name="Purchase Costing Analysis" action="menu_action_od_po_costing_view" parent="account.account_reports_management_menu" sequence="2"/>
+
+		<menuitem id="od_asp_contract_monthly_line_menu" name="Revenue Recognition Analysis" parent="account.account_transactions_menu" action="menu_action_od_revenue_line_view" sequence="7"/>
+	</data>
+</odoo>

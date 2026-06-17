@@ -1,0 +1,67 @@
+<odoo>   
+    <template id="report_fab_cheque_print">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div style="position: fixed; top: 350; right: 0; bottom: 0; left: 1090; margin: 1px 1px 1px 1px; padding : 1px;  width: 200px;  height: 30px;      background-color: white;  border: 0px solid black;  z-index: 1;">
+                        <h5><b> <span t-field="o.od_check_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MMM-yyyy&quot;}"/> </b></h5>
+                    </div>
+                    <div t-if="o.od_acc_payee">
+                        <div style="position: fixed; top: 300; right: 0; bottom: 0; left: 900; margin: 1px 1px 1px 1px; padding : 1px;  width: 100px;  height: 20px;      background-color : white;   z-index: 1; border-top:1px solid black; border-bottom:1px solid black; border-left:1px solid white; border-right:1px solid white;">
+                            <b> A/c Payee </b>
+                        </div>
+                    </div>
+                    <t t-if="o.od_check_to">
+                        <div style="position: fixed; top: 450; right: 0; bottom: 0; left: 500; margin: 1px 1px 1px 1px; padding : 1px;  width: 600px;  height: 30px;      background-color: white;  border: 0px solid black;  z-index: 1;">
+                            <h5><b><b> <span t-field="o.od_check_to"/> </b></b></h5>
+                        </div>
+                    </t>
+                    <t t-if="not o.od_check_to">
+                        <div style="position: fixed; top: 450; right: 0; bottom: 0; left: 500; margin: 1px 1px 1px 1px; padding : 1px;  width: 600px;  height: 30px;      background-color: white;  border: 0px solid black;  z-index: 1;">
+                         <h5><b><b> <span t-field="o.partner_id"/> </b></b></h5> 
+                        </div>
+                    </t>
+                    <div style="position: relative; top: 500; right: 0; bottom: 0; left:400 ; margin: 1px 1px 1px 1px; padding : 1px;  width: 500;  height: 30px;      background-color: white;  border: 0px solid black;  z-index: 1; text-indent: 30px">
+                        <h5><b> <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        </b></h5>
+                    </div>
+                    <div style="position: absolute; top: 500; right: 0; bottom: 0; left: 1090; margin: 1px 1px 1px 1px; padding : 1px;  width: 150px;  height: 30px;      background-color: white;  border: 0px solid black;  z-index: 1;">
+                        <br/><h5><b>**
+                            <span t-esc="'{0:,.2f}'.format(float(o.amount_total))"/> 
+                        </b></h5>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_fab_cheque_payment_print">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="position: relative; width: 240mm; height: 100mm; margin: 0; padding: 0; font-family: Arial, sans-serif; overflow: visible;">
+
+                    <div t-if="o.od_acc_payee" style="position: absolute; top: 31mm; left: 195mm; width: 28mm; height: 6mm; border-top: 0.3mm solid black; border-bottom: 0.3mm solid black; font-size: 8.5pt; font-weight: 700; text-align: center; white-space: nowrap;">
+                        A/c Payee
+                    </div>
+
+                    <div style="position: absolute; top: 35mm; left: 260mm; width: 10mm; font-size: 8.5pt; font-weight: 700; white-space: nowrap; text-align: left;">
+                        <span t-field="o.move_id.od_check_date" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MMM-yyyy&quot;}"/>
+                    </div>
+
+                    <div style="position: absolute; top: 54mm; left: 135mm; width: 120mm; font-size: 8.5pt; font-weight: 700; white-space: nowrap;">
+                        <span t-if="o.move_id.od_check_to" t-field="o.move_id.od_check_to"/>
+                        <span t-if="not o.move_id.od_check_to" t-field="o.move_id.partner_id"/>
+                    </div>
+
+                    <div style="position: absolute; top: 64mm; left: 125mm; width: 125mm; font-size: 8.5pt; line-height: 10pt; font-weight: 700;">
+                        <span t-esc="o.move_id.currency_id.amount_to_text(o.move_id.amount_total)"/>
+                    </div>
+
+                    <div style="position: absolute; top: 72mm; left: 260mm; width: 34mm; font-size: 8.5pt; font-weight: 700; white-space: nowrap;">
+                        ** <span t-esc="'{0:,.2f}'.format(float(o.move_id.amount_total))"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

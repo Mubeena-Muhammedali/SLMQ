@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_revenue_recognition_view_form" model="ir.ui.view">
+        <field name="name">od.revenue.recognition.wiz.form</field>
+        <field name="model">od.revenue.recognition.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Revenue Recognition">
+                <group>
+                    <group>
+                        <field name="current_date"/>
+                        <field name="date_from" invisible="current_date" readonly="1" force_save="1"/>
+                        <field name="date"/>
+                        <button name="search_lines_view" type="object" class="oe_highlight" string="View Report" />
+                        <button name="search_lines" type="object" class="oe_highlight" string="Generate" />
+                    </group>
+                    <group>
+                        <field name="contract_id" options="{'no_create': True,'no_edit': True}"/>
+                        <field name="partner_id" options="{'no_create': True,'no_edit': True}" />
+                        <field name="company_id" invisible="1"/>
+                        <field name="amount_to_be_posted" string="Total Revenue to be posted" readonly="1" force_save="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Lines" invisible="not revenue_line">
+                        <field name="revenue_line" readonly="1">
+                            <list create="false">
+                                <field name="wiz_id" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="company_currency_id" invisible="1"/>
+                                <field name="revenue_line_id" invisible="1"/>
+                                <field name="partner_id"/>
+                                <field name="product_id"/>
+                                <field name="account_id"/>
+                                <field name="debit" sum="Total"/>
+                                <field name="credit" sum="Total"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="generate_lines" string="Post" type="object" class="btn-primary"  invisible="not revenue_line" confirm="Are you sure that you want to generate entry for these lines?"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_revenue_recognition_action" model="ir.actions.act_window">
+        <field name="name">Revenue Recognition</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.revenue.recognition.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_revenue_recognition_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <record model="ir.ui.view" id="view_move_form_inher_cash_bank">
+        <field name="name">account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <field name="od_check_date"/>
+                <field name="od_check_to"/>
+                <field name="od_acc_payee" invisible="1" force_save="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+

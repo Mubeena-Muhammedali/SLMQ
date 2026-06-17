@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_contract_renew_view_form" model="ir.ui.view">
+        <field name="name">od.renew.contract.wiz.form</field>
+        <field name="model">od.renew.contract.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Renew Contract">
+                <group>
+                    <field name="contract_id" readonly="1" invisible="1"/>
+                    <field name="new_quotation"/>
+                </group>
+                <footer>
+                    <button name="button_renew" string="Renew" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_contract_renew_action" model="ir.actions.act_window">
+        <field name="name">Renew Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.renew.contract.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_contract_renew_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
