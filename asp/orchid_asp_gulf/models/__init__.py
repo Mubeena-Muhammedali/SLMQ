@@ -14,3 +14,4 @@ from . import product
 from . import provision
 from . import purchase
 from . import sale
+from . import crm_stage

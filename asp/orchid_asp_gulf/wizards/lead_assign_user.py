@@ -21,8 +21,8 @@ class OrchidLeadAssignUser(models.Model):
 		if self.lead_id and self.user_id:
 			self.lead_id.sudo().write({'user_id':self.user_id.id})
 			return {
-			  'view_type': 'tree',
-			  "view_mode": 'tree',
+			  'view_type': 'list',
+			  "view_mode": 'list',
 			  'res_model': 'crm.lead',
 			  'view_id': 902,
 			  'type': 'ir.actions.act_window',

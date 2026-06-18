@@ -10,3 +10,4 @@ from . import multiple_contract_invoice
 from . import revenue_recognition
 from . import contract_credit_note
 from . import revenue_recognition_report
+from . import crm_lead_stage_probability_update

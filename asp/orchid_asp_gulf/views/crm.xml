@@ -64,6 +64,24 @@
           <attribute name="required">1</attribute>
           <attribute name="domain">[('od_channel_id','=',campaign_id)]</attribute>
         </xpath>
+
+        <xpath expr="//label[@for='probability']" position="before">
+            <field name="is_stage_probability" invisible="1"/>
+            <button class="btn btn-link"
+                name="action_set_stage_probability"
+                type="object"
+                invisible="is_stage_probability">
+                <i
+                    class="fa fa-gear"
+                    role="img"
+                    title="Switch to stage probability"
+                    aria-label="Switch to stage probability"/>
+            </button>
+            <small class="oe_grey"
+                invisible="is_stage_probability">
+                <field name="stage_probability"/>
+            </small>
+        </xpath>
       </field>
     </record>
 

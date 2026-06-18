@@ -16,7 +16,8 @@
         "data/data.xml",
         "data/schedule_actions.xml",
         "data/contract_seq.xml",
-        
+        "data/crm_stage.xml",
+
         "security/security.xml",
         "security/ir.model.access.csv",
 
@@ -30,6 +31,7 @@
         "wizards/revenue_recognition.xml",
         "wizards/contract_credit_note.xml",
         "wizards/revenue_recognition_report.xml",
+        "wizards/crm_lead_stage_probability_update.xml",
 
         "views/account_move_view.xml",
         "views/contract_view.xml",
@@ -48,6 +50,7 @@
         "views/revenue_forecast_assets.xml",
         "views/revenue_forecast_report.xml",
         "views/menus.xml",
+        "views/crm_stage.xml",
 
         'reports/asp_sale_print.xml',
         'reports/asp_tax_invoice_print.xml',
