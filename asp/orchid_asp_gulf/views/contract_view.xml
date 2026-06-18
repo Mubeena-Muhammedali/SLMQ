@@ -94,7 +94,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Service Lines" name="contract_lines" invisible="0">
+                            <page string="Service Lines" name="contract_lines">
                                 <field name="contract_line_ids" context="{'default_billing_from':date_from,'default_billing_to':date_to}" mode="list">
                                     <list editable="top" decoration-it="state=='0_draft'" decoration-muted="state in ['inactive','terminate']">
                                         <button name="%(orchid_asp_gulf.od_terminate_contract_line_action)d"
@@ -109,7 +109,7 @@
                                                 invisible="not effective_date or parent.state in ['0_draft', 'inactive'] or state != '0_draft'"/>
 
                                         <field name="effective_date"
-                                            readonly="state != '0_draft'" force_save="1"/>
+                                            readonly="state != '0_draft'"/>
 
                                         <field name="billing_from"
                                             readonly="state != '0_draft'"

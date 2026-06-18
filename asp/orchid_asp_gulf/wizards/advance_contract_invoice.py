@@ -59,10 +59,11 @@ class OrchidAdvanceInvoice(models.TransientModel):
 	
 	def create_invoice(self):
 		user_id=self.contract_id.sam_id.id if self.contract_id.sam_id else self.env.user.id
+		journal_id_rec = self.env['account.move'].with_context(default_move_type='out_invoice').new({'move_type': 'out_invoice'})
 		invoice_vals={
 		'od_contract_id': self.contract_id.id,
 		'partner_id': self.contract_id.partner_id.id,
-		'journal_id': self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal().id,
+		'journal_id': journal_id_rec._search_default_journal().id,
 		'invoice_payment_term_id': self.contract_id.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
 		'invoice_origin': self.contract_id.name,
 		'invoice_user_id': self.contract_id.partner_id.user_id and self.contract_id.partner_id.user_id.id or user_id,
@@ -72,7 +73,8 @@ class OrchidAdvanceInvoice(models.TransientModel):
 		'invoice_payment_term_id':self.contract_id.payment_term_id and self.contract_id.payment_term_id.id,
 		'od_exchange_rate':self.contract_id.od_exchange_rate,
 		'date':self.invoice_date,
-		'partner_bank_id':3,
+		# 'partner_bank_id':3, code from odoo 14
+		'partner_bank_id':self.contract_id.partner_id.bank_ids and self.contract_id.partner_id.bank_ids[0].id or False,
 		'ref':self.contract_id.client_order_ref,
 		'payment_reference':self.contract_id.client_order_ref,
 		'od_contact_id':self.contract_id.contact_id and self.contract_id.contact_id.id,
@@ -88,13 +90,15 @@ class OrchidAdvanceInvoice(models.TransientModel):
 			'product_id':line.contract_line_id.product_id.id,
 			'quantity':1,
 			'move_id':invoice_id.id,
-			'display_type':False,
+			# 'display_type':False,
 			'name':line.name,
 			'price_unit':(line.amount_to_invoice),
 			'od_contract_line_id':line.contract_line_id.id,
 			'tax_ids':[(6,0,tax_ls)],
 			'name':line.contract_line_id.name,
-			'analytic_account_id':self.contract_id.analytic_account_id.id or False,
+			'analytic_distribution': {
+						str(line.contract_id.analytic_account_id.id): 100
+					} if line.contract_id.analytic_account_id else {},
 			'od_frequency':line.contract_line_id.frequency,
 			}
 			if vals['price_unit']==0:
@@ -102,7 +106,7 @@ class OrchidAdvanceInvoice(models.TransientModel):
 			w_line=(0,0,vals)
 			invoice_lines.append(w_line)
 		invoice_id.invoice_line_ids = invoice_lines
-		invoice_id.post()
+		invoice_id.action_post()
 		for line in self.invoice_line:
 			inv_line_id = invoice_id.invoice_line_ids.search([('od_contract_line_id','=',line.contract_line_id.id)])
 			c_line_inv_ids=[ivl.id for ivl in line.contract_line_id.invoice_line_ids]

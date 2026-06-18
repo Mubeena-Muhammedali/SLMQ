@@ -2,19 +2,34 @@
 
 from odoo import models, fields, api, _
 
-ACCOUNT_DOMAIN = [
-    ('deprecated', '=', False),
-    ('account_type', '=', 'income'),
-    ('is_off_balance', '=', False)
-]
 
 
-
-class ProducTemplate(models.Model):
+class ProductTemplate(models.Model):
 	_inherit = "product.template"
 
-	od_property_account_revenue_id = fields.Many2one('account.account', company_dependent=True,string="Revenue Account", domain=ACCOUNT_DOMAIN)
-	od_property_account_subscription_id = fields.Many2one('account.account', company_dependent=True,string="Subscription Account", domain=ACCOUNT_DOMAIN)
+	od_property_account_revenue_id = fields.Many2one(
+			'account.account',
+			company_dependent=True,
+			string="Revenue Account",
+			domain=lambda self: [
+				('deprecated', '=', False),
+				('account_type', '=', 'income'),
+				('is_off_balance', '=', False),
+				('company_id', 'in', self.env.company.ids),
+			]
+		)
+
+	od_property_account_subscription_id = fields.Many2one(
+			'account.account',
+			company_dependent=True,
+			string="Subscription Account",
+			domain=lambda self: [
+				('deprecated', '=', False),
+				('account_type', '=', 'income'),
+				('is_off_balance', '=', False),
+				('company_ids', 'in', self.env.company.ids),
+			]
+		)
 	od_property_account_subscription_id = fields.Many2one('account.account', company_dependent=True,string="Subscription Account")
 	od_company_currency_id = fields.Many2one('res.currency',string='Company Currency', readonly=True, default=lambda self: self.env.company.currency_id.id)
 	od_avg_cost = fields.Monetary(string="Average Cost", currency_field='od_company_currency_id', readonly=True, help="for cost recognition")

@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from datetime import date
 import pandas as pd
 import datetime
 
@@ -80,7 +81,7 @@ class OrchidASPContract(models.Model):
 		for line in self.contract_line_ids.filtered(lambda r: r.state in('0_draft','active')):
 			line.state='terminate'
 			line.termination_reason="Contract Terminated"
-			line.termination_date=fields.date.today()
+			line.termination_date=date.today()
 		self.state='terminate'
 
 	def button_expire(self):
