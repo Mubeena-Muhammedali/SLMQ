@@ -446,6 +446,14 @@ class OrchidContractPayment(models.Model):
 					next_month_start = mm.replace(day=1)
 					start_period = next_month_start+relativedelta(months=+1)
 					start_period = start_period.date()
+
+				if not line_periods:
+					line_periods.append({
+						'start_period': start_date,
+						'end_period': end_date,
+						'amount_to_invoice': self.per_month,
+					})
+					
 				last_month_end_period = line_periods[(len(line_periods)-1)]['end_period']
 				if end_date > last_month_end_period:
 					extra_month_start = last_month_end_period.replace(day=1)

@@ -106,9 +106,9 @@ class OrchidASPContract(models.Model):
 			if record.renewed:
 				raise UserError(_("This contract is renewed already!!"))
 			if new_quotation:
-				pricelist_id = 1
-				if record.currency_id.id == 2:
-					pricelist_id = 4
+				# pricelist_id = 1
+				# if record.currency_id.id == 2:
+				# 	pricelist_id = 4
 				old_quotation_id = self.sale_order_ids.search([],limit=1, order="id desc")
 
 				sale_vals={
@@ -117,7 +117,7 @@ class OrchidASPContract(models.Model):
 				'currency_id':record.currency_id.id,
 				'payment_term_id':record.payment_term_id.id,
 				'od_exchange_rate':record.od_exchange_rate,
-				'pricelist_id':pricelist_id,
+				'pricelist_id':old_quotation_id.pricelist_id.id,
 				}
 				if old_quotation_id:
 					sale_vals['campaign_id'] = old_quotation_id.campaign_id and old_quotation_id.campaign_id.id or 16
@@ -138,11 +138,11 @@ class OrchidASPContract(models.Model):
 					'price_unit':line.price_unit,
 					'price_subtotal':line.price_subtotal,
 					'price_total':line.price_total,
-					'tax_id':[(6,0,tax_ls)],
+					'tax_ids':[(6,0,tax_ls)],
 					'price_tax':line.price_tax,
 					'discount':line.discount,
 					'product_uom_qty':line.product_uom_qty,
-					'product_uom':line.product_uom.id,
+					'product_uom_id':line.product_uom.id,
 					# 'od_frequency':line.frequency,
 					'od_frequency':0,
 					}
