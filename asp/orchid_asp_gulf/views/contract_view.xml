@@ -136,7 +136,7 @@
                                         <field name="termination_reason" required="termination_date" readonly="1" optional="hide"/>
                                         <field name="product_id" required="1" force_save="1" readonly="1"/>
                                         <field name="name" readonly="1" force_save="1"/>
-                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="company_currency_id" column_invisible="1"/>
                                         <field name="total_direct_cost" widget="monetary" readonly="state != '0_draft'"/>
                                         <field name="product_uom_qty" sum="Quantity" readonly="1" force_save="1"/>
                                         <field name="product_uom"  readonly="1" force_save="1" optional="hide"/>
@@ -145,17 +145,17 @@
                                         <field name="tax_id" widget="many2many_tags" readonly="1" force_save="1"/>
                                         <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show" widget="product_discount"  readonly="1" force_save="1"/>
                                         <field name="price_subtotal" widget="monetary"  readonly="1" force_save="1"/>
-                                        <field name="price_tax" invisible="1"  readonly="1" force_save="1"/>
+                                        <field name="price_tax" column_invisible="1"  readonly="1" force_save="1"/>
                                         <field name="price_total" widget="monetary"  readonly="1" force_save="1"/>
-                                        <field name="currency_id" invisible="1"/>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="order_id" invisible="1"/>
-                                        <field name="order_line_id" force_save="1" invisible="1"/>
-                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
-                                        <field name="payment_id" force_save="1" invisible="1"/>
-                                        <field name="line_regular" force_save="1" invisible="1"/>
-                                        <field name="fluctuating_contract" invisible="1"/>
-                                        
+                                        <field name="currency_id" column_invisible="1"/>
+                                        <field name="company_id" column_invisible="1"/>
+                                        <field name="order_id" column_invisible="1"/>
+                                        <field name="order_line_id" force_save="1" column_invisible="1"/>
+                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" column_invisible="1"/>
+                                        <field name="payment_id" force_save="1" column_invisible="1"/>
+                                        <field name="line_regular" force_save="1" column_invisible="1"/>
+                                        <field name="fluctuating_contract" column_invisible="1"/>
+
                                     </list>
                                 </field>
                             </page>
@@ -197,7 +197,7 @@
                                         <field name="termination_reason" required="termination_date" readonly="1" optional="hide"/>
                                         <field name="product_id" required="1" force_save="1" readonly="1"/>
                                         <field name="name" readonly="1" force_save="1"/>
-                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="company_currency_id" column_invisible="1"/>
                                         <field name="total_direct_cost" widget="monetary" readonly="state != '0_draft'"/>
                                         <field name="product_uom_qty" sum="Quantity" readonly="1" force_save="1"/>
                                         <field name="product_uom"  readonly="1" force_save="1" optional="hide"/>
@@ -206,17 +206,17 @@
                                         <field name="tax_id" widget="many2many_tags" readonly="1" force_save="1"/>
                                         <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show" widget="product_discount"  readonly="1" force_save="1"/>
                                         <field name="price_subtotal" widget="monetary"  readonly="1" force_save="1"/>
-                                        <field name="price_tax" invisible="1"  readonly="1" force_save="1"/>
+                                        <field name="price_tax" column_invisible="1"  readonly="1" force_save="1"/>
                                         <field name="price_total" widget="monetary"  readonly="1" force_save="1"/>
-                                        <field name="currency_id" invisible="1"/>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="order_id" invisible="1"/>
-                                        <field name="order_line_id" force_save="1" invisible="1"/>
-                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
-                                        <field name="payment_id" force_save="1" invisible="1"/>
-                                        <field name="line_regular" force_save="1" invisible="1"/>
-                                        <field name="fluctuating_contract" invisible="1"/>
-                                        
+                                        <field name="currency_id" column_invisible="1"/>
+                                        <field name="company_id" column_invisible="1"/>
+                                        <field name="order_id" column_invisible="1"/>
+                                        <field name="order_line_id" force_save="1" column_invisible="1"/>
+                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" column_invisible="1"/>
+                                        <field name="payment_id" force_save="1" column_invisible="1"/>
+                                        <field name="line_regular" force_save="1" column_invisible="1"/>
+                                        <field name="fluctuating_contract" column_invisible="1"/>
+
                                     </list>
                                 </field>
                             </page>
