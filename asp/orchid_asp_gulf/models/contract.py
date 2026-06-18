@@ -223,7 +223,7 @@ class OrchidASPContract(models.Model):
 		if self.date_from and self.date_to:
 			start_date = self.date_from
 			end_date = self.date_to
-			months = pd.date_range(start_date, end_date, freq='M')
+			months = pd.date_range(start_date, end_date, freq='ME')
 			# months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month)
 			# months=abs(months)+1
 			# months=abs(rdelta.months)+1
@@ -310,7 +310,7 @@ class OrchidASPContract(models.Model):
 
 	def find_number_of_months(self,start_date,end_date):
 		start_months=pd.date_range(start_date, end_date, freq='MS')
-		end_months=pd.date_range(start_date, end_date, freq='M')
+		end_months=pd.date_range(start_date, end_date, freq='ME')
 		months_all =[]
 		for date in start_months:
 			yr_month=str(date.month)+"-"+str(date.year)
@@ -381,7 +381,7 @@ class OrchidASPContractLines(models.Model):
 					if line.billing_from and line.billing_to:
 						start_date = line.billing_from
 						end_date = line.billing_to
-						months = pd.date_range(start_date, end_date, freq='M')
+						months = pd.date_range(start_date, end_date, freq='ME')
 						no_of_months=len(months)
 					if no_of_months<1:
 						no_of_months=1
@@ -410,17 +410,7 @@ class OrchidASPContractLines(models.Model):
 	@api.onchange('effective_date')
 	def onchange_payment_date(self):
 		for line in self:
-			# if line.billing_from:
-			# 	if not(line.order_id.date_from<=line.billing_from<=line.order_id.date_to):
-			# 		raise UserError(_("The Billing Date should be between Contract Period!!"))
-			# if line.billing_to:
-			# 	if not(line.order_id.date_from<=line.billing_to<=line.order_id.date_to):
-			# 		raise UserError(_("The Billing To Date should be between Contract Period!!"))
-			# 	if line.billing_from and not(line.billing_from<=line.billing_to):
-			# 		raise UserError(_("The Billing To Date should not be less than Billing From Date!!"))
 			if line.effective_date:
-				# if not(line.order_id.date_from<=line.effective_date<=line.order_id.date_to):
-				# 	raise UserError(_("The Effective Date should be between Contract Period!!"))
 				line.next_invoice_date=line.effective_date
 				line.billing_from=line.effective_date
 				line.onchange_line_regular()
@@ -523,7 +513,7 @@ class OrchidASPContractLinesActive(models.Model):
 					if line.billing_from and line.billing_to:
 						start_date = line.billing_from
 						end_date = line.billing_to
-						months = pd.date_range(start_date, end_date, freq='M')
+						months = pd.date_range(start_date, end_date, freq='ME')
 						no_of_months=len(months)
 					if no_of_months<1:
 						no_of_months=1

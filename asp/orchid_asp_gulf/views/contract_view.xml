@@ -93,7 +93,6 @@
                                 <field name="contracts_to_renew"/>
                             </group>
                         </group>
-                        <group></group>
                         <notebook>
                             <page string="Service Lines" name="contract_lines" invisible="0">
                                 <field name="contract_line_ids" context="{'default_billing_from':date_from,'default_billing_to':date_to}" mode="list">
@@ -110,7 +109,7 @@
                                                 invisible="not effective_date or parent.state in ['0_draft', 'inactive'] or state != '0_draft'"/>
 
                                         <field name="effective_date"
-                                            readonly="state != '0_draft'"/>
+                                            readonly="state != '0_draft'" force_save="1"/>
 
                                         <field name="billing_from"
                                             readonly="state != '0_draft'"
@@ -153,14 +152,14 @@
                                         <field name="order_id" invisible="1"/>
                                         <field name="order_line_id" force_save="1" invisible="1"/>
                                         <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
-                                        <field name="payment_id" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="payment_id" force_save="1" invisible="1"/>
                                         <field name="line_regular" force_save="1" invisible="1"/>
                                         <field name="fluctuating_contract" invisible="1"/>
                                         
                                     </list>
                                 </field>
                             </page>
-                            <page string="Service Lines" name="contract_lines" invisible="1">
+                            <page string="Service Lines" name="contract_active_lines" invisible="1">
                                 <field name="contract_line_active_ids" context="{'default_billing_from':date_from,'default_billing_to':date_to}" mode="list">
                                     <list editable="top" decoration-it="state=='0_draft'" decoration-muted="state in ['inactive','terminate']">
                                         <button name="%(orchid_asp_gulf.od_terminate_contract_line_action)d" type="action"  string="Terminate" invisible="state != 'active'"/>
@@ -214,7 +213,7 @@
                                         <field name="order_id" invisible="1"/>
                                         <field name="order_line_id" force_save="1" invisible="1"/>
                                         <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
-                                        <field name="payment_id" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="payment_id" force_save="1" invisible="1"/>
                                         <field name="line_regular" force_save="1" invisible="1"/>
                                         <field name="fluctuating_contract" invisible="1"/>
                                         
@@ -224,10 +223,7 @@
                         </notebook>
                         <field name="note"  placeholder="Notes" nolabel="1"/>
                     </sheet>
-                    <div class="oe_chatter">
-                      <field name="message_follower_ids" widget="mail_followers"/>
-                      <field name="message_ids" widget="mail_thread"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>

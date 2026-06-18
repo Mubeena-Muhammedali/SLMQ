@@ -15,6 +15,7 @@
     'data': [
         "data/data.xml",
         "data/schedule_actions.xml",
+        "data/contract_seq.xml",
         
         "security/security.xml",
         "security/ir.model.access.csv",

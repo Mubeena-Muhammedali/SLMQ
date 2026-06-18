@@ -90,10 +90,11 @@ class OrchidCreateContractAll(models.TransientModel):
 				user_id=self.env.user.id
 				partner_id = self.env['res.partner'].browse(pc_vals['partner'])
 				contract_id=self.env['od.asp.contract'].browse(pc_vals['contract'])
+				journal_id_rec = self.env['account.move'].with_context(default_move_type='out_invoice').new({'move_type': 'out_invoice'})
 				invoice_vals={
 				'od_contract_id': pc_vals['contract'],
 				'partner_id': pc_vals['partner'],
-				'journal_id': self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal().id,
+				'journal_id': journal_id_rec._search_default_journal().id,
 				'invoice_origin': 'Contract Bulk '+str(self.date),
 				'invoice_user_id': partner_id.user_id and partner_id.user_id.id or user_id,
 				'move_type':'out_invoice',
@@ -102,7 +103,8 @@ class OrchidCreateContractAll(models.TransientModel):
 				'invoice_payment_term_id':pc_vals['payment_term_id'],
 				'od_exchange_rate':pc_vals['rate'],
 				'date':self.invoice_date,
-				'partner_bank_id':3,
+				# 'partner_bank_id':3, code from odoo 14
+				'partner_bank_id':partner_id.bank_ids and partner_id.bank_ids[0].id or False,
 				'ref':contract_id.client_order_ref,
 				'payment_reference':contract_id.client_order_ref,
 				'od_contact_id':contract_id.contact_id and contract_id.contact_id.id,
@@ -152,7 +154,7 @@ class OrchidCreateContractAll(models.TransientModel):
 					if line.payment_line.period_from and line.payment_line.period_to:
 						freq_start_date = line.payment_line.period_from
 						freq_end_date = line.payment_line.period_to
-						freq_months = pd.date_range(freq_start_date, freq_end_date, freq='M')
+						freq_months = pd.date_range(freq_start_date, freq_end_date, freq='ME')
 						no_freq_months=len(freq_months)
 					if no_freq_months==0:
 						no_freq_months=1
@@ -161,7 +163,7 @@ class OrchidCreateContractAll(models.TransientModel):
 					'product_id':line.contract_line_id.product_id.id,
 					'quantity':line.contract_line_id.product_uom_qty,
 					'move_id':invoice_id.id,
-					'display_type':False,
+					# 'display_type':False,
 					'name':line.contract_line_id.product_id.name,
 					'od_period_from':line.payment_line.period_from,
 					'od_period_to':line.payment_line.period_to,
@@ -169,7 +171,9 @@ class OrchidCreateContractAll(models.TransientModel):
 					'tax_ids':[(6,0,tax_ls)],
 					'od_contract_line_id':[(6,0,line.contract_line_id.ids)],
 					'name':line.contract_line_id.name,
-					'analytic_account_id':line.contract_id.analytic_account_id.id or False,
+					'analytic_distribution': {
+						str(line.contract_id.analytic_account_id.id): 100
+					} if line.contract_id.analytic_account_id else {},
 					'od_frequency':no_freq_months,
 					}
 					# onetime case change
@@ -219,7 +223,7 @@ class OrchidCreateContractAll(models.TransientModel):
 					if line.payment_line.period_from and line.payment_line.period_to:
 						freq_start_date = line.payment_line.period_from
 						freq_end_date = line.payment_line.period_to
-						freq_months = pd.date_range(freq_start_date, freq_end_date, freq='M')
+						freq_months = pd.date_range(freq_start_date, freq_end_date, freq='ME')
 						no_freq_months=len(freq_months)
 					if no_freq_months==0:
 						no_freq_months=1
@@ -228,14 +232,16 @@ class OrchidCreateContractAll(models.TransientModel):
 					'product_id':line.contract_line_id.product_id.id,
 					'quantity':actual_quantity,
 					'move_id':invoice_id.id,
-					'display_type':False,
+					# 'display_type':False,
 					'od_period_from':line.payment_line.period_from,
 					'od_period_to':line.payment_line.period_to,
 					'price_unit':(amount_to_invoice/(no_freq_months or 1.0))/product_uom_qty,
 					'tax_ids':[(6,0,tax_ls)],
 					'od_contract_line_id':[(6,0,contract_line_ls)],
 					'name':description,
-					'analytic_account_id':line.contract_id.analytic_account_id.id or False,
+					'analytic_distribution': {
+						str(line.contract_id.analytic_account_id.id): 100
+					} if line.contract_id.analytic_account_id else {},
 					'od_frequency':no_freq_months,
 					}
 					# onetime case change
@@ -256,7 +262,7 @@ class OrchidCreateContractAll(models.TransientModel):
 					invoice_lines.append(w_line)
 
 				invoice_id.invoice_line_ids = invoice_lines
-				invoice_id.post()
+				invoice_id.action_post()
 				for line in self.invoice_line.filtered(lambda r: r.contract_id.partner_id.id == pc_vals['partner'] and r.contract_id.id==pc_vals['contract']):
 					inv_line_id = invoice_id.invoice_line_ids.search([('od_contract_line_id','=',line.contract_line_id.id),('od_period_from','=',line.payment_line.period_from),('od_period_to','=',line.payment_line.period_to),('move_id.payment_state','!=','reversed'),('move_id.move_type','=','out_invoice')])
 					c_line_inv_ids=[ivl.id for ivl in line.contract_line_id.invoice_line_ids]
