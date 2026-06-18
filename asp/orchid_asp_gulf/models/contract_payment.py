@@ -256,8 +256,8 @@ class OrchidContractPayment(models.Model):
 	#------ correct as on 4 nov 2021
 	def generate_linesnew(self, start_date, end_date, period_start, frequency, months, amount_per_days, total_amount):
 		t_amount = 0
-		no_of_months = len(pd.date_range(start_date, end_date, freq='M'))#only take if month end date 30 or 31
-		no_of_years = pd.date_range(start_date, end_date, freq='Y')
+		no_of_months = len(pd.date_range(start_date, end_date, freq='ME'))#only take if month end date 30 or 31
+		no_of_years = pd.date_range(start_date, end_date, freq='YE')
 		line_periods=[]
 		start_period = period_start
 		if frequency == 'Q':
@@ -386,7 +386,7 @@ class OrchidContractPayment(models.Model):
 			line_periods.reverse()
 		#------ correct as on 4 nov 2021
 		if frequency == 'M':
-			monthly_months = pd.date_range(start_date, end_date, freq='M')
+			monthly_months = pd.date_range(start_date, end_date, freq='ME')
 			len_months = len(monthly_months)
 			m_count=0
 			if not self.contract_line_id.line_regular:
@@ -711,7 +711,7 @@ class OrchidContractPayment(models.Model):
 				amount_per_days = (total_amount-self.contract_line_id.invoice_line_ids[0].price_total)/days
 
 			if line.billing_cycle=='monthly':
-				months = len(pd.date_range(start_date, end_date, freq='M'))
+				months = len(pd.date_range(start_date, end_date, freq='ME'))
 				period_start = start_date
 				if line.fluctuating_contract:
 					self.generate_fluctng_prepay('M')# to generate prepayment lines for fluctuating conntract lines
@@ -720,7 +720,7 @@ class OrchidContractPayment(models.Model):
 				self.generate_lines(start_date, end_date, period_start, months, 0, amount_per_days, total_amount)#to generate revenue lines
 					
 			if line.billing_cycle == 'quarterly':
-				quarter = len(pd.date_range(start_date, end_date, freq='Q'))
+				quarter = len(pd.date_range(start_date, end_date, freq='QE'))
 				period_start = start_date
 				if line.fluctuating_contract:
 					raise UserError(_('Only Monthly billing Cycle is allowed for this contract line'))
@@ -731,7 +731,7 @@ class OrchidContractPayment(models.Model):
 				
 					
 			if line.billing_cycle == 'half':
-				no_of_years = len(pd.date_range(start_date, end_date, freq='Y'))
+				no_of_years = len(pd.date_range(start_date, end_date, freq='YE'))
 				halves = no_of_years*2
 				period_start = start_date
 				if line.fluctuating_contract:
@@ -742,7 +742,7 @@ class OrchidContractPayment(models.Model):
 
 
 			if line.billing_cycle in ('yearly','annually'):
-				years = len(pd.date_range(start_date, end_date, freq='Y'))
+				years = len(pd.date_range(start_date, end_date, freq='YE'))
 				period_start = start_date
 				if line.fluctuating_contract:
 					raise UserError(_('Only Monthly billing Cycle is allowed for this contract line'))
@@ -801,26 +801,26 @@ class OrchidContractPayment(models.Model):
 				amount_per_days = (total_amount-self.contract_line_id.invoice_line_ids[0].price_total)/days
 
 			if line.billing_cycle=='monthly':
-				months = len(pd.date_range(start_date, end_date, freq='M'))
+				months = len(pd.date_range(start_date, end_date, freq='ME'))
 				period_start = start_date
 				self.generate_lines(start_date, end_date, period_start, months, 0, amount_per_days, total_amount)#to generate revenue lines
 					
 			if line.billing_cycle == 'quarterly':
-				quarter = len(pd.date_range(start_date, end_date, freq='Q'))
+				quarter = len(pd.date_range(start_date, end_date, freq='QE'))
 				period_start = start_date
 				self.generate_lines(start_date, end_date, period_start, quarter, 2, amount_per_days, total_amount)
 
 				
 					
 			if line.billing_cycle == 'half':
-				no_of_years = len(pd.date_range(start_date, end_date, freq='Y'))
+				no_of_years = len(pd.date_range(start_date, end_date, freq='YE'))
 				halves = no_of_years*2
 				period_start = start_date
 				self.generate_lines(start_date, end_date, period_start, halves, 5, amount_per_days, total_amount)
 
 
 			if line.billing_cycle in ('yearly','annually'):
-				years = len(pd.date_range(start_date, end_date, freq='Y'))
+				years = len(pd.date_range(start_date, end_date, freq='YE'))
 				period_start = start_date
 				self.generate_lines(start_date, end_date, period_start, years, 11, amount_per_days, total_amount)
 				
@@ -843,23 +843,23 @@ class OrchidContractPayment(models.Model):
 				amount_per_days = (total_amount-self.contract_line_id.invoice_line_ids[0].price_total)/days
 
 			if line.billing_cycle=='monthly':
-				months = len(pd.date_range(start_date, end_date, freq='M'))
+				months = len(pd.date_range(start_date, end_date, freq='ME'))
 				period_start = start_date
 				self.server_action_generate_lines(start_date, end_date, period_start, months, 0, amount_per_days, total_amount)#to generate revenue lines
 					
 			if line.billing_cycle == 'quarterly':
-				quarter = len(pd.date_range(start_date, end_date, freq='Q'))
+				quarter = len(pd.date_range(start_date, end_date, freq='QE'))
 				period_start = start_date
 				self.server_action_generate_lines(start_date, end_date, period_start, quarter, 2, amount_per_days, total_amount)
 					
 			if line.billing_cycle == 'half':
-				no_of_years = len(pd.date_range(start_date, end_date, freq='Y'))
+				no_of_years = len(pd.date_range(start_date, end_date, freq='YE'))
 				halves = no_of_years*2
 				period_start = start_date
 				self.server_action_generate_lines(start_date, end_date, period_start, halves, 5, amount_per_days, total_amount)
 
 			if line.billing_cycle in ('yearly','annually'):
-				years = len(pd.date_range(start_date, end_date, freq='Y'))
+				years = len(pd.date_range(start_date, end_date, freq='YE'))
 				period_start = start_date
 				self.server_action_generate_lines(start_date, end_date, period_start, years, 11, amount_per_days, total_amount)
 				

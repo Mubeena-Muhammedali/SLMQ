@@ -25,7 +25,7 @@ class OrchidTerminateContractLine(models.Model):
 			self.contract_line_id.sudo().write({'termination_date':self.termination_date,'termination_reason':self.termination_reason,'state':'terminate'})
 			start_date = self.contract_line_id.billing_from
 			end_date = self.termination_date
-			months = pd.date_range(start_date, end_date, freq='M')
+			months = pd.date_range(start_date, end_date, freq='ME')
 			frequency=len(months)
 			self.contract_line_id.order_line_id.od_frequency=frequency
 			return {
