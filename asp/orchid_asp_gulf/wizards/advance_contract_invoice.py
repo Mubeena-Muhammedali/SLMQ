@@ -93,16 +93,16 @@ class OrchidAdvanceInvoice(models.TransientModel):
 			# 'display_type':False,
 			'name':line.name,
 			'price_unit':(line.amount_to_invoice),
-			'od_contract_line_id':line.contract_line_id.id,
+			'od_contract_line_id':[(6,0,[line.contract_line_id.id])],
 			'tax_ids':[(6,0,tax_ls)],
 			'name':line.contract_line_id.name,
 			'analytic_distribution': {
-						str(line.contract_id.analytic_account_id.id): 100
-					} if line.contract_id.analytic_account_id else {},
+						str(self.contract_id.analytic_account_id.id): 100
+					} if self.contract_id.analytic_account_id else {},
 			'od_frequency':line.contract_line_id.frequency,
 			}
 			if vals['price_unit']==0:
-				raise UserError(_("The Price Unit should be non-zero!! Refer the line for contract '%s' ")%(line.contract_id.name))
+				raise UserError(_("The Price Unit should be non-zero!! Refer the line for contract '%s' ")%(self.contract_id.name))
 			w_line=(0,0,vals)
 			invoice_lines.append(w_line)
 		invoice_id.invoice_line_ids = invoice_lines

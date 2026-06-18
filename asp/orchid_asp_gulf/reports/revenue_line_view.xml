@@ -33,7 +33,7 @@
         <record id="menu_action_od_revenue_line_view" model="ir.actions.act_window">
             <field name="name">Revenue Recognition Analysis</field>
             <field name="res_model">od.revenue.line.view</field>
-            <field name="view_mode">pivot,graph,tree</field> 
+            <field name="view_mode">pivot,graph,list</field> 
         </record>
         
     </data>
