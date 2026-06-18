@@ -219,25 +219,25 @@ class SaleOrder(models.Model):
 			})
 			
 	#fto correct discount	
-	def supply_rate(self):
+	# def supply_rate(self):
 
-		for order in self:
-			if order.discount_type == 'percent':
-				for line in order.order_line:
-					line.od_disc_amount = 0
-					line.discount = order.discount_rate
-			else:
-				total = discount = 0.0
-				for line in order.order_line:
-					line.od_disc_amount = 0
-					# total += round((line.product_uom_qty * line.price_unit))
-					total += (line.product_uom_qty * line.price_unit * line.od_frequency)
-				if order.discount_rate != 0:
-					discount = (order.discount_rate / total) * 100
-				else:
-					discount = order.discount_rate
-				for line in order.order_line:
-					line.discount = discount
+	# 	for order in self:
+	# 		if order.discount_type == 'percent':
+	# 			for line in order.order_line:
+	# 				line.od_disc_amount = 0
+	# 				line.discount = order.discount_rate
+	# 		else:
+	# 			total = discount = 0.0
+	# 			for line in order.order_line:
+	# 				line.od_disc_amount = 0
+	# 				# total += round((line.product_uom_qty * line.price_unit))
+	# 				total += (line.product_uom_qty * line.price_unit * line.od_frequency)
+	# 			if order.discount_rate != 0:
+	# 				discount = (order.discount_rate / total) * 100
+	# 			else:
+	# 				discount = order.discount_rate
+	# 			for line in order.order_line:
+	# 				line.discount = discount
 
 class SaleOrderLine(models.Model):
 	_inherit = 'sale.order.line'
@@ -250,10 +250,10 @@ class SaleOrderLine(models.Model):
 	@api.onchange('od_disc_amount','price_unit','product_uom_qty')
 	def onchange_disc_amt(self):
 		for line in self:
-			if line.order_id.discount_rate==0:
-				price_unit = line.price_unit if line.price_unit !=0 else 1
-				product_uom_qty = line.product_uom_qty if line.product_uom_qty !=0 else 1
-				line.discount = ((line.od_disc_amount/(price_unit*product_uom_qty))*100)
+			# if line.order_id.discount_rate==0:
+			price_unit = line.price_unit if line.price_unit !=0 else 1
+			product_uom_qty = line.product_uom_qty if line.product_uom_qty !=0 else 1
+			line.discount = ((line.od_disc_amount/(price_unit*product_uom_qty))*100)
 
 
 	@api.onchange('product_id')

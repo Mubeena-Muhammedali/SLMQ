@@ -53,6 +53,7 @@
                        options="{'no_create': True, 'no_create_edit': True}"/>
             </field>
             <field name="ref" position="after">
+                <field name="od_is_bank_voucher"/>
                 <field name="od_reveiew" invisible="not od_is_bank_voucher" readonly="state != 'draft'"/>
                 <field name="od_check_date"/>
                 <field name="od_check_to"/>
