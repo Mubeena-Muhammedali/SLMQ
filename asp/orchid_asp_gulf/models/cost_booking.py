@@ -46,7 +46,7 @@ class OrchidCostBooking(models.Model):
 			self.total_cost = total_cost
 
 			get_direct_cost_line = ('''SELECT 
-								[]		dl.product_id as product,
+										dl.product_id as product,
 										cp.partner_id as partner,
 										sum(coalesce(dl.amount,0)) as debit
 										FROM od_direct_costing_line dl

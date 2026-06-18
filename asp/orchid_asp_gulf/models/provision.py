@@ -91,14 +91,18 @@ class OrchidProvisionForm(models.Model):
 		self.state='completed'
 
 
-	@api.model
-	def create(self, vals):
-		if 'unrevisioned_name' not in vals:
-			if vals.get('name', 'New') == 'New':
-				seq = self.env['ir.sequence']
-				vals['name'] = seq.next_by_code('od.asp.provision.form') or '/'
-			vals['unrevisioned_name'] = vals['name']
-		return super(OrchidProvisionForm, self).create(vals)
+	@api.model_create_multi
+	def create(self, vals_list):
+		for vals in vals_list:
+			if 'unrevisioned_name' not in vals:
+				if vals.get('name', 'New') == 'New':
+					vals['name'] = self.env['ir.sequence'].next_by_code(
+						'od.asp.provision.form'
+					) or '/'
+
+				vals['unrevisioned_name'] = vals['name']
+
+		return super().create(vals_list)
 	
 
 	def button_revision(self):

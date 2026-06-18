@@ -19,11 +19,16 @@ class OrchidLeadAssignUser(models.Model):
 
 	def assign_user(self):
 		if self.lead_id and self.user_id:
-			self.lead_id.sudo().write({'user_id':self.user_id.id})
+			self.lead_id.sudo().write({
+				'user_id': self.user_id.id
+			})
+
 			return {
-			  'view_type': 'list',
-			  "view_mode": 'list',
-			  'res_model': 'crm.lead',
-			  'view_id': 902,
-			  'type': 'ir.actions.act_window',
-			  }
+				'name': 'Opportunities',
+				'type': 'ir.actions.act_window',
+				'res_model': 'crm.lead',
+				'view_mode': 'list',
+				'views': [
+					(self.env.ref('crm.crm_case_tree_view_oppor').id, 'list'),
+				]
+			}
