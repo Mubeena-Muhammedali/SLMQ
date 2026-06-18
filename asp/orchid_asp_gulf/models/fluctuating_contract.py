@@ -123,7 +123,7 @@ class OrchidFluctuatingContractLine(models.Model):
 			'name':self.new_desc,
 			'price_unit':self.contract_line_id.price_unit,
 			'od_frequency':self.frequency,
-			'tax_id':[(6,0,[tax.id for tax in self.contract_line_id.tax_id])],
+			'tax_ids':[(6,0,[tax.id for tax in self.contract_line_id.tax_id])],
 			}
 		if self.revised_qty>0:
 			quotation_line_vals['product_uom_qty']=self.revised_qty
@@ -147,10 +147,10 @@ class OrchidFluctuatingContractLine(models.Model):
 				'price_subtotal':sale_order_line.price_subtotal,
 				'price_total':sale_order_line.price_total,
 				'price_tax':sale_order_line.price_tax,
-				'tax_id':[(6,0,[tax.id for tax in sale_order_line.tax_id])],
+				'tax_id':[(6,0,[tax.id for tax in sale_order_line.tax_ids])],
 				'discount':sale_order_line.discount,
 				'product_uom_qty':sale_order_line.product_uom_qty,
-				'product_uom':sale_order_line.product_uom.id,
+				'product_uom':sale_order_line.product_uom_id.id,
 				'order_line_id':sale_order_line.id,
 				'frequency':sale_order_line.od_frequency,
 				'order_id':self.contract_id.id,

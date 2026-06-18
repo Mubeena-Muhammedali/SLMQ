@@ -58,8 +58,6 @@
                                 <field name="description"/>
 
                             </group>
-                            <group>
-                            </group>
                         </group>
                         <field name="remarks" placeholder="Remarks...."/>
                         <notebook>
@@ -68,7 +66,7 @@
                                 invisible="record_type != 'sale'">
 
                                 <field name="product_line_ds"
-                                    mode="tree"
+                                    mode="list"
                                     readonly="state != 'draft'">
 
                                     <list editable="top">
@@ -126,7 +124,7 @@
                                 invisible="record_type != 'contract'">
 
                                 <field name="contract_line_ids"
-                                    mode="tree"
+                                    mode="list"
                                     readonly="state != 'draft'">
 
                                     <list editable="top">
@@ -183,10 +181,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                      <field name="message_follower_ids" widget="mail_followers"/>
-                      <field name="message_ids" widget="mail_thread"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -210,7 +205,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">od.product.correction</field>
             <field name="view_mode">list,form</field>
-            <field name="view_id" ref="od_product_correction_tree_view"/>
             <field name="search_view_id" ref="od_product_correction_filter_view"/>
         </record>
     </data>
