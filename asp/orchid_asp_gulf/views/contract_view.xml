@@ -133,7 +133,7 @@
                                             readonly="invoice_line_ids"/>
                                         <field name="state" required="1" readonly="1"/>
                                         <field name="termination_date" readonly="1" optional="hide"/>
-                                        <field name="termination_reason" required="1" readonly="1" optional="hide"/>
+                                        <field name="termination_reason" required="termination_date" readonly="1" optional="hide"/>
                                         <field name="product_id" required="1" force_save="1" readonly="1"/>
                                         <field name="name" readonly="1" force_save="1"/>
                                         <field name="company_currency_id" invisible="1"/>
@@ -194,7 +194,7 @@
                                             readonly="invoice_line_ids"/>
                                         <field name="state" required="1" readonly="1"/>
                                         <field name="termination_date" readonly="1" optional="hide"/>
-                                        <field name="termination_reason" required="1" readonly="1" optional="hide"/>
+                                        <field name="termination_reason" required="termination_date" readonly="1" optional="hide"/>
                                         <field name="product_id" required="1" force_save="1" readonly="1"/>
                                         <field name="name" readonly="1" force_save="1"/>
                                         <field name="company_currency_id" invisible="1"/>
