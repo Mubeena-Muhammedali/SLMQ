@@ -266,7 +266,8 @@ class OrchidASPContract(models.Model):
 			if not sale_order_ids:
 				raise UserError(_('Contract can be created from Sale Order only'))
 
-			vals['name'] = self.env['ir.sequence'].next_by_code('od.asp.contract')
+			if 'name' not in vals:
+				vals['name'] = self.env['ir.sequence'].next_by_code('od.asp.contract')
 
 		records = super().create(vals_list)
 
