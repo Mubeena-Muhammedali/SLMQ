@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-    	<menuitem id="od_asp_contract_view_menu_main" name="Contracts" parent="sale.sale_menu_root"  sequence="2"/>
+    	<menuitem id="od_asp_contract_view_menu_main" name="Contracts" parent="sale.sale_menu_root"  sequence="11"/>
     	<menuitem id="od_asp_provision_view_menu" name="Provision Form" parent="od_asp_contract_view_menu_main" action="action_od_asp_provision_view" sequence="1"/>
         <menuitem id="od_asp_contract_view_menu" name="Contracts" parent="od_asp_contract_view_menu_main" action="action_od_asp_contract_view" sequence="2"/>
         <menuitem id="od_fluctuating_contract_view_menu" name="Fluctuating Services" parent="od_asp_contract_view_menu_main" action="action_od_fluctuating_contract_view" sequence="3"/>
 		<menuitem id="od_asp_contract_payment_view_menu" name="Pregenerated Invoice Lines" parent="od_asp_contract_view_menu_main" action="action_od_asp_contract_payment_view" sequence="4"/>
 		<menuitem id="od_product_correction_menu" name="Product Correction Utility" parent="od_asp_contract_view_menu_main" action="action_od_product_correction_view" sequence="5"/>
-		
-		<menuitem id="od_asp_provision_view_menu_main" name="Provision Masters" parent="sale.sale_menu_root"  sequence="2"/>
-		
+
+		<menuitem id="od_asp_provision_view_menu_main" name="Provision Masters" parent="sale.sale_menu_root"  sequence="12"/>
+
 		<menuitem id="od_asp_azzurance_cluster_menu" name="Azzurance Cluster" parent="od_asp_provision_view_menu_main" action="action_azzurance_cluster_tree_view" sequence="5"/>
 		<menuitem id="od_asp_disk_master_menu" name="Disks" parent="od_asp_provision_view_menu_main" action="action_disk_master_tree_view" sequence="6"/>
 		<menuitem id="od_asp_revenue_recognition_menu" name="Revenue Recognition" parent="account.account_transactions_menu" action="od_revenue_recognition_action" sequence="7"/>
