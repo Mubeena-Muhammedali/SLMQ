@@ -35,7 +35,7 @@ class PurchaseOrder(models.Model):
 
 	def od_generate_po_costing_line(self):
 		for line in self.order_line:
-			if not line.account_analytic_id and line.od_start_date:
+			if not line.analytic_distribution and line.od_start_date:
 				start_date = line.od_start_date
 				end_date = line.od_to_date
 
