@@ -458,7 +458,7 @@ class OrchidASPContractLines(models.Model):
 
 class OrchidASPContractLinesActive(models.Model):
 	_name = "od.asp.contract.line.active"
-	_description = "Service Lines"
+	_description = "Active Service Lines"
 	_order = "state asc, id desc"
 
 	order_id = fields.Many2one('od.asp.contract', string="Contract", ondelete='cascade')
@@ -499,7 +499,7 @@ class OrchidASPContractLinesActive(models.Model):
 	flctng_parent_contract_line_id=fields.Many2one('od.asp.contract.line', string="Parent contract line", help="contract line from which this fluctuating line has been created")
 
 	company_currency_id = fields.Many2one('res.currency',string='Company Currency', readonly=True, related='company_id.currency_id')
-	total_direct_cost = fields.Monetary(string='Total Cost', currency_field='company_currency_id', help="Total cost to be booked for the whole contract period")
+	total_direct_cost = fields.Monetary(string='Total Cost', currency_field='currency_id', help="Total cost to be booked for the whole contract period")
 
 	def action_activate(self):
 		for line in self:

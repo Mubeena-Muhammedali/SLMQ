@@ -24,7 +24,7 @@ class OrchidContractPayment(models.Model):
 	per_month = fields.Float(digits=(16,3), string="Per Month Amount")
 	states=fields.Selection(related="contract_line_id.state", string="State",store=True)
 	partner_id = fields.Many2one('res.partner', string="Customer")
-	monthly_line_ids = fields.One2many('od.contract.monthly.line','service_id', string="Payment Lines")
+	monthly_line_ids = fields.One2many('od.contract.monthly.line','service_id', string="Monthly Lines")
 	fluctuating_contract=fields.Boolean(string="Fluctuating Service", help="returns true if this prepayment is associated with a fluctuating contractline", default=False, copy=False)
 	contract_name = fields.Char('Contract Name', related="contract_id.contract_code", store=True)
 	
@@ -1027,7 +1027,6 @@ class OrchidContractPayment(models.Model):
 	def update_contract_line(self):
 		for line in self:
 			contract_line = self.env['od.asp.contract.line'].search([('order_id','=',line.contract_id.id),('name','=',line.name)])
-			print("contract_line---------------->",len(contract_line),line.contract_id.name)
 			if contract_line and len(contract_line)==1:
 				if not line.contract_line_id:
 					line.contract_line_id = contract_line.id
@@ -1038,8 +1037,6 @@ class OrchidContractPayment(models.Model):
 							('order_id', '=', line.contract_id.id),
 							('name', 'ilike', line.name[:100])
 						])
-
-					print("contract_line---------111111111111111111111------->",len(contract_lines),line.contract_id.name)
 					if len(contract_lines) == 1:
 						line.contract_line_id = contract_lines.id
 						contract_lines.payment_id = line.id
@@ -1052,8 +1049,6 @@ class OrchidContractPayment(models.Model):
 						]).filtered(
 							lambda l: (l.name or '').replace(' ', '').lower() == line_name
 						)
-
-						print("contract_line---------space removed------->", len(contract_lines), line.contract_id.name)
 
 						if len(contract_lines) == 1:
 							line.contract_line_id = contract_lines.id
