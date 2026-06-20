@@ -217,6 +217,14 @@ class SaleOrder(models.Model):
 				'amount_discount': amount_discount,
 				'amount_total': amount_untaxed + amount_tax,
 			})
+
+	def update_contract_analytic(self):
+		for rec in self:
+			contract = self.env['od.asp.contract'].search([('sale_order_ids','in',rec.ids)])
+			rec.od_contract_id = contract.id
+			project_account_id = self.env['account.analytic.account'].search([('code','=',rec.name)])
+			rec.project_account_id = project_account_id.id
+			rec.od_contract_id.analytic_account_id = project_account_id.id
 			
 	#fto correct discount	
 	# def supply_rate(self):

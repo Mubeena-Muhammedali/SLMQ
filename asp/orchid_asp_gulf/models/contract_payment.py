@@ -1024,6 +1024,41 @@ class OrchidContractPayment(models.Model):
 		entry_id.line_ids=mv_line
 		entry_id.post()
 
+	def update_contract_line(self):
+		for line in self:
+			contract_line = self.env['od.asp.contract.line'].search([('order_id','=',line.contract_id.id),('name','=',line.name)])
+			print("contract_line---------------->",len(contract_line),line.contract_id.name)
+			if contract_line and len(contract_line)==1:
+				if not line.contract_line_id:
+					line.contract_line_id = contract_line.id
+					contract_line.payment_id = line.id
+			else:
+				if line.name:
+					contract_lines = self.env['od.asp.contract.line'].search([
+							('order_id', '=', line.contract_id.id),
+							('name', 'ilike', line.name[:100])
+						])
+
+					print("contract_line---------111111111111111111111------->",len(contract_lines),line.contract_id.name)
+					if len(contract_lines) == 1:
+						line.contract_line_id = contract_lines.id
+						contract_lines.payment_id = line.id
+					
+					else:
+						line_name = (line.name or '').replace(' ', '').lower()
+
+						contract_lines = self.env['od.asp.contract.line'].search([
+							('order_id', '=', line.contract_id.id),('termination_date','=',False)
+						]).filtered(
+							lambda l: (l.name or '').replace(' ', '').lower() == line_name
+						)
+
+						print("contract_line---------space removed------->", len(contract_lines), line.contract_id.name)
+
+						if len(contract_lines) == 1:
+							line.contract_line_id = contract_lines.id
+							contract_lines.payment_id = line.id
+
 
 
 
