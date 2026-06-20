@@ -108,8 +108,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract Payment">
-                    <field name="partner_id" operator="child_of"/>
                     <field name="contract_id"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <group>

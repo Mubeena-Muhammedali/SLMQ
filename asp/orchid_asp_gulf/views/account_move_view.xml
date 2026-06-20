@@ -31,7 +31,7 @@
                 <field name="od_period_to" invisible="1"/>
             </xpath>
 
-            <field name="partner_id" position="after">
+            <field name="partner_shipping_id" position="after">
                 <field name="move_type"
                        readonly="1"
                        force_save="1"
@@ -53,10 +53,10 @@
                        options="{'no_create': True, 'no_create_edit': True}"/>
             </field>
             <field name="ref" position="after">
-                <field name="od_is_bank_voucher"/>
-                <field name="od_reveiew" invisible="not od_is_bank_voucher" readonly="state != 'draft'"/>
-                <field name="od_check_date"/>
-                <field name="od_check_to"/>
+                <field name="od_is_bank_voucher" invisible="1" />
+                <field name="od_reveiew" invisible="1" readonly="state != 'draft'"/>
+                <field name="od_check_date" invisible="1"/>
+                <field name="od_check_to" invisible="1"/>
                 <field name="od_acc_payee" invisible="1" force_save="1"/>
             </field>
             <xpath expr="//form/header/button[1]" position="attributes">
