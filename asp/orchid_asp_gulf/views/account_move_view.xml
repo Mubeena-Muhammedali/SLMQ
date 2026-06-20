@@ -11,7 +11,7 @@
                 <field name="od_exchange_rate"
                        readonly="state != 'draft'"
                        invisible="move_type not in ('out_invoice', 'out_refund')"/>
-            </field>
+            </xpath>
 
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="od_frequency"/>
