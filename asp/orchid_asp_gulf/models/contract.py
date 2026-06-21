@@ -24,7 +24,7 @@ class OrchidASPContract(models.Model):
 	sale_order_ids=fields.Many2many('sale.order', string="Sale Orders")
 	sam_id = fields.Many2one('res.users', string="SAM")
 	contract_line_ids = fields.One2many('od.asp.contract.line', 'order_id', string="Service Lines")
-	contract_line_active_ids = fields.One2many('od.asp.contract.line.active', 'order_id', string="Service Lines")
+	contract_line_active_ids = fields.One2many('od.asp.contract.line.active', 'order_id', string="Active Service Lines")
 	note = fields.Text(string="Note")
 	company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company.id)
 	state=fields.Selection([('0_draft','Draft'),('active','In Progress'),('inactive','Expired'),('terminate','Terminated')], string="Active", default='0_draft')
@@ -323,6 +323,11 @@ class OrchidASPContract(models.Model):
 		months_all = list(set(months_all))
 		return len(months_all)
 
+	def action_update_contract_line_amounts(self):
+		for contract in self:
+			contract.contract_line_ids._update_amounts()
+		return True
+
 class OrchidASPContractLines(models.Model):
 	_name = "od.asp.contract.line"
 	_description = "Service Lines"
@@ -368,6 +373,34 @@ class OrchidASPContractLines(models.Model):
 	company_currency_id = fields.Many2one('res.currency',string='Company Currency', readonly=True, related='company_id.currency_id')
 	total_direct_cost = fields.Monetary(string='Total Cost', currency_field='currency_id', help="Total cost to be booked for the whole contract period")
 
+
+	def _prepare_amount_values(self):
+		self.ensure_one()
+		price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+		price = price * self.frequency if self.frequency else price
+		currency = self.currency_id or self.order_id.currency_id or self.company_id.currency_id or self.env.company.currency_id
+		taxes = self.tax_id.compute_all(
+			price,
+			currency,
+			self.product_uom_qty,
+			product=self.product_id,
+			partner=self.order_id.partner_id,
+		)
+		return {
+			'price_tax': sum(tax.get('amount', 0.0) for tax in taxes.get('taxes', [])),
+			'price_total': taxes['total_included'],
+			'price_subtotal': taxes['total_excluded'],
+		}
+
+	def _update_amounts(self):
+		for line in self:
+			line.write(line._prepare_amount_values())
+		return True
+
+	@api.onchange('price_unit', 'discount', 'product_uom_qty', 'tax_id', 'frequency')
+	def _onchange_amount(self):
+		for line in self:
+			line.update(line._prepare_amount_values())
 
 	def action_activate(self):
 		for line in self:
