@@ -6,6 +6,10 @@
         <field name="arch" type="xml">
             <form string="Create Invoices">
                 <group>
+                    <field name="message"
+                        nolabel="1"
+                        readonly="1"
+                        class="text-danger"/>
                     <group>
                         <field name="date" required="1"/>
                         <field name="invoice_date" required="1"/>

@@ -15,11 +15,13 @@ class OrchidCreateContractAll(models.TransientModel):
 	contract_id = fields.Many2one('od.asp.contract', string="Contract")
 	partner_id = fields.Many2one('res.partner', string="Customer")
 	invoice_line = fields.One2many('od.contract.invoice.wiz.line.all','wiz_id', string="Lines")
+	message = fields.Char(readonly=True)
 
 	@api.onchange('date')
 	def onchange_date(self):
 		if self.date:
 			self.invoice_date = self.date
+			
 	def search_lines(self):
 		if self.date:
 			if self.invoice_line:
@@ -61,9 +63,18 @@ class OrchidCreateContractAll(models.TransientModel):
 							if line.billing_cycle == 'annually':
 								vals['amount'] = payment_line.amount
 							self.env['od.contract.invoice.wiz.line.all'].create(vals)
-					
+
 			if not self.invoice_line:
-				raise UserError(_("No Invoiceable Lines !!!"))
+				self.message = _("No Invoiceable Lines Found!")
+				return {
+					'type': 'ir.actions.act_window',
+					'res_model': 'od.contract.invoice.wiz.all',
+					'res_id': self.id,
+					'view_mode': 'form',
+					'target': 'new',
+				}
+
+			self.message = False
 			return {
 			  'view_type': 'form',
 			  "view_mode": 'form',

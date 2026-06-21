@@ -20,14 +20,14 @@ class AccountMove(models.Model):
 			('cancel', 'Cancelled'),
 		], string='Status', required=True, readonly=True, copy=False, tracking=True,
 		default='draft')
-	od_reveiew = fields.Boolean(string="Reveiew by Manager", default=False)
-	od_check_date = fields.Date(string="Check Date",default=fields.Date.context_today)
-	od_check_to = fields.Char(string="Cheque To")
-	od_acc_payee= fields.Boolean(string='A/c Payee', default=True)
-	od_is_bank_voucher = fields.Boolean(string="Is a Bank Voucher?", help="To determine the domain for journal")
+	# od_reveiew = fields.Boolean(string="Reveiew by Manager", default=False)
+	# od_check_date = fields.Date(string="Check Date",default=fields.Date.context_today)
+	# od_check_to = fields.Char(string="Cheque To")
+	# od_acc_payee= fields.Boolean(string='A/c Payee', default=True)
+	# od_is_bank_voucher = fields.Boolean(string="Is a Bank Voucher?", help="To determine the domain for journal")
 
-	def od_button_submit(self):
-		self.state = 'submit'
+	# def od_button_submit(self):
+	# 	self.state = 'submit'
 
 	@api.depends('bank_partner_id')
 	def _compute_partner_bank_id(self):
@@ -455,10 +455,10 @@ class AccountMove(models.Model):
 	def action_post(self):
 		res = super(AccountMove, self).action_post()
 
-		if self.state == 'draft' and self.od_is_bank_voucher and self.od_reveiew:
-			raise UserError(_("Please Submit the record!!!"))
-		if self.od_is_bank_voucher and self.env.user.id == self.create_uid.id and self.od_reveiew:
-			raise UserError(_("You are not allowed to post this record!!!"))
+		# if self.state == 'draft' and self.od_is_bank_voucher and self.od_reveiew:
+		# 	raise UserError(_("Please Submit the record!!!"))
+		# if self.od_is_bank_voucher and self.env.user.id == self.create_uid.id and self.od_reveiew:
+		# 	raise UserError(_("You are not allowed to post this record!!!"))
 
 		# overridden to update the posted(invoiced) field of revenue line. if the entry is reposted , the field is set to true
 		revenue_line_ids = self.env['od.contract.monthly.line'].search([('move_id','=',self.id)])

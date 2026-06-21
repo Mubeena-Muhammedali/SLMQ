@@ -52,21 +52,21 @@
                        invisible="move_type not in ('out_invoice', 'out_refund')"
                        options="{'no_create': True, 'no_create_edit': True}"/>
             </field>
-            <field name="ref" position="after">
+            <!-- <field name="ref" position="after">
                 <field name="od_is_bank_voucher" invisible="1" />
                 <field name="od_reveiew" invisible="1" readonly="state != 'draft'"/>
                 <field name="od_check_date" invisible="1"/>
                 <field name="od_check_to" invisible="1"/>
                 <field name="od_acc_payee" invisible="1" force_save="1"/>
-            </field>
+            </field> -->
             <xpath expr="//form/header/button[1]" position="attributes">
                 <attribute name="invisible">
                     state not in ['draft', 'submit'] or auto_post or move_type != 'entry'
                 </attribute>
             </xpath>
-            <button name="action_post" position="after">
+            <!-- <button name="action_post" position="after">
                 <button name="od_button_submit" string="Submit" class="oe_highlight" type="object" groups="account.group_account_invoice" invisible="state != 'draft' or not od_is_bank_voucher or not od_reveiew"/>
-            </button>
+            </button> -->
 
         </field>
     </record>
