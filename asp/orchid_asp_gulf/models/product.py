@@ -12,10 +12,8 @@ class ProductTemplate(models.Model):
 			company_dependent=True,
 			string="Revenue Account",
 			domain=lambda self: [
-				('deprecated', '=', False),
 				('account_type', '=', 'income'),
-				('is_off_balance', '=', False),
-				('company_id', 'in', self.env.company.ids),
+				('company_ids', 'in', self.env.company.ids),
 			]
 		)
 
@@ -24,9 +22,7 @@ class ProductTemplate(models.Model):
 			company_dependent=True,
 			string="Subscription Account",
 			domain=lambda self: [
-				('deprecated', '=', False),
 				('account_type', '=', 'income'),
-				('is_off_balance', '=', False),
 				('company_ids', 'in', self.env.company.ids),
 			]
 		)

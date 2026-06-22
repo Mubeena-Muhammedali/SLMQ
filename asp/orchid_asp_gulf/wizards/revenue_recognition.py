@@ -227,10 +227,11 @@ class OrchidRevenueRecognition(models.TransientModel):
 				mv_line.append(w_line)
 				line_id.revenue_line_id.invoiced=True
 			entry_id.line_ids=mv_line
-			entry_id.post()
+			entry_id.action_post()
 
 			param_id = self.env['ir.config_parameter'].sudo().search([('key','=','od_last_revenue_post_date')])
 			print("jjjj",param_id)
+			dhewudhweid
 			if not param_id:
 				raise UserError(_("od_last_revenue_post_date param is not set!!!"))
 			param_id.value = entry_id.date
