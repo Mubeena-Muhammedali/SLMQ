@@ -51,6 +51,7 @@
         "views/revenue_forecast_report.xml",
         "views/res_bank.xml",
         "views/crm_stage.xml",
+        "views/company_view.xml",
         "views/menus.xml",
 
         'reports/asp_sale_print.xml',

@@ -16,3 +16,4 @@ from . import purchase
 from . import sale
 from . import crm_stage
 from . import res_bank
+from . import company
