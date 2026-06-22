@@ -113,6 +113,7 @@
                                     </tr>
                                 </thead>
                                 <t t-set="total_incl_discount" t-value="0"/>
+                                <t t-set="total_discount" t-value="0"/>
                                 <tbody>
                                     <t t-set="sl_no" t-value="0"/>
                                     
@@ -142,11 +143,14 @@
                                                     <!-- <span style="color:#474646;" t-esc="'{0:,.2f}'.format((l.price_subtotal))"/> -->
                                                     <t t-if="l.od_frequency">
                                                         <t t-set="line_sub_incl_discount" t-value="(l.product_uom_qty*l.price_unit*int(l.od_frequency))"/>
+                                                        <t t-set="line_discount" t-value="(l.od_disc_amount*int(l.od_frequency))"/>
                                                     </t>
                                                     <t t-if="not l.od_frequency">
                                                         <t t-set="line_sub_incl_discount" t-value="(l.product_uom_qty*l.price_unit)"/>
+                                                        <t t-set="line_discount" t-value="l.od_disc_amount"/>
                                                     </t>
                                                     <t t-set="total_incl_discount" t-value="total_incl_discount+line_sub_incl_discount"/>
+                                                    <t t-set="total_discount" t-value="total_discount+line_discount"/>
                                                     <span style="color:#474646;" t-esc="'{0:,.2f}'.format((line_sub_incl_discount))"/>
                                                 </td>
                                             </t>
@@ -167,8 +171,8 @@
                             </table>
                         </div>
                         <div class="clearfix" name="so_total_summary" style="border-top:1px solid white;">
-                            <div id="total" class="row" name="total" style="border-top:1px solid white;">
-                                <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto" style="border-top:1px solid white;">
+                            <div id="total" class="row justify-content-end" name="total" style="border-top:1px solid white;">
+                                <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ms-auto" style="border-top:1px solid white;">
                                     <table class="table table-sm" style="border-top:1px solid white;">
                                         <tr style="border-top:1px solid white;">
                                             <td name="td_amount_untaxed_label" style="border-bottom:1px solid white;border-top:1px solid black"><strong style=";color:#474646">Subtotal</strong></td>
@@ -177,44 +181,32 @@
                                                 <span style="color:#474646;border-bottom:1px solid white;" t-esc="'{0:,.2f}'.format(total_incl_discount)"/><span t-field="o.currency_id"/>
                                             </td>
                                         </tr>
-                                        <t t-if="o.discount_rate!=0 or display_discount">
+                                        <t t-if="display_discount">
                                             <tr class="o_total">
                                                     <td name="td_amount_total_label" style="border-bottom:1px solid white;background-color:#FFFFFF;border-right:1px solid black;"><strong style=";color:#474646">Discount</strong></td>
                                                     <td name="td_amount_total" style="color:#474646;border-bottom:1px solid white;background-color:#FFFFFF" class="text-right">
-                                                        <span t-field="o.amount_discount"/>
+                                                        <span t-esc="'{0:,.2f}'.format(total_discount)"/><span t-field="o.currency_id"/>
                                                     </td>
                                             </tr>
                                             <tr class="o_total">
                                                     <td name="td_amount_total_label" style="border-bottom:1px solid white;background-color:#DCDCDC;;border-right:1px solid black;"><strong style=";color:#474646">Net Total</strong></td>
                                                     <td name="td_amount_total" style="color:#474646;border-bottom:1px solid white;background-color:#DCDCDC;" class="text-right">
-                                                        <!-- <span t-field="o.amount_discount"/> -->
-                                                        <t t-esc="'{0:,.2f}'.format((o.amount_total-o.amount_tax))"/><span t-field="o.currency_id"/>
+                                                        <t t-esc="'{0:,.2f}'.format(total_incl_discount-total_discount)"/><span t-field="o.currency_id"/>
                                                     </td>
                                             </tr>
                                         </t>
-                                        <!-- <tr><td colspan="2"><span t-field="o.amount_by_group"/></td></tr> -->
-                                        <t t-if="o.currency_id.id==131">
-                                            <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                                <tr style="">
-                                                    <!-- <t t-if="amount_by_group[5] == 1 and o.amount_untaxed == amount_by_group[2]">
-                                                        <td name="td_amount_by_group_label_3" syle="border-bottom:1px solid white;">
-                                                            <span  t-esc="amount_by_group[0]"/>
-                                                            <span style="color:#474646;">&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/></span>
-                                                        </td>
-                                                        <td name="td_amount_by_group_3" class="text-right o_price_total" style="border-bottom:1px solid white;">
-                                                            <span style="color:#474646;" t-esc="amount_by_group[1]" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/>
-                                                        </td>
-                                                    </t> -->
-                                                    <!-- <t t-else=""> -->
+                                        <t t-if="o.currency_id.name=='AED'">
+                                            <t t-foreach="(o.tax_totals or {}).get('subtotals', [])" t-as="subtotal">
+                                                <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                                    <tr style="">
                                                         <td name="td_amount_by_group_label" style="border-bottom:1px solid white;">
-                                                            <span style="color:#474646;" t-esc="amount_by_group[0]"/>
+                                                            <span style="color:#474646;" t-esc="tax_group['group_name']"/>
                                                         </td>
                                                         <td name="td_amount_by_group" class="text-right o_price_total" style="border-bottom:1px solid white;background-color:#FFFFFF;">
-                                                            <!-- <span style="color:#474646;" t-esc="amount_by_group[1]" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/> -->
-                                                            <span style="color:#474646;" t-field="o.amount_tax"/>
+                                                            <span style="color:#474646;" t-out="tax_group['tax_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                                         </td>
-                                                    <!-- </t> -->
-                                                </tr>
+                                                    </tr>
+                                                </t>
                                             </t>
                                             <tr class="o_total">
                                                 <td name="td_amount_total_label" style="border-bottom:1px solid black;background-color:#DCDCDC;border-right:1px solid black;"><strong style="color:#474646">Total</strong></td>
@@ -231,27 +223,18 @@
                                                 <span style="color:#474646;" t-field="o.company_id.currency_id"/> <span t-esc="'{0:,.2f}'.format(o.amount_untaxed*o.od_exchange_rate)"/>
                                                 </td>
                                             </tr>
-                                            <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                                <tr style="">
-                                                    <!-- <t t-if="amount_by_group[5] == 1 and o.amount_untaxed == amount_by_group[2]">
-                                                        <td name="td_amount_by_group_label_3" style="border-bottom:1px solid white;">
-                                                            <span  t-esc="amount_by_group[0]"/>
-                                                            <span style="color:#474646;">&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="'{0:,.2f}'.format(amount_by_group[2]*o.od_exchange_rate)"/></span>&#160;<span style="color:#474646;" t-field="o.company_id.currency_id"/>
+                                            <t t-foreach="(o.tax_totals or {}).get('subtotals', [])" t-as="subtotal">
+                                                <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                                    <tr style="">
+                                                        <td name="td_amount_by_group_label" style="border-bottom:1px solid white;">
+                                                            <span style="color:#474646;" t-esc="tax_group['group_name']"/>
                                                         </td>
-                                                        <td name="td_amount_by_group_3" class="text-right o_price_total" style="border-bottom:1px solid white;">
-                                                            <span style="color:#474646;" t-esc="'{0:,.2f}'.format(amount_by_group[1]*o.od_exchange_rate)"/>&#160;<span style="color:#474646;" t-field="o.company_id.currency_id"/>
+                                                        <td name="td_amount_by_group" class="text-right o_price_total" style="border-bottom:1px solid white;background-color:#FFFFFF;">
+                                                            <span style="color:#474646;" t-field="o.company_id.currency_id"/> 
+                                                            <span style="color:#474646;" t-esc="'{0:,.2f}'.format(tax_group['tax_amount_currency']*o.od_exchange_rate)"/>
                                                         </td>
-                                                    </t> -->
-                                                    <!-- <t t-else=""> -->
-                                                    <td name="td_amount_by_group_label" style="border-bottom:1px solid white;">
-                                                        <span style="color:#474646;" t-esc="amount_by_group[0]"/>
-                                                    </td>
-                                                    <td name="td_amount_by_group" class="text-right o_price_total" style="border-bottom:1px solid white;background-color:#FFFFFF;">
-                                                        <span style="color:#474646;" t-field="o.company_id.currency_id"/> <!-- <span style="color:#474646;" t-esc="'{0:,.2f}'.format(amount_by_group[1]*o.od_exchange_rate)"/> -->
-                                                        <span style="color:#474646;" t-esc="'{0:,.2f}'.format(o.amount_tax*o.od_exchange_rate)"/>
-                                                    </td>
-                                                    <!-- </t> -->
-                                                </tr>
+                                                    </tr>
+                                                </t>
                                             </t>
                                             <tr class="o_total">
                                                 <td name="td_amount_total_label" style="border-bottom:1px solid black;background-color:#DCDCDC;border-right:1px solid black"><strong style="color:#474646;">Net Total</strong></td>

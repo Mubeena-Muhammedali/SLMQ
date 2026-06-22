@@ -112,7 +112,7 @@
                             <div class="col-5 col-offset-1">
                                 <div>
                                     <span style="text-align:right;"><strong>Mobile</strong></span>
-                                    <span style="padding-left:0.8cm;">:&#160;</span><span t-field="o.od_contact_id.mobile"/>
+                                    <span style="padding-left:0.8cm;">:&#160;</span><span t-field="o.od_contact_id.phone"/>
                                 </div>
                             </div>
                         </div>

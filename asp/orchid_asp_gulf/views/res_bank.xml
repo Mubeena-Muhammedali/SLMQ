@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_res_bank_form_orchid_inherit">
+            <field name="name">res.bank.form.form.inherit</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="replace">
+                    <field name="bic" placeholder="e.g GEBABEBB" string="Swift Code"/>
+                </field>
+            	<field name="bic" position="after">
+            		<field name="od_bank_iban"/>
+            		<field name="od_bank_branch"/>
+            	</field>
+            </field>
+        </record>
+    </data>
+</odoo>
+           
+
+            

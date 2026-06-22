@@ -93,7 +93,7 @@
                                 <div class="col-4 col-offset-1">
                                     <div>
                                         <span style="text-align:right;"><strong>Mobile</strong></span>
-                                        <span style="padding-left:0.8cm;">: </span><span t-field="o.od_contact_id.mobile"/>
+                                        <span style="padding-left:0.8cm;">: </span><span t-field="o.od_contact_id.phone"/>
                                     </div>
                                 </div>
                             </div>
@@ -248,8 +248,8 @@
                                         </table>
                                     </div>
                                 </div>
-                                <p t-if="o.notes" >
-                                    <b>Terms &amp; Conditions:</b><br/><span t-field="o.notes"/>
+                                <p t-if="o.note" >
+                                    <b>Terms &amp; Conditions:</b><br/><span t-field="o.note"/>
                                 </p>
                                 <div class="oe_structure"/>
                             </div>

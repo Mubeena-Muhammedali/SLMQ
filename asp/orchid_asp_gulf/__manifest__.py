@@ -49,8 +49,9 @@
         "views/sale.xml",
         "views/revenue_forecast_assets.xml",
         "views/revenue_forecast_report.xml",
-        "views/menus.xml",
+        "views/res_bank.xml",
         "views/crm_stage.xml",
+        "views/menus.xml",
 
         'reports/asp_sale_print.xml',
         'reports/asp_tax_invoice_print.xml',

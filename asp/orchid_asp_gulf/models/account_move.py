@@ -20,11 +20,11 @@ class AccountMove(models.Model):
 			('cancel', 'Cancelled'),
 		], string='Status', required=True, readonly=True, copy=False, tracking=True,
 		default='draft')
-	# od_reveiew = fields.Boolean(string="Reveiew by Manager", default=False)
-	# od_check_date = fields.Date(string="Check Date",default=fields.Date.context_today)
-	# od_check_to = fields.Char(string="Cheque To")
-	# od_acc_payee= fields.Boolean(string='A/c Payee', default=True)
-	# od_is_bank_voucher = fields.Boolean(string="Is a Bank Voucher?", help="To determine the domain for journal")
+	od_reveiew = fields.Boolean(string="Reveiew by Manager", default=False)
+	od_check_date = fields.Date(string="Check Date",default=fields.Date.context_today)
+	od_check_to = fields.Char(string="Cheque To")
+	od_acc_payee= fields.Boolean(string='A/c Payee', default=True)
+	od_is_bank_voucher = fields.Boolean(string="Is a Bank Voucher?", help="To determine the domain for journal")
 
 	# def od_button_submit(self):
 	# 	self.state = 'submit'
