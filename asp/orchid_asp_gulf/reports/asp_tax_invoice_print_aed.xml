@@ -218,7 +218,7 @@
                                                     <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((line_tax_amt))"/></t>
                                                     <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((line_tax_amt*(-1)))"/></t>
                                                 </td>
-                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-top:1px solid black;">
+                                                <td name="td_subtotal" class="text-right o_price_total" style="background-color:#DCDCDC;border-bottom:1px solid black;border-top:1px solid black;">
                                                     <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit+line_tax_amt))"/></t>
                                                     <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit+line_tax_amt)*(-1))"/></t>
                                                 </td>
