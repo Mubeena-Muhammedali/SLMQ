@@ -190,7 +190,8 @@ class OrchidCreateContractAll(models.TransientModel):
 					# onetime case change
 					if line.payment_line.service_id.billing_cycle=='one_time':
 						vals['quantity']=line.contract_line_id.product_uom_qty
-						vals['price_unit']=(line.amount_to_invoice/line.contract_line_id.product_uom_qty)/line.contract_line_id.frequency
+						if line.contract_line_id.frequency > 0:
+							vals['price_unit']=(line.amount_to_invoice/line.contract_line_id.product_uom_qty)/line.contract_line_id.frequency
 						vals['od_frequency']=line.contract_line_id.frequency
 					# annual case change
 					if line.payment_line.service_id.billing_cycle=='annually':

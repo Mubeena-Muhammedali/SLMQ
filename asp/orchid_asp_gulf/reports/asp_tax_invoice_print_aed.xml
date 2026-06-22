@@ -148,7 +148,7 @@
                                     <t t-set="total_tax" t-value="0"/>
                                     <t t-foreach="o.invoice_line_ids" t-as="l">
                                         <tr t-att-class="'bg-200 font-weight-bold o_line_section' if l.display_type == 'line_section' else 'font-italic o_line_note' if l.display_type == 'line_note' else ''">
-                                            <t t-if="not l.display_type">
+                                            <!-- <t t-if="l.display_type == 'product'"> -->
                                                 <t t-set="sl_no" t-value="sl_no+1"/>
                                                 <td name="td_name" style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;border-top:1px solid black;">
                                                     <center><span t-esc="sl_no"/></center>
@@ -222,8 +222,8 @@
                                                     <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit+line_tax_amt))"/></t>
                                                     <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit+line_tax_amt)*(-1))"/></t>
                                                 </td>
-                                            </t>
-                                            <t t-if="l.display_type == 'line_section'">
+                                            <!-- </t> -->
+                                            <!-- <t t-if="l.display_type == 'line_section'">
                                                 <td name="td_section_line" colspan="99">
                                                     <span t-field="l.name"/>
                                                 </td>
@@ -232,7 +232,7 @@
                                                 <td name="td_note_line" colspan="99">
                                                     <span t-field="l.name"/>
                                                 </td>
-                                            </t>
+                                            </t> -->
                                         </tr>
                                     </t>
                                     <tr>
@@ -331,7 +331,7 @@
                         <div class="row">
                             <t t-foreach="o.company_id.header_image" t-as="images">
                                 <t t-if="images.name == 'tax_invoice_footer'">
-                                    <img style="padding-left:1cm;" t-if="images.img" t-att-src="'data:image/png;base64,%s' % to_text(images.img)"/>
+                                    <img style="padding-left:1cm;" t-if="images.img" t-att-src="image_data_uri(images.img)"/>
                                 </t>
                             </t>
                         </div>

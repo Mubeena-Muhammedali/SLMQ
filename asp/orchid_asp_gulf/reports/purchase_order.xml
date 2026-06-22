@@ -267,7 +267,7 @@
                         <div class="row">
                             <t t-foreach="o.company_id.header_image" t-as="images">
                                 <t t-if="images.name == 'tax_invoice_footer'">
-                                    <img style="padding-left:1cm;" t-if="images.img" t-att-src="'data:image/png;base64,%s' % to_text(images.img)"/>
+                                    <img style="padding-left:1cm;" t-if="images.img" t-att-src="image_data_uri(images.img)"/>
                                 </t>
                             </t>
                         </div>

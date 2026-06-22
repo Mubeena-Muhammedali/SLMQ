@@ -40,31 +40,15 @@ class AccountMove(models.Model):
 
 	@api.onchange('od_exchange_rate','currency_id','invoice_date')
 	def od_onchange_exchange_rate(self):
-		for line in self:
-			if self.od_exchange_rate not in [0,1] and self.currency_id.id!=self.company_id.currency_id.id:
-				date = self.invoice_date if self.invoice_date else datetime.today().date()
-				currency_rate_id = self.env['res.currency.rate'].search([('currency_id','=',self.currency_id.id),('name','<=',date)],limit=1, order='name desc')
-				inv_rate = self.od_exchange_rate
-				if currency_rate_id:
-					if currency_rate_id.rate != (1/inv_rate):
-						if currency_rate_id.name!=date:
-							vals={
-							'currency_id':self.currency_id.id,
-							'name':date,
-							'rate':(1/inv_rate),
-							}
-							c=self.env['res.currency.rate'].create(vals)
-						else:
-							currency_rate_id.rate=(1/inv_rate)
-						line._onchange_currency()
-				else:
-					vals={
-					'currency_id':self.currency_id.id,
-					'name':date,
-					'rate':(1/inv_rate),
-					}
-					c=self.env['res.currency.rate'].create(vals)
-					line._onchange_currency()
+		for move in self:
+			if (
+				move.od_exchange_rate not in [0, 1]
+				and move.currency_id
+				and move.company_id
+				and move.currency_id != move.company_id.currency_id
+			):
+				move.invoice_currency_rate = 1 / move.od_exchange_rate
+				move._inverse_currency_id()
 
 
 	def od_reverse_revenue(self):
