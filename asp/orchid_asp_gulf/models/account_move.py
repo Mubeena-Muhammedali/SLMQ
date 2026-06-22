@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from datetime import datetime
 import calendar
+from odoo.tools.float_utils import float_compare
 
 
 class AccountMove(models.Model):
@@ -57,6 +58,7 @@ class AccountMove(models.Model):
 			if contract_id:
 				for line in self.invoice_line_ids:
 					reversed_revenue_line_ids = []
+					currency = line.currency_id
 					# A)Based on contractline
 					if line.od_contract_line_id:
 						domain = [('contract_line_id','=',line.od_contract_line_id[0].id)]
@@ -73,18 +75,20 @@ class AccountMove(models.Model):
 									period_from = self.invoice_date.replace(day=1)
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
+
+									if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-line.debit,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-line.debit,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 
 								# if not posted generate a revenue line with the same period
 								else:
@@ -92,17 +96,19 @@ class AccountMove(models.Model):
 									r_domain = [('service_id','=',pre_payment_id.id),('period_from','<=',self.invoice_date),
 									('period_to','>=',self.invoice_date),('amount','>',0)]
 									revenue_line_id = self.env['od.contract.monthly.line'].search(r_domain)
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':revenue_line_id.period_from,
-									'period_to':revenue_line_id.period_to,
-									'amount':-line.debit,
-									'due':revenue_line_id.due,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+
+									if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':revenue_line_id.period_from,
+										'period_to':revenue_line_id.period_to,
+										'amount':-line.debit,
+										'due':revenue_line_id.due,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 
 
 								# @28 dec 2022 in every case create reverse revenue line in i
@@ -122,17 +128,18 @@ class AccountMove(models.Model):
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-line.debit,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+									if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-line.debit,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 
 								# if not posted generate a revenue line with the same period
 								else:
@@ -154,18 +161,20 @@ class AccountMove(models.Model):
 									period_from = self.invoice_date.replace(day=1)
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
+
+									if float_compare(posted_amt, 0.0, precision_rounding=currency.rounding) != 0:
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-posted_amt,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-posted_amt,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 									
 									if remaining_amount:
 										for revenue_line_id in revenue_line_ids:
@@ -175,18 +184,20 @@ class AccountMove(models.Model):
 													each_month=each_month
 												if remaining_amount<each_month:
 													each_month=remaining_amount
-												revenue_line_vals = {
-												'service_id':pre_payment_id.id,
-												'period_from':revenue_line_id.period_from,
-												'period_to':revenue_line_id.period_to,
-												'amount':-each_month,
-												'due':revenue_line_id.due,
-												}
-												revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-												revenue_line_id.reverse_date = self.invoice_date
-												revenue_line_id.reverse_line_id = line.id
-												reversed_revenue_line_ids.append(revenue_line_id.id)
-												remaining_amount -= each_month
+
+												if float_compare(each_month, 0.0, precision_rounding=currency.rounding) != 0:
+													revenue_line_vals = {
+													'service_id':pre_payment_id.id,
+													'period_from':revenue_line_id.period_from,
+													'period_to':revenue_line_id.period_to,
+													'amount':-each_month,
+													'due':revenue_line_id.due,
+													}
+													revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+													revenue_line_id.reverse_date = self.invoice_date
+													revenue_line_id.reverse_line_id = line.id
+													reversed_revenue_line_ids.append(revenue_line_id.id)
+													remaining_amount -= each_month
 									
 										
 
@@ -205,17 +216,18 @@ class AccountMove(models.Model):
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-line.debit,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+									if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-line.debit,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 
 								# if not posted generate a revenue line with the same period
 								else:
@@ -238,17 +250,18 @@ class AccountMove(models.Model):
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-posted_amt,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+									if float_compare(posted_amt, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-posted_amt,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 									if remaining_amount:
 										for revenue_line_id in revenue_line_ids:
 											if remaining_amount:
@@ -256,18 +269,20 @@ class AccountMove(models.Model):
 													each_month=each_month
 												if remaining_amount<each_month:
 													each_month=remaining_amount
-												revenue_line_vals = {
-												'service_id':pre_payment_id.id,
-												'period_from':revenue_line_id.period_from,
-												'period_to':revenue_line_id.period_to,
-												'amount':-each_month,
-												'due':revenue_line_id.due,
-												}
-												revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-												revenue_line_id.reverse_date = self.invoice_date
-												revenue_line_id.reverse_line_id = line.id
-												reversed_revenue_line_ids.append(revenue_line_id.id)
-												remaining_amount -= each_month
+
+												if float_compare(each_month, 0.0, precision_rounding=currency.rounding) != 0:
+													revenue_line_vals = {
+													'service_id':pre_payment_id.id,
+													'period_from':revenue_line_id.period_from,
+													'period_to':revenue_line_id.period_to,
+													'amount':-each_month,
+													'due':revenue_line_id.due,
+													}
+													revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+													revenue_line_id.reverse_date = self.invoice_date
+													revenue_line_id.reverse_line_id = line.id
+													reversed_revenue_line_ids.append(revenue_line_id.id)
+													remaining_amount -= each_month
 										
 
 							# yrly
@@ -284,17 +299,18 @@ class AccountMove(models.Model):
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
 									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-line.debit,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+									if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-line.debit,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 
 								# if not posted generate a revenue line with the same period
 								else:
@@ -316,18 +332,20 @@ class AccountMove(models.Model):
 									period_from = self.invoice_date.replace(day=1)
 									end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 									period_to=period_from.replace(day=end_date_day)
-									
-									revenue_line_vals = {
-									'service_id':pre_payment_id.id,
-									'period_from':period_from,
-									'period_to':period_to,
-									'amount':-posted_amt,
-									'due':True,
-									}
-									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-									revenue_line_id.reverse_date = self.invoice_date
-									revenue_line_id.reverse_line_id = line.id
-									reversed_revenue_line_ids.append(revenue_line_id.id)
+
+
+									if float_compare(posted_amt, 0.0, precision_rounding=currency.rounding) != 0:
+										revenue_line_vals = {
+										'service_id':pre_payment_id.id,
+										'period_from':period_from,
+										'period_to':period_to,
+										'amount':-posted_amt,
+										'due':True,
+										}
+										revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+										revenue_line_id.reverse_date = self.invoice_date
+										revenue_line_id.reverse_line_id = line.id
+										reversed_revenue_line_ids.append(revenue_line_id.id)
 									if remaining_amount:
 										for revenue_line_id in revenue_line_ids:
 											# revenue_line_id = revenue_line_id[0]
@@ -336,18 +354,20 @@ class AccountMove(models.Model):
 													each_month=each_month
 												if remaining_amount<each_month:
 													each_month=remaining_amount
-												revenue_line_vals = {
-												'service_id':pre_payment_id.id,
-												'period_from':revenue_line_id.period_from,
-												'period_to':revenue_line_id.period_to,
-												'amount':-each_month,
-												'due':revenue_line_id.due,
-												}
-												revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-												revenue_line_id.reverse_date = self.invoice_date
-												revenue_line_id.reverse_line_id = line.id
-												reversed_revenue_line_ids.append(revenue_line_id.id)
-												remaining_amount-=each_month
+
+												if float_compare(each_month, 0.0, precision_rounding=currency.rounding) != 0:
+													revenue_line_vals = {
+													'service_id':pre_payment_id.id,
+													'period_from':revenue_line_id.period_from,
+													'period_to':revenue_line_id.period_to,
+													'amount':-each_month,
+													'due':revenue_line_id.due,
+													}
+													revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+													revenue_line_id.reverse_date = self.invoice_date
+													revenue_line_id.reverse_line_id = line.id
+													reversed_revenue_line_ids.append(revenue_line_id.id)
+													remaining_amount-=each_month
 
 
 							if pre_payment_id.billing_cycle == 'one_time':
@@ -359,18 +379,20 @@ class AccountMove(models.Model):
 								period_from = self.invoice_date.replace(day=1)
 								end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 								period_to=period_from.replace(day=end_date_day)
+
+								if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
 								
-								revenue_line_vals = {
-								'service_id':pre_payment_id.id,
-								'period_from':period_from,
-								'period_to':period_to,
-								'amount':-line.debit,
-								'due':True,
-								}
-								revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
-								revenue_line_id.reverse_date = self.invoice_date
-								revenue_line_id.reverse_line_id = line.id
-								reversed_revenue_line_ids.append(revenue_line_id.id)
+									revenue_line_vals = {
+									'service_id':pre_payment_id.id,
+									'period_from':period_from,
+									'period_to':period_to,
+									'amount':-line.debit,
+									'due':True,
+									}
+									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals)
+									revenue_line_id.reverse_date = self.invoice_date
+									revenue_line_id.reverse_line_id = line.id
+									reversed_revenue_line_ids.append(revenue_line_id.id)
 					
 					# B) Based on Invoice, THis case will not arise
 					else:
@@ -382,28 +404,30 @@ class AccountMove(models.Model):
 								end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 								period_to=period_from.replace(day=end_date_day)
 								
-								revenue_line_vals = {
-								'service_id':pre_payment_id.id,
-								'period_from':period_from,
-								'period_to':period_to,
-								'amount':-line.debit
-								}
-								revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals).id
-								reversed_revenue_line_ids.append(revenue_line_id.id)
+								if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+									revenue_line_vals = {
+									'service_id':pre_payment_id.id,
+									'period_from':period_from,
+									'period_to':period_to,
+									'amount':-line.debit
+									}
+									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals).id
+									reversed_revenue_line_ids.append(revenue_line_id.id)
 
 							if pre_payment_id.billing_cycle == 'quarterly':
 								period_from = self.invoice_date.replace(day=1)
 								end_date_day=calendar.monthrange(period_from.year, period_from.month)[1]
 								period_to=period_from.replace(day=end_date_day)
 								
-								revenue_line_vals = {
-								'service_id':pre_payment_id.id,
-								'period_from':period_from,
-								'period_to':period_to,
-								'amount':-line.debit
-								}
-								revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals).id
-								reversed_revenue_line_ids.append(revenue_line_id.id)
+								if float_compare(line.debit, 0.0, precision_rounding=currency.rounding) != 0:
+									revenue_line_vals = {
+									'service_id':pre_payment_id.id,
+									'period_from':period_from,
+									'period_to':period_to,
+									'amount':-line.debit
+									}
+									revenue_line_id = self.env['od.contract.monthly.line'].create(revenue_line_vals).id
+									reversed_revenue_line_ids.append(revenue_line_id.id)
 					line.od_reversed_revenue_line_ids = [(6,0,reversed_revenue_line_ids)]
 
 
