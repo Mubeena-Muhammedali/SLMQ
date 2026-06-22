@@ -139,7 +139,7 @@
                                                 <td t-if="display_frequency" class="text-right" style="border-bottom:1px solid white;;">
                                                     <span style="color:#474646;" t-esc="int(l.od_frequency)"/>
                                                 </td>
-                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid white;border-right:1px solid black;">
+                                                <td name="td_subtotal" class="text-right o_price_total" style="background-color:#DCDCDC;border-bottom:1px solid white;border-right:1px solid black;">
                                                     <!-- <span style="color:#474646;" t-esc="'{0:,.2f}'.format((l.price_subtotal))"/> -->
                                                     <t t-if="l.od_frequency">
                                                         <t t-set="line_sub_incl_discount" t-value="(l.product_uom_qty*l.price_unit*int(l.od_frequency))"/>
@@ -155,12 +155,17 @@
                                                 </td>
                                             </t>
                                             <t t-if="l.display_type == 'line_section'">
-                                                <td name="td_section_line" style="border-right:1px solid black;" colspan="99">
+                                                <td name="td_section_line"
+                                                    colspan="99"
+                                                    style="background-color:#4a4a4a;color:white;font-weight:bold;border-right:1px solid black;">
                                                     <span t-field="l.name"/>
                                                 </td>
                                             </t>
+
                                             <t t-if="l.display_type == 'line_note'">
-                                                <td name="td_note_line" style="border-right:1px solid black;" colspan="99">
+                                                <td name="td_note_line"
+                                                    colspan="99"
+                                                    style="background-color:#4a4a4a;color:white;border-right:1px solid black;">
                                                     <span t-field="l.name"/>
                                                 </td>
                                             </t>

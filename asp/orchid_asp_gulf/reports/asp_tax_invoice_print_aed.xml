@@ -198,7 +198,7 @@
                                                     </center>
                                                 </td>
                                                 
-                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                <td name="td_subtotal" class="text-right o_price_total" style="background-color:#DCDCDC;border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
                                                     <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit))"/></t>
                                                     <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit*(-1)))"/></t>
                                                 </td>
@@ -207,7 +207,7 @@
                                                 <td t-attf-class="text-center {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
                                                     <span t-esc="', '.join(map(lambda x: (str(int(x.amount))), l.tax_ids))" id="line_tax_ids"/>%
                                                 </td>
-                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                <td name="td_subtotal" class="text-right o_price_total" style="background-color:#DCDCDC;border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
                                                     <t t-set="line_tax" t-value="0"/>
                                                     <t t-foreach="l.tax_ids" t-as="tax">
                                                         <t t-set="line_tax" t-value="line_tax+tax.amount"/>
