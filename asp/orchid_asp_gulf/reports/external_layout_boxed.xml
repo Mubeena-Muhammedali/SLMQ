@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_boxed_page_format"
+            inherit_id="web.external_layout_boxed">
+
+        <xpath expr="//div[1]" position="replace">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                <div class="o_boxed_header" style="border-bottom:1px solid white;">
+                <div class="row mb8">
+                    <div class="col-6">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        <!--extra change by orchid-->
+                        <br/>
+                        <span style="font-size:12px;">Application Services Providers Gulf Company LLC</span>
+                        <!--orchid-->
+                    </div>
+                    <div class="col-6 text-right mb4">
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <div class="pt-5">
+                    <!-- This div ensures that the address is not cropped by the header. -->
+                    <t t-call="web.address_layout"/>
+                </div>
+                <t t-raw="0"/>
+            </div>
+            
+            <div class="footer">
+                <div class="row">
+                    <div class="col-12 text-end">
+                        Page: <span class="page"/> of <span class="topage"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <t t-foreach="o.company_id.header_image" t-as="images">
+                        <t t-if="images.name == 'tax_invoice_footer'">
+                            <img style="padding-left:1cm;" t-if="images.img" t-att-src="image_data_uri(images.img)"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>

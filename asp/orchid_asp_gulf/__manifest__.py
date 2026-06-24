@@ -68,6 +68,7 @@
         'reports/revenue_recognition_report.xml',
         'reports/report_enbd_cheque_print.xml',
         'reports/report_fab_cheque_print.xml',
+        'reports/external_layout_boxed.xml',
         'reports/menu.xml',
         
     ],

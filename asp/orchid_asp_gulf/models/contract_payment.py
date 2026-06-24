@@ -1026,33 +1026,61 @@ class OrchidContractPayment(models.Model):
 
 	def update_contract_line(self):
 		for line in self:
-			contract_line = self.env['od.asp.contract.line'].search([('order_id','=',line.contract_id.id),('name','=',line.name)])
-			if contract_line and len(contract_line)==1:
-				if not line.contract_line_id:
-					line.contract_line_id = contract_line.id
-					contract_line.payment_id = line.id
-			else:
-				if line.name:
-					contract_lines = self.env['od.asp.contract.line'].search([
-							('order_id', '=', line.contract_id.id),
-							('name', 'ilike', line.name[:100])
-						])
-					if len(contract_lines) == 1:
-						line.contract_line_id = contract_lines.id
-						contract_lines.payment_id = line.id
-					
-					else:
-						line_name = (line.name or '').replace(' ', '').lower()
 
-						contract_lines = self.env['od.asp.contract.line'].search([
-							('order_id', '=', line.contract_id.id),('termination_date','=',False)
-						]).filtered(
-							lambda l: (l.name or '').replace(' ', '').lower() == line_name
-						)
+			# 1. Exact name match
+			contract_lines = self.env['od.asp.contract.line'].search([
+				('order_id', '=', line.contract_id.id),
+				('name', '=', line.name),
+				('termination_date', '=', False)
+			])
 
-						if len(contract_lines) == 1:
-							line.contract_line_id = contract_lines.id
-							contract_lines.payment_id = line.id
+			# If multiple lines found, filter by amount
+			if len(contract_lines) > 1:
+				contract_lines = contract_lines.filtered(
+					lambda l: abs(l.price_subtotal - line.total_amount) < 0.01
+					and not l.payment_id
+				)
+
+			if len(contract_lines) == 1:
+				line.contract_line_id = contract_lines.id
+				contract_lines.payment_id = line.id
+				continue
+
+			# 2. ILIKE match
+			if line.name:
+				contract_lines = self.env['od.asp.contract.line'].search([
+					('order_id', '=', line.contract_id.id),
+					('name', 'ilike', line.name[:100]),
+					('termination_date', '=', False)
+				])
+
+				if len(contract_lines) > 1:
+					contract_lines = contract_lines.filtered(
+						lambda l: abs(l.price_subtotal - line.total_amount) < 0.01
+						and not l.payment_id
+					)
+
+				if len(contract_lines) == 1:
+					line.contract_line_id = contract_lines.id
+					contract_lines.payment_id = line.id
+					continue
+
+			# 3. Normalized name match
+			line_name = (line.name or '').replace(' ', '').lower()
+
+			contract_lines = self.env['od.asp.contract.line'].search([
+				('order_id', '=', line.contract_id.id),
+				('termination_date', '=', False)
+			]).filtered(
+				lambda l:
+					(l.name or '').replace(' ', '').lower() == line_name
+					and abs(l.price_subtotal - line.total_amount) < 0.01
+					and not l.payment_id
+			)
+
+			if len(contract_lines) == 1:
+				line.contract_line_id = contract_lines.id
+				contract_lines.payment_id = line.id
 
 
 
