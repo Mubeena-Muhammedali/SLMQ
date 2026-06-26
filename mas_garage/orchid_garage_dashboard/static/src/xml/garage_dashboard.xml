@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- ── KPI Card ──────────────────────────────────────────────────────── -->
+    <t t-name="orchid_garage_dashboard.KpiCard">
+        <div t-attf-class="gd-kpi-card #{props.color} #{props.onClick ? 'gd-kpi-clickable' : ''}"
+             t-on-click="props.onClick">
+            <div class="gd-kpi-icon-wrap">
+                <i t-attf-class="fa #{props.icon} gd-kpi-icon"/>
+            </div>
+            <div class="gd-kpi-body">
+                <div class="gd-kpi-value">
+                    <t t-if="props.loading">
+                        <span class="gd-skeleton"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="props.value"/>
+                    </t>
+                </div>
+                <div class="gd-kpi-label"><t t-esc="props.label"/></div>
+                <t t-if="props.sub">
+                    <div class="gd-kpi-sub">
+                        <t t-if="props.loading"><span class="gd-skeleton gd-skeleton-sm"/></t>
+                        <t t-else=""><t t-esc="props.sub"/></t>
+                    </div>
+                </t>
+            </div>
+            <t t-if="props.onClick">
+                <div class="gd-kpi-arrow">
+                    <i class="fa fa-arrow-right"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <!-- ── Main Dashboard ────────────────────────────────────────────────── -->
+    <t t-name="orchid_garage_dashboard.Dashboard">
+        <div class="gd-root">
+
+            <!-- Header -->
+            <div class="gd-header">
+                <div class="gd-header-left">
+                    <div class="gd-logo-mark">
+                        <i class="fa fa-wrench"/>
+                    </div>
+                    <div>
+                        <h1 class="gd-title">Garage Dashboard</h1>
+                    </div>
+                </div>
+                <button class="gd-refresh-btn" t-on-click="refresh" t-att-disabled="state.loading">
+                    <i t-attf-class="fa fa-refresh #{state.loading ? 'fa-spin' : ''}"/>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- Section: Active Operations -->
+            <div class="gd-section-label">Active Operations</div>
+            <div class="gd-grid gd-grid-3">
+                <KpiCard
+                    label="'Pending Jobs'"
+                    value="fmt(state.data.pending_job_count)"
+                    icon="'fa-clock-o'"
+                    color="'kpi-amber'"
+                    loading="state.loading"
+                    onClick.bind="openPendingJobs"
+                />
+                <KpiCard
+                    label="'Closed Jobs'"
+                    value="fmt(state.data.closed_job_count)"
+                    sub="'Total: ' + fmtMoney(state.data.closed_amount_total)"
+                    icon="'fa-check-circle'"
+                    color="'kpi-green'"
+                    loading="state.loading"
+                    onClick.bind="openClosedJobs"
+                />
+                <KpiCard
+                    label="'Invoice Pending'"
+                    value="fmt(state.data.invoice_pending_count)"
+                    sub="'Outstanding: ' + fmtMoney(state.data.invoice_pending_amount_total)"
+                    icon="'fa-file-text-o'"
+                    color="'kpi-red'"
+                    loading="state.loading"
+                    onClick.bind="openInvoicePending"
+                />
+            </div>
+
+            <!-- Section: This Month -->
+            <div class="gd-section-label">This Month</div>
+            <div class="gd-grid gd-grid-2">
+                <KpiCard
+                    label="'Closed This Month'"
+                    value="fmt(state.data.closed_this_month)"
+                    icon="'fa-calendar-check-o'"
+                    color="'kpi-blue'"
+                    loading="state.loading"
+                />
+                <KpiCard
+                    label="'Invoiced This Month'"
+                    value="fmtMoney(state.data.invoiced_this_month)"
+                    icon="'fa-money'"
+                    color="'kpi-blue'"
+                    loading="state.loading"
+                />
+            </div>
+
+        </div>
+    </t>
+
+</templates>

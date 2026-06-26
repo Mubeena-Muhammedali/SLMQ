@@ -1,0 +1,252 @@
+// ── Garage Dashboard Styles ──────────────────────────────────────────────────
+// Design: dark slate sidebar / white canvas, accent palette per KPI type.
+// Signature element: the coloured left-border "slash" on each KPI card.
+
+// ── Tokens ───────────────────────────────────────────────────────────────────
+
+$gd-bg:        #F7F8FA;
+$gd-surface:   #FFFFFF;
+$gd-border:    #E5E8EF;
+$gd-text-dark: #1A1F36;
+$gd-text-mid:  #4A5568;
+$gd-text-muted:#8A94A6;
+$gd-radius:    12px;
+$gd-shadow:    0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+
+// Accent palette
+$gd-amber:  #F59E0B;
+$gd-green:  #10B981;
+$gd-red:    #EF4444;
+$gd-blue:   #3B82F6;
+
+// ── Root ─────────────────────────────────────────────────────────────────────
+
+.gd-root {
+    background: $gd-bg;
+    min-height: 100%;
+    padding: 28px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: $gd-text-dark;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.gd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.gd-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.gd-logo-mark {
+    width: 44px;
+    height: 44px;
+    background: $gd-text-dark;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+}
+
+.gd-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+}
+
+.gd-subtitle {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: $gd-text-muted;
+}
+
+.gd-refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 18px;
+    border: 1px solid $gd-border;
+    border-radius: 8px;
+    background: $gd-surface;
+    color: $gd-text-mid;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover:not(:disabled) {
+        background: #F0F2F5;
+        border-color: #CBD5E0;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// ── Section labels ────────────────────────────────────────────────────────────
+
+.gd-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $gd-text-muted;
+    margin-bottom: 12px;
+    margin-top: 4px;
+
+    &:not(:first-of-type) {
+        margin-top: 28px;
+    }
+}
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
+
+.gd-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.gd-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.gd-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 900px) {
+    .gd-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .gd-grid-3,
+    .gd-grid-2 { grid-template-columns: 1fr; }
+    .gd-root { padding: 16px; }
+}
+
+// ── KPI Card ──────────────────────────────────────────────────────────────────
+
+.gd-kpi-card {
+    background: $gd-surface;
+    border-radius: $gd-radius;
+    box-shadow: $gd-shadow;
+    padding: 22px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    border-left: 4px solid transparent;  // signature: coloured left slash
+    transition: box-shadow 0.2s, transform 0.15s;
+
+    // ── colour variants ─────────────────────────────────────────────────────
+    &.kpi-amber {
+        border-left-color: $gd-amber;
+        .gd-kpi-icon-wrap { background: rgba($gd-amber, .1); color: $gd-amber; }
+        .gd-kpi-value     { color: $gd-amber; }
+    }
+    &.kpi-green {
+        border-left-color: $gd-green;
+        .gd-kpi-icon-wrap { background: rgba($gd-green, .1); color: $gd-green; }
+        .gd-kpi-value     { color: $gd-green; }
+    }
+    &.kpi-red {
+        border-left-color: $gd-red;
+        .gd-kpi-icon-wrap { background: rgba($gd-red, .1); color: $gd-red; }
+        .gd-kpi-value     { color: $gd-red; }
+    }
+    &.kpi-blue {
+        border-left-color: $gd-blue;
+        .gd-kpi-icon-wrap { background: rgba($gd-blue, .1); color: $gd-blue; }
+        .gd-kpi-value     { color: $gd-blue; }
+    }
+}
+
+.gd-kpi-clickable {
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        transform: translateY(-2px);
+
+        .gd-kpi-arrow { opacity: 1; transform: translateX(0); }
+    }
+}
+
+.gd-kpi-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.gd-kpi-icon {
+    font-size: 18px;
+}
+
+.gd-kpi-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.gd-kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.gd-kpi-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: $gd-text-mid;
+    margin-top: 4px;
+}
+
+.gd-kpi-sub {
+    font-size: 12px;
+    color: $gd-text-muted;
+    margin-top: 4px;
+}
+
+.gd-kpi-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
+    color: $gd-text-muted;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+// ── Skeleton loading ──────────────────────────────────────────────────────────
+
+@keyframes gd-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+
+.gd-skeleton {
+    display: inline-block;
+    width: 80px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #E8ECF0 25%, #F4F6F8 50%, #E8ECF0 75%);
+    background-size: 800px 100%;
+    animation: gd-shimmer 1.4s infinite;
+}
+
+.gd-skeleton-sm {
+    width: 120px;
+    height: 14px;
+}
