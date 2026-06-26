@@ -231,7 +231,6 @@ class OrchidRevenueRecognition(models.TransientModel):
 
 			param_id = self.env['ir.config_parameter'].sudo().search([('key','=','od_last_revenue_post_date')])
 			print("jjjj",param_id)
-			dhewudhweid
 			if not param_id:
 				raise UserError(_("od_last_revenue_post_date param is not set!!!"))
 			param_id.value = entry_id.date
