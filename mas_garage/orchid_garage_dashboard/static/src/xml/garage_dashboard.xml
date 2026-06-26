@@ -84,24 +84,6 @@
                 />
             </div>
 
-            <!-- Section: This Month -->
-            <div class="gd-section-label">This Month</div>
-            <div class="gd-grid gd-grid-2">
-                <KpiCard
-                    label="'Closed This Month'"
-                    value="fmt(state.data.closed_this_month)"
-                    icon="'fa-calendar-check-o'"
-                    color="'kpi-blue'"
-                    loading="state.loading"
-                />
-                <KpiCard
-                    label="'Invoiced This Month'"
-                    value="fmtMoney(state.data.invoiced_this_month)"
-                    icon="'fa-money'"
-                    color="'kpi-blue'"
-                    loading="state.loading"
-                />
-            </div>
 
         </div>
     </t>

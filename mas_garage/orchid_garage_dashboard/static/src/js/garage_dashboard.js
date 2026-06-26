@@ -51,30 +51,17 @@ class GarageDashboard extends Component {
 
     async _loadData() {
         this.state.loading = true;
-        try {
-            // orm.create returns a plain integer (the new record's id) in Odoo 16–19.
-            // Pass a plain object (not an array) for a single record.
-            const id = await this.orm.create("garage.dashboard", {});
 
-            // orm.read expects an array of ids.
-            const records = await this.orm.read(
+        try {
+            this.state.data = await this.orm.call(
                 "garage.dashboard",
-                [id],
-                [
-                    "pending_job_count",
-                    "closed_job_count",
-                    "closed_amount_total",
-                    "invoice_pending_count",
-                    "invoice_pending_amount_total",
-                    "closed_this_month",
-                    "invoiced_this_month",
-                ]
+                "get_dashboard_data",
+                []
             );
-            if (records && records.length) {
-                Object.assign(this.state.data, records[0]);
-            }
+
+            console.log(this.state.data);
         } catch (e) {
-            console.error("GarageDashboard._loadData failed:", e);
+            console.error(e);
         } finally {
             this.state.loading = false;
         }
@@ -86,12 +73,9 @@ class GarageDashboard extends Component {
         return (value !== undefined && value !== null) ? String(value) : "—";
     }
 
-    fmtMoney(value) {
-        if (value === undefined || value === null) return "—";
-        return new Intl.NumberFormat(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(value);
+   fmtMoney(value) {
+        const symbol = this.state.data.currency_symbol || "";
+        return `${symbol} ${new Intl.NumberFormat().format(value || 0)}`;
     }
 
     // ── Click handlers ─────────────────────────────────────────────────────────
