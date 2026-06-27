@@ -7,12 +7,8 @@
              t-on-click="props.onClick">
             <div class="gd-kpi-body">
                 <div class="gd-kpi-value">
-                    <t t-if="props.loading">
-                        <span class="gd-skeleton"/>
-                    </t>
-                    <t t-else="">
-                        <t t-esc="props.value"/>
-                    </t>
+                    <t t-if="props.loading"><span class="gd-skeleton"/></t>
+                    <t t-else=""><t t-esc="props.value"/></t>
                 </div>
                 <div class="gd-kpi-label"><t t-esc="props.label"/></div>
                 <t t-if="props.sub">
@@ -22,7 +18,6 @@
                     </div>
                 </t>
             </div>
-            <!-- Visible icon box (right side) -->
             <div class="gd-kpi-icon-wrap">
                 <i t-attf-class="fa #{props.icon}"/>
             </div>
@@ -33,14 +28,14 @@
     <t t-name="orchid_garage_dashboard.Dashboard">
         <div class="gd-root">
 
-            <!-- Hero Banner Card (white card, dark-teal left, diagonal slash, light right) -->
+            <!-- Hero Banner Card -->
             <div class="gd-hero-card">
                 <div class="gd-hero-dark">
                     <div class="gd-hero-eyebrow">GARAGE CONTROL</div>
                     <h1 class="gd-hero-title">
                         <i class="fa fa-wrench"/>Dashboard
                     </h1>
-                    <p class="gd-hero-sub">Job orders and invoices</p>
+                    <p class="gd-hero-sub">Job orders, Estimations and Invoices</p>
                 </div>
                 <div class="gd-hero-light">
                     <button class="gd-refresh-btn" t-on-click="refresh" t-att-disabled="state.loading">
@@ -50,35 +45,53 @@
                 </div>
             </div>
 
-            <!-- Section: Active Operations -->
-            <div class="gd-section-label">Active Operations</div>
+            <!-- Section: Estimations -->
+            <div class="gd-section-label">Estimations</div>
             <div class="gd-grid gd-grid-3">
-                <KpiCard
-                    label="'Pending Jobs'"
-                    value="fmt(state.data.pending_job_count)"
-                    icon="'fa-clock-o'"
-                    color="'kpi-amber'"
-                    loading="state.loading"
-                    onClick.bind="openPendingJobs"
-                />
-                <KpiCard
-                    label="'Closed Jobs'"
-                    value="fmt(state.data.closed_job_count)"
+                <KpiCard label="'Draft Estimations'" value="fmt(state.data.est_draft_count)"
+                    icon="'fa-pencil-square-o'" color="'kpi-blue'" loading="state.loading"
+                    onClick.bind="openEstDraft"/>
+                <KpiCard label="'Confirmed Estimations'" value="fmt(state.data.est_confirmed_count)"
+                    sub="'Value: ' + fmtMoney(state.data.est_confirmed_amount)"
+                    icon="'fa-thumbs-up'" color="'kpi-teal'" loading="state.loading"
+                    onClick.bind="openEstConfirmed"/>
+                <KpiCard label="'Completed Estimations'" value="fmt(state.data.est_completed_count)"
+                    sub="'Value: ' + fmtMoney(state.data.est_completed_amount)"
+                    icon="'fa-flag-checkered'" color="'kpi-purple'" loading="state.loading"
+                    onClick.bind="openEstCompleted"/>
+            </div>
+
+            <!-- Section: Job Orders -->
+            <div class="gd-section-label">Job Orders</div>
+            <div class="gd-grid gd-grid-3">
+                <KpiCard label="'Pending Jobs'" value="fmt(state.data.pending_job_count)"
+                    icon="'fa-clock-o'" color="'kpi-amber'" loading="state.loading"
+                    onClick.bind="openPendingJobs"/>
+                <KpiCard label="'Closed Jobs'" value="fmt(state.data.closed_job_count)"
                     sub="'Total: ' + fmtMoney(state.data.closed_amount_total)"
-                    icon="'fa-check-circle'"
-                    color="'kpi-green'"
-                    loading="state.loading"
-                    onClick.bind="openClosedJobs"
-                />
-                <KpiCard
-                    label="'Invoice Pending'"
-                    value="fmt(state.data.invoice_pending_count)"
+                    icon="'fa-check-circle'" color="'kpi-green'" loading="state.loading"
+                    onClick.bind="openClosedJobs"/>
+                <KpiCard label="'Invoice Pending'" value="fmt(state.data.invoice_pending_count)"
                     sub="'Outstanding: ' + fmtMoney(state.data.invoice_pending_amount_total)"
-                    icon="'fa-file-text-o'"
-                    color="'kpi-red'"
-                    loading="state.loading"
-                    onClick.bind="openInvoicePending"
-                />
+                    icon="'fa-file-text-o'" color="'kpi-red'" loading="state.loading"
+                    onClick.bind="openInvoicePending"/>
+            </div>
+
+            <!-- Section: Invoices -->
+            <div class="gd-section-label">Invoices</div>
+            <div class="gd-grid gd-grid-3">
+                <KpiCard label="'Open Invoices'" value="fmt(state.data.inv_posted_count)"
+                    sub="'Receivable: ' + fmtMoney(state.data.inv_posted_amount)"
+                    icon="'fa-file-o'" color="'kpi-blue'" loading="state.loading"
+                    onClick.bind="openInvPosted"/>
+                <KpiCard label="'Paid Invoices'" value="fmt(state.data.inv_paid_count)"
+                    sub="'Collected: ' + fmtMoney(state.data.inv_paid_amount)"
+                    icon="'fa-money'" color="'kpi-green'" loading="state.loading"
+                    onClick.bind="openInvPaid"/>
+                <KpiCard label="'Overdue Invoices'" value="fmt(state.data.inv_overdue_count)"
+                    sub="'Overdue: ' + fmtMoney(state.data.inv_overdue_amount)"
+                    icon="'fa-exclamation-circle'" color="'kpi-red'" loading="state.loading"
+                    onClick.bind="openInvOverdue"/>
             </div>
 
         </div>
