@@ -1,252 +1,258 @@
-// ── Garage Dashboard Styles ──────────────────────────────────────────────────
-// Design: dark slate sidebar / white canvas, accent palette per KPI type.
-// Signature element: the coloured left-border "slash" on each KPI card.
+// ── Orchid Garage Dashboard ───────────────────────────────────────────────────
+// Hero: white rounded card, dark-teal left ~62% + triangle slash into light right
 
-// ── Tokens ───────────────────────────────────────────────────────────────────
+$gd-bg:         #F0F4F8;
+$gd-surface:    #FFFFFF;
+$gd-border:     #CBD5E0;
+$gd-text-dark:  #1A2535;
+$gd-text-mid:   #4A5568;
+$gd-text-muted: #8A94A6;
+$gd-radius:     12px;
+$gd-shadow:     0 2px 6px rgba(0,0,0,.07), 0 6px 20px rgba(0,0,0,.05);
 
-$gd-bg:        #F7F8FA;
-$gd-surface:   #FFFFFF;
-$gd-border:    #E5E8EF;
-$gd-text-dark: #1A1F36;
-$gd-text-mid:  #4A5568;
-$gd-text-muted:#8A94A6;
-$gd-radius:    12px;
-$gd-shadow:    0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+$gd-hero-dark:  #0D2B3E;
+$gd-hero-light: #EBF1F7;
 
-// Accent palette
 $gd-amber:  #F59E0B;
 $gd-green:  #10B981;
 $gd-red:    #EF4444;
 $gd-blue:   #3B82F6;
+$gd-pink:   #EC4899;
+$gd-purple: #8B5CF6;
 
 // ── Root ─────────────────────────────────────────────────────────────────────
-
 .gd-root {
     background: $gd-bg;
     min-height: 100%;
-    padding: 28px 32px;
+    padding: 24px 28px 36px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: $gd-text-dark;
 }
 
-// ── Header ────────────────────────────────────────────────────────────────────
-
-.gd-header {
+// ── Hero Banner Card ──────────────────────────────────────────────────────────
+.gd-hero-card {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
+    border-radius: $gd-radius;
+    overflow: hidden;
+    box-shadow: $gd-shadow;
+    margin-bottom: 24px;
+    min-height: 130px;
+    background: $gd-surface;
 }
 
-.gd-header-left {
+// Dark teal left section — ~62% width, triangle cut on right edge
+.gd-hero-dark {
+    background: $gd-hero-dark;
+    padding: 28px 32px;
     display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.gd-logo-mark {
-    width: 44px;
-    height: 44px;
-    background: $gd-text-dark;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    color: #fff;
-    font-size: 20px;
+    position: relative;
+    flex: 0 0 62%;
+
+    // Triangle slash: border trick pointing right into light section
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -46px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 130px 0 0 50px;
+        border-color: transparent transparent transparent $gd-hero-dark;
+    }
 }
 
-.gd-title {
-    font-size: 22px;
+.gd-hero-eyebrow {
+    font-size: 10px;
     font-weight: 700;
-    margin: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $gd-green;
+    margin-bottom: 8px;
+}
+
+.gd-hero-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 6px;
     letter-spacing: -0.3px;
     line-height: 1.2;
+
+    .fa {
+        font-size: 20px;
+        margin-right: 10px;
+        opacity: 0.8;
+    }
 }
 
-.gd-subtitle {
-    margin: 2px 0 0;
-    font-size: 13px;
-    color: $gd-text-muted;
+.gd-hero-sub {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
 }
 
+// Light right section
+.gd-hero-light {
+    flex: 1;
+    background: $gd-hero-light;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 28px;
+}
+
+// ── Refresh button ────────────────────────────────────────────────────────────
 .gd-refresh-btn {
     display: flex;
     align-items: center;
     gap: 7px;
-    padding: 8px 18px;
+    padding: 7px 20px;
     border: 1px solid $gd-border;
-    border-radius: 8px;
+    border-radius: 20px;
     background: $gd-surface;
     color: $gd-text-mid;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
 
     &:hover:not(:disabled) {
-        background: #F0F2F5;
-        border-color: #CBD5E0;
+        background: #F8FAFC;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
     }
 
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
-// ── Section labels ────────────────────────────────────────────────────────────
-
+// ── Section label ─────────────────────────────────────────────────────────────
 .gd-section-label {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.3px;
     text-transform: uppercase;
     color: $gd-text-muted;
     margin-bottom: 12px;
-    margin-top: 4px;
 
-    &:not(:first-of-type) {
-        margin-top: 28px;
-    }
+    &:not(:first-of-type) { margin-top: 28px; }
 }
 
 // ── Grid ──────────────────────────────────────────────────────────────────────
-
-.gd-grid {
-    display: grid;
-    gap: 16px;
-}
-
+.gd-grid { display: grid; gap: 16px; }
 .gd-grid-3 { grid-template-columns: repeat(3, 1fr); }
 .gd-grid-2 { grid-template-columns: repeat(2, 1fr); }
 
-@media (max-width: 900px) {
-    .gd-grid-3 { grid-template-columns: repeat(2, 1fr); }
-}
-
+@media (max-width: 960px) { .gd-grid-3 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) {
-    .gd-grid-3,
-    .gd-grid-2 { grid-template-columns: 1fr; }
+    .gd-grid-3, .gd-grid-2 { grid-template-columns: 1fr; }
     .gd-root { padding: 16px; }
+    .gd-hero-card { flex-direction: column; min-height: auto; }
+    .gd-hero-dark { flex: none; padding: 24px 20px; }
+    .gd-hero-dark::after { display: none; }
+    .gd-hero-light { justify-content: flex-start; padding: 16px 20px; }
 }
 
-// ── KPI Card ──────────────────────────────────────────────────────────────────
-
+// ── KPI Card — LEFT border (matching sample exactly) ─────────────────────────
 .gd-kpi-card {
     background: $gd-surface;
     border-radius: $gd-radius;
     box-shadow: $gd-shadow;
     padding: 22px 20px;
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
-    border-left: 4px solid transparent;  // signature: coloured left slash
+    border-left: 4px solid transparent;
+    overflow: hidden;
     transition: box-shadow 0.2s, transform 0.15s;
 
-    // ── colour variants ─────────────────────────────────────────────────────
     &.kpi-amber {
         border-left-color: $gd-amber;
-        .gd-kpi-icon-wrap { background: rgba($gd-amber, .1); color: $gd-amber; }
-        .gd-kpi-value     { color: $gd-amber; }
+        .gd-kpi-icon-wrap { color: $gd-amber; background: rgba($gd-amber, .12); }
     }
     &.kpi-green {
         border-left-color: $gd-green;
-        .gd-kpi-icon-wrap { background: rgba($gd-green, .1); color: $gd-green; }
-        .gd-kpi-value     { color: $gd-green; }
+        .gd-kpi-icon-wrap { color: $gd-green; background: rgba($gd-green, .12); }
     }
     &.kpi-red {
         border-left-color: $gd-red;
-        .gd-kpi-icon-wrap { background: rgba($gd-red, .1); color: $gd-red; }
-        .gd-kpi-value     { color: $gd-red; }
+        .gd-kpi-icon-wrap { color: $gd-red; background: rgba($gd-red, .12); }
     }
     &.kpi-blue {
         border-left-color: $gd-blue;
-        .gd-kpi-icon-wrap { background: rgba($gd-blue, .1); color: $gd-blue; }
-        .gd-kpi-value     { color: $gd-blue; }
+        .gd-kpi-icon-wrap { color: $gd-blue; background: rgba($gd-blue, .12); }
+    }
+    &.kpi-pink {
+        border-left-color: $gd-pink;
+        .gd-kpi-icon-wrap { color: $gd-pink; background: rgba($gd-pink, .12); }
+    }
+    &.kpi-purple {
+        border-left-color: $gd-purple;
+        .gd-kpi-icon-wrap { color: $gd-purple; background: rgba($gd-purple, .12); }
     }
 }
 
 .gd-kpi-clickable {
     cursor: pointer;
-
     &:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,.1);
         transform: translateY(-2px);
-
-        .gd-kpi-arrow { opacity: 1; transform: translateX(0); }
     }
 }
 
-.gd-kpi-icon-wrap {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.gd-kpi-icon {
-    font-size: 18px;
-}
-
-.gd-kpi-body {
-    flex: 1;
-    min-width: 0;
-}
+.gd-kpi-body { flex: 1; min-width: 0; position: relative; z-index: 1; }
 
 .gd-kpi-value {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
-    line-height: 1.1;
+    color: $gd-text-dark;
     letter-spacing: -0.5px;
+    line-height: 1.1;
 }
 
 .gd-kpi-label {
     font-size: 13px;
     font-weight: 500;
     color: $gd-text-mid;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .gd-kpi-sub {
     font-size: 12px;
     color: $gd-text-muted;
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
-.gd-kpi-arrow {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%) translateX(4px);
-    color: $gd-text-muted;
-    font-size: 13px;
-    opacity: 0;
-    transition: opacity 0.2s, transform 0.2s;
+// Solid icon box on the right — dark accent color, visible
+.gd-kpi-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
 }
 
-// ── Skeleton loading ──────────────────────────────────────────────────────────
-
+// ── Skeleton ──────────────────────────────────────────────────────────────────
 @keyframes gd-shimmer {
     0%   { background-position: -400px 0; }
-    100% { background-position: 400px 0; }
+    100% { background-position:  400px 0; }
 }
 
 .gd-skeleton {
     display: inline-block;
-    width: 80px;
-    height: 28px;
+    width: 80px; height: 30px;
     border-radius: 6px;
     background: linear-gradient(90deg, #E8ECF0 25%, #F4F6F8 50%, #E8ECF0 75%);
     background-size: 800px 100%;
     animation: gd-shimmer 1.4s infinite;
 }
 
-.gd-skeleton-sm {
-    width: 120px;
-    height: 14px;
-}
+.gd-skeleton-sm { width: 130px; height: 14px; }

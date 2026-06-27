@@ -5,9 +5,6 @@
     <t t-name="orchid_garage_dashboard.KpiCard">
         <div t-attf-class="gd-kpi-card #{props.color} #{props.onClick ? 'gd-kpi-clickable' : ''}"
              t-on-click="props.onClick">
-            <div class="gd-kpi-icon-wrap">
-                <i t-attf-class="fa #{props.icon} gd-kpi-icon"/>
-            </div>
             <div class="gd-kpi-body">
                 <div class="gd-kpi-value">
                     <t t-if="props.loading">
@@ -25,11 +22,10 @@
                     </div>
                 </t>
             </div>
-            <t t-if="props.onClick">
-                <div class="gd-kpi-arrow">
-                    <i class="fa fa-arrow-right"/>
-                </div>
-            </t>
+            <!-- Visible icon box (right side) -->
+            <div class="gd-kpi-icon-wrap">
+                <i t-attf-class="fa #{props.icon}"/>
+            </div>
         </div>
     </t>
 
@@ -37,20 +33,21 @@
     <t t-name="orchid_garage_dashboard.Dashboard">
         <div class="gd-root">
 
-            <!-- Header -->
-            <div class="gd-header">
-                <div class="gd-header-left">
-                    <div class="gd-logo-mark">
-                        <i class="fa fa-wrench"/>
-                    </div>
-                    <div>
-                        <h1 class="gd-title">Garage Dashboard</h1>
-                    </div>
+            <!-- Hero Banner Card (white card, dark-teal left, diagonal slash, light right) -->
+            <div class="gd-hero-card">
+                <div class="gd-hero-dark">
+                    <div class="gd-hero-eyebrow">GARAGE CONTROL</div>
+                    <h1 class="gd-hero-title">
+                        <i class="fa fa-wrench"/>Dashboard
+                    </h1>
+                    <p class="gd-hero-sub">Job orders and invoices</p>
                 </div>
-                <button class="gd-refresh-btn" t-on-click="refresh" t-att-disabled="state.loading">
-                    <i t-attf-class="fa fa-refresh #{state.loading ? 'fa-spin' : ''}"/>
-                    Refresh
-                </button>
+                <div class="gd-hero-light">
+                    <button class="gd-refresh-btn" t-on-click="refresh" t-att-disabled="state.loading">
+                        <i t-attf-class="fa fa-refresh #{state.loading ? 'fa-spin' : ''}"/>
+                        Refresh
+                    </button>
+                </div>
             </div>
 
             <!-- Section: Active Operations -->
@@ -83,7 +80,6 @@
                     onClick.bind="openInvoicePending"
                 />
             </div>
-
 
         </div>
     </t>
