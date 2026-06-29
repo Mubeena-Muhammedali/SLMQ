@@ -1,0 +1,94 @@
+<odoo>
+
+    <template id="report_garage_job_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <!-- HEADING -->
+                <div class="text-center mb-4">
+                    <h2>
+                        <strong>Job Card -<span t-field="o.name"/></strong>
+                    </h2>
+                </div>
+
+                <table class="table table-borderless" style="width:100%;">
+                    <tr>
+                        <td><strong>Customer</strong></td>
+                        <td>:<span t-field="o.partner_id"/></td>
+                        <td><strong>Date</strong></td>
+                        <td>:<span t-field="o.date"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Address</strong></td>
+                        <td>:<span t-field="o.partner_id.contact_address"/></td>
+                        <td><strong>Brand</strong></td>
+                        <td>:<span t-field="o.vehicle_id.brand_id"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td>:<span t-field="o.partner_id.email"/></td>
+                        <td><strong>Model</strong></td>
+                        <td>:<span t-field="o.vehicle_id.model_id"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Contact No</strong></td>
+                        <td>:<span t-field="o.partner_id.phone"/></td>
+                        <td><strong>Chassis No</strong></td>
+                        <td>:<span t-field="o.vehicle_id.vin_no"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>TRN</strong></td>
+                        <td>:<span t-field="o.partner_id.vat"/></td>
+                        <td><strong>Plate No</strong></td>
+                        <td>:<span t-field="o.vehicle_id.plate_no"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Estimation No</strong></td>
+                        <td>:<span t-field="o.estimation_no"/></td>
+                        <td><strong>Color</strong></td>
+                        <td>:<span t-field="o.colour"/></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><strong>Km</strong></td>
+                        <td>:<span t-field="o.vehicle_id.kms"/>
+                            <span style="margin-left:25px;">
+                                <strong>Year</strong>
+                            </span>:<span t-field="o.vehicle_id.year"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <br/>
+                <p>
+                    <strong>Terms &amp; Conditions</strong><br/>
+                    I here by authorize the repair work listed overleaf to be done with the necessary materials and grant this workshop authorities to drive the vehicle for the purpose of road test. You will not be held responsible for any loss or any damage to the vehicles or contents during repairs. I certify that there are no valuables in the vehicle.
+                </p>
+
+                <!-- SIGNATURE -->
+                <div class="row">
+                    <div class="col-6">
+                        <b>Advisor</b>:<span t-field="o.advisor_id"/>
+                    </div>
+                    <div class="col-5 col-offset-1">
+                        <b>Customer Signature</b>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_garage_job">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_garage.report_garage_job_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

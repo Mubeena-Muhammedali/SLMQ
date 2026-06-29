@@ -1,0 +1,177 @@
+<odoo>
+
+    <!-- ROOT -->
+
+    <menuitem id="menu_garage_root"
+              name="Garage"
+              web_icon="orchid_garage,static/description/garage.png"
+              sequence="10"/>
+
+    <!-- ESTIMATION -->
+
+      <menuitem
+            id="menu_garage_dashboard"
+            name="Dashboard"
+            parent="orchid_garage.menu_garage_root"
+            action="action_garage_dashboard"
+            sequence="1"/>
+
+    <menuitem id="menu_garage_estimation"
+              name="Estimations"
+              parent="menu_garage_root"
+              action="action_garage_estimation"
+              sequence="2"/>
+
+    <menuitem id="menu_garage_orders_root"
+          name="Orders"
+          parent="menu_garage_root"
+          sequence="30"/>
+
+
+    <!-- Quotations -->
+    <menuitem id="menu_garage_sale_quotations"
+              parent="menu_garage_orders_root"
+              action="sale.action_quotations_with_onboarding"
+              sequence="1"/>
+
+
+    <!-- Sale Orders -->
+    <menuitem id="menu_garage_sale_orders"
+              parent="menu_garage_orders_root"
+              action="sale.action_orders"
+              sequence="2"/>
+
+
+    <!-- Customers -->
+    <menuitem id="menu_garage_customers"
+              parent="menu_garage_orders_root"
+              action="base.action_partner_form"
+              sequence="3"/>
+
+    <!-- =======================================================
+    PRODUCTS
+    ======================================================= -->
+
+    <menuitem id="menu_garage_products_root"
+              name="Products"
+              parent="menu_garage_root"
+              sequence="40"/>
+
+
+    <!-- Products -->
+    <menuitem id="menu_garage_products"
+              parent="menu_garage_products_root"
+              action="sale.product_template_action"
+              sequence="1"/>
+
+
+    <!-- Product Variants -->
+    <menuitem id="menu_garage_product_variants"
+              parent="menu_garage_products_root"
+              action="product.product_normal_action_sell"
+              sequence="2"/>
+
+    <!-- =======================================================
+        PURCHASES
+    ======================================================= -->
+
+    <menuitem id="menu_garage_purchase_root"
+              name="Purchases"
+              parent="menu_garage_root"
+              sequence="50"/>
+
+
+    <!-- RFQ -->
+    <menuitem id="menu_garage_rfq"
+              parent="menu_garage_purchase_root"
+              action="purchase.purchase_rfq"
+              sequence="1"/>
+
+
+    <!-- Purchase Orders -->
+    <menuitem id="menu_garage_purchase_orders"
+              parent="menu_garage_purchase_root"
+              action="purchase.purchase_form_action"
+              sequence="2"/>
+
+
+    <!-- Vendors -->
+    <menuitem id="menu_garage_vendors"
+              parent="menu_garage_purchase_root"
+              action="base.action_partner_supplier_form"
+              sequence="3"/>
+
+    <!-- MASTERS -->
+
+    <menuitem id="menu_garage_master"
+              name="Configurations"
+              parent="menu_garage_root"
+              sequence="100"/>
+
+    <menuitem id="menu_garage_brand"
+              name="Brands"
+              parent="menu_garage_master"
+              action="action_garage_brand"
+              sequence="1"/>
+
+    <menuitem id="menu_garage_vehicle"
+              name="Vehicles"
+              parent="menu_garage_master"
+              action="action_garage_vehicle"
+              sequence="2"/>
+
+    <menuitem id="menu_garage_vehicle_model"
+              name="Vehicle Models"
+              parent="menu_garage_master"
+              action="action_garage_vehicle_model"
+              sequence="3"/>
+
+   <menuitem id="menu_garage_sub_status"
+              name="Sub Status"
+              parent="menu_garage_master"
+              action="action_garage_sub_status"
+              sequence="4"/>
+
+    <menuitem id="menu_garage_charger_type"
+              name="Charger Types"
+              parent="menu_garage_master"
+              action="action_garage_charger_type"
+              sequence="5"/>
+
+    <menuitem id="menu_garage_engine"
+              name="Vehicle Engines"
+              parent="menu_garage_master"
+              action="action_garage_vehicle_engine"
+              sequence="6"/>
+
+    <menuitem id="menu_garage_cylinder"
+              name="Cylinders"
+              parent="menu_garage_master"
+              action="action_garage_cylinder"
+              sequence="7"/>
+
+    <menuitem id="menu_garage_job_category"
+              name="Job Categories"
+              parent="menu_garage_master"
+              action="action_garage_job_category"
+              sequence="8"/>
+
+    <menuitem id="menu_garage_order_type"
+              name="Order Types"
+              parent="menu_garage_master"
+              action="action_garage_order_type"
+              sequence="9"/>
+
+    <menuitem id="menu_garage_status"
+              name="Statuses"
+              parent="menu_garage_master"
+              action="action_garage_status"
+              sequence="10"/>
+
+    <menuitem id="menu_garage_lead_source"
+              name="Lead Sources"
+              parent="menu_garage_master"
+              action="action_garage_lead_source"
+              sequence="11"/>
+
+</odoo>

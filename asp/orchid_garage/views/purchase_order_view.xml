@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="od_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="od_action_view_sale_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        invisible="not od_sale_order_id">
+                    <field name="od_sale_order_id" widget="statinfo" string="Sale Order"/>
+                </button>
+            </xpath>
+             <xpath expr="//page[@name='products']" position="after">
+                <page string="Garage Details">
+                    <group>
+                        <group>
+                             <field name="od_sale_order_id"/>
+                            <field name="od_analytic_account_id"/>
+                            <field name="od_vehicle_id"/>
+                            <field name="od_brand_id"/>
+                            <field name="od_model_id"/>
+                            <field name="od_vin_no"/>
+                        </group>
+                        <group>
+                            <field name="od_colour"/>
+                            <field name="od_kms"/>
+                            <field name="od_year"/>
+                            <field name="od_customer_contact_no"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="od_remarks"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

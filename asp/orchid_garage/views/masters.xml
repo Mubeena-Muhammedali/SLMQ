@@ -1,0 +1,390 @@
+<odoo>
+
+    <!-- =========================================================
+        VEHICLE
+    ========================================================== -->
+
+    <record id="view_garage_vehicle_tree" model="ir.ui.view">
+        <field name="name">garage.vehicle.tree</field>
+        <field name="model">garage.vehicle</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="plate_no"/>
+                <field name="partner_id"/>
+                <field name="brand_id"/>
+                <field name="model_id"/>
+                <field name="vin_no"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_garage_vehicle_form" model="ir.ui.view">
+        <field name="name">garage.vehicle.form</field>
+        <field name="model">garage.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="plate_no"/>
+                            <field name="partner_id"/>
+                            <field name="brand_id"/>
+                            <field name="model_id" context="{'default_brand_id':brand_id}"/>
+                        </group>
+                        <group>
+                            <field name="vin_no"/>
+                            <field name="colour"/>
+                            <field name="year"/>
+                            <field name="kms"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">garage.vehicle</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- vehicle brand TREE VIEW -->
+
+    <record id="view_garage_brand_tree" model="ir.ui.view">
+        <field name="name">garage.brand.tree</field>
+        <field name="model">garage.brand</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_garage_brand_form" model="ir.ui.view">
+        <field name="name">garage.brand.form</field>
+        <field name="model">garage.brand</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_brand" model="ir.actions.act_window">
+        <field name="name">Brands</field>
+        <field name="res_model">garage.brand</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- vehicle model TREE VIEW -->
+
+    <record id="view_garage_vehicle_model_tree" model="ir.ui.view">
+        <field name="name">garage.vehicle.model.tree</field>
+        <field name="model">garage.vehicle.model</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="brand_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_garage_vehicle_model_form" model="ir.ui.view">
+        <field name="name">garage.vehicle.model.form</field>
+        <field name="model">garage.vehicle.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="brand_id"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_vehicle_model" model="ir.actions.act_window">
+        <field name="name">Vehicle Models</field>
+        <field name="res_model">garage.vehicle.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Charger Types TREE VIEW -->
+
+    <record id="view_garage_charger_type_model_tree" model="ir.ui.view">
+        <field name="name">garage.charger.type.tree</field>
+        <field name="model">garage.charger.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_charger_type_form" model="ir.ui.view">
+        <field name="name">garage.charger.type.form</field>
+        <field name="model">garage.charger.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+
+    <record id="action_garage_charger_type" model="ir.actions.act_window">
+        <field name="name">Charger Types</field>
+        <field name="res_model">garage.charger.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Sub Status TREE VIEW -->
+
+    <record id="view_garage_sub_status_tree" model="ir.ui.view">
+        <field name="name">garage.sub.status.tree</field>
+        <field name="model">garage.sub.status</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_sub_status_form" model="ir.ui.view">
+        <field name="name">garage.sub.status.form</field>
+        <field name="model">garage.sub.status</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+
+    <record id="action_garage_sub_status" model="ir.actions.act_window">
+        <field name="name">Sub Status</field>
+        <field name="res_model">garage.sub.status</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Status TREE VIEW -->
+
+    <record id="view_garage_status_tree" model="ir.ui.view">
+        <field name="name">garage.status.tree</field>
+        <field name="model">garage.status</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_status_form" model="ir.ui.view">
+        <field name="name">garage.status.form</field>
+        <field name="model">garage.status</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+
+    <record id="action_garage_status" model="ir.actions.act_window">
+        <field name="name">Job Status</field>
+        <field name="res_model">garage.status</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =========================================================
+        ENGINE
+    ========================================================== -->
+
+    <record id="view_garage_vehicle_engine_tree" model="ir.ui.view">
+        <field name="name">garage.vehicle.engine.tree</field>
+        <field name="model">garage.vehicle.engine</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_vehicle_engine_form" model="ir.ui.view">
+        <field name="name">garage.vehicle.engine.form</field>
+        <field name="model">garage.vehicle.engine</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_vehicle_engine" model="ir.actions.act_window">
+        <field name="name">Vehicle Engines</field>
+        <field name="res_model">garage.vehicle.engine</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- =========================================================
+        CYLINDER
+    ========================================================== -->
+
+    <record id="view_garage_cylinder_tree" model="ir.ui.view">
+        <field name="name">garage.cylinder.tree</field>
+        <field name="model">garage.cylinder</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_garage_cylinder_form" model="ir.ui.view">
+        <field name="name">garage.cylinder.form</field>
+        <field name="model">garage.cylinder</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_cylinder" model="ir.actions.act_window">
+        <field name="name">Cylinders</field>
+        <field name="res_model">garage.cylinder</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- =========================================================
+        JOB CATEGORY
+    ========================================================== -->
+
+    <record id="view_garage_job_category_tree" model="ir.ui.view">
+        <field name="name">garage.job.category.tree</field>
+        <field name="model">garage.job.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_job_category_form" model="ir.ui.view">
+        <field name="name">garage.job.category.form</field>
+        <field name="model">garage.job.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_job_category" model="ir.actions.act_window">
+        <field name="name">Job Categories</field>
+        <field name="res_model">garage.job.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- =========================================================
+        ORDER TYPE
+    ========================================================== -->
+
+    <record id="view_garage_order_type_tree" model="ir.ui.view">
+        <field name="name">garage.order.type.tree</field>
+        <field name="model">garage.order.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_order_type_form" model="ir.ui.view">
+        <field name="name">garage.order.type.form</field>
+        <field name="model">garage.order.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_order_type" model="ir.actions.act_window">
+        <field name="name">Order Types</field>
+        <field name="res_model">garage.order.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- =========================================================
+        LEAD SOURCE
+    ========================================================== -->
+
+    <record id="view_garage_lead_source_tree" model="ir.ui.view">
+        <field name="name">garage.lead.source.tree</field>
+        <field name="model">garage.lead.source</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_garage_lead_source_form" model="ir.ui.view">
+        <field name="name">garage.lead.source.form</field>
+        <field name="model">garage.lead.source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_garage_lead_source" model="ir.actions.act_window">
+        <field name="name">Lead Sources</field>
+        <field name="res_model">garage.lead.source</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
