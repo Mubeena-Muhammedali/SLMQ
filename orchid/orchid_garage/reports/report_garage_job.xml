@@ -65,7 +65,97 @@
                     </tr>
                 </table>
 
-                <br/>
+                <t t-set="lines_to_report" t-value="o._get_order_lines_to_report()"/>
+
+                <div class="d-flex justify-content-center">
+                    <table class="o_has_total_table table o_main_table table-borderless" style="width: 80%; max-width: 900px;">
+                        <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_sl" class="text-start">Sl No</th>
+                                <th name="th_description" class="text-start">Description</th>
+                                <th name="th_quantity" class="text-start">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+
+                            <t t-set="sl_no" t-value="1"/>
+
+                            <t t-set="current_section" t-value="None"/>
+                            <t t-set="current_subsection" t-value="None"/>
+
+
+                            <t t-foreach="lines_to_report" t-as="line">
+
+                                <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
+                                <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
+                                <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
+                                <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
+
+                                <t t-if="is_section">
+                                    <t t-set="current_section" t-value="line"/>
+                                    <t t-set="current_subsection" t-value="None"/>
+                                    <t t-set="line_padding" t-value="0"/>
+                                </t>
+                                <t t-elif="is_subsection">
+                                    <t t-set="current_subsection" t-value="line"/>
+                                    <t t-set="line_padding" t-value="2"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="line_padding" t-value="3 if current_subsection else (2 if current_section else 0)"/>
+                                </t>
+
+                                <t t-if="line.combo_item_id">
+                                    <t t-set="line_padding" t-value="line_padding + 1"/>
+                                </t>
+
+                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                <tr t-if="is_section or is_subsection" name="tr_section" t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'">
+                                    <t t-set="section_name_colspan" t-value="99"/>
+                                    <td name="td_section_name" t-att-colspan="section_name_colspan" t-att-class="padding_class">
+                                        <span t-field="line.name">A section title</span>
+                                    </td>
+                                </tr>
+                                <tr t-elif="is_note" name="tr_note" class="fst-italic o_line_note">
+                                    <td name="td_note_name" colspan="99" t-att-class="padding_class">
+                                        <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
+                                    </td>
+                                </tr>
+                                <tr t-elif="is_combo" name="tr_combo" class="fw-bold o_line_subsection">
+                                    <td name="td_combo_name" t-att-colspan="2" t-att-class="padding_class">
+                                        <span t-field="line.name">Combo Product</span>
+                                        x <span t-field="line.product_uom_qty" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                </tr>
+                                <tr t-else="" name="tr_product">
+                                    <td>
+                                        <span t-esc="sl_no"/>
+                                    </td>
+                                    <td name="td_description" t-att-class="padding_class">
+                                        <span t-field="line.name">Bacon Burger</span>
+                                    </td>
+                                    <td name="td_product_quantity">
+                                        <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
+                                        <span t-field="line.product_uom_id">units</span>
+                                        <span t-if="line.product_uom_id != line.product_id.uom_id" class="text-muted small">
+                                            <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
+                                            <br/><span t-esc="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
+                                        </span>
+                                    </td>
+                                        <t t-set="sl_no" t-value="sl_no + 1"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- VEHICLE DIAGRAM -->
+                <div class="d-flex justify-content-center mt-4" style="page-break-inside: avoid;">
+                    <img src="/orchid_garage/static/description/job_digram.jpg"
+                         alt="Vehicle Diagram"
+                         style="max-width: 450px; width: 100%;"/>
+                </div>
+
                 <p>
                     <strong>Terms &amp; Conditions</strong><br/>
                     I here by authorize the repair work listed overleaf to be done with the necessary materials and grant this workshop authorities to drive the vehicle for the purpose of road test. You will not be held responsible for any loss or any damage to the vehicles or contents during repairs. I certify that there are no valuables in the vehicle.
