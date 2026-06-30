@@ -22,7 +22,42 @@
 
                     <tr>
                         <td><strong>Address</strong></td>
-                        <td>:<span t-field="o.partner_id.contact_address"/></td>
+                        <td>:
+                            <!-- Street -->
+                            <t t-if="o.partner_id.street">
+                                <span t-field="o.partner_id.street"/>
+                            </t>
+                        
+                            <!-- Street 2 -->
+                            <t t-if="o.partner_id.street2">
+                                <t t-if="o.partner_id.street">, </t>
+                                <span t-field="o.partner_id.street2"/>
+                            </t>
+                        
+                            <!-- City -->
+                            <t t-if="o.partner_id.city">
+                                <t t-if="o.partner_id.street or o.partner_id.street2">, </t>
+                                <span t-field="o.partner_id.city"/>
+                            </t>
+                        
+                            <!-- ZIP -->
+                            <t t-if="o.partner_id.zip">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city"> - </t>
+                                <span t-field="o.partner_id.zip"/>
+                            </t>
+                        
+                            <!-- State -->
+                            <t t-if="o.partner_id.state_id">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city or o.partner_id.zip">, </t>
+                                <span t-field="o.partner_id.state_id"/>
+                            </t>
+                        
+                            <!-- Country -->
+                            <t t-if="o.partner_id.country_id">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city or o.partner_id.zip or o.partner_id.state_id">, </t>
+                                <span t-field="o.partner_id.country_id"/>
+                            </t>
+                        </td>
                         <td><strong>Brand</strong></td>
                         <td>:<span t-field="o.brand_id"/></td>
                     </tr>
@@ -56,8 +91,8 @@
                     </tr>
 
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td><strong>Salesperson</strong></td>
+                        <td>:<span t-field="o.salesperson_id"/></td>
                         <td><strong>Km</strong></td>
                         <td>:<span t-field="o.kms"/>
                             <span style="margin-left:25px;">
@@ -83,14 +118,14 @@
                     <tbody>
                         <t t-set="sl_no" t-value="1"/>
                         <t t-set="section_total" t-value="0"/>
-                        <t t-foreach="o.line_ids.filtered(lambda x:x.product_id.id!=x.company_id.sale_discount_product_id.id)" t-as="line">
+                        <t t-foreach="o.line_ids" t-as="line">
                             <!-- SECTION -->
                             <t t-if="line.display_type == 'line_section'">
                                 <!-- PREVIOUS SECTION TOTAL -->
                                 <t t-if="section_total">
                                     <tr>
                                         <td colspan="5" class="text-end"><strong>Section Total</strong></td>
-                                        <td class="text-end"><strong><span t-esc="section_total"/></strong></td>
+                                        <td class="text-end"><strong><span t-out="section_total"/></strong></td>
                                     </tr>
                                 </t>
 
@@ -119,7 +154,7 @@
                             <t t-else="">
                                 <tr>
                                     <td>
-                                        <span t-esc="sl_no"/>
+                                        <span t-out="sl_no"/>
                                     </td>
 
                                     <td>
@@ -153,7 +188,7 @@
 
                         <tr>
                             <td colspan="5" class="text-end"><strong>Section Total</strong></td>
-                            <td class="text-end"><strong><span t-esc="section_total"/></strong></td>
+                            <td class="text-end"><strong><span t-out="section_total"/></strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -222,12 +257,21 @@
 
                 <div class="mt-3">
                     <strong>Amount in Words :</strong>
-                    <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                    <span t-out="o.currency_id.amount_to_text(o.amount_total)"/>
                 </div>
 
 
                 <!-- NOTES -->
-                <div class="mt-4"><span t-field="o.note"/></div>
+                <div class="mt-4" style="page-break-inside: avoid;"><span t-field="o.note"/></div>
+                
+                <!-- TERMS AND CONDITIONS -->
+                <div class="mt-3" style="page-break-inside: avoid;">
+                    <strong>Terms and Condition:</strong>
+                    <ol style="margin-top:4px; padding-left:18px;">
+                        <li>Estimate is valid for 15 days from the date of the estimate issuance.</li>
+                        <li>If the estimate is fully or partially rejected; diagnosis charges, all consumables, parts used in the process of estimating and charges for refitting removed parts shall be settled before collecting the vehicle back. Additional charges may occur after initiating repairs previously approved by client and such, updates would be communicated before commencing.</li>
+                    </ol>
+                </div>
 
                 <!-- SIGNATURE -->
                 <div class="mt-5" style="width:250px; float:right; text-align:center;">Customer's Signature</div>

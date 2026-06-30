@@ -15,12 +15,47 @@
                         <td><strong>Customer</strong></td>
                         <td>:<span t-field="o.partner_id"/></td>
                         <td><strong>Date</strong></td>
-                        <td>:<span t-field="o.date_order"/></td>
+                        <td>:<span t-field="o.date_order" t-options="{&quot;format&quot;: &quot;MM/dd/yyyy&quot;}"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Address</strong></td>
-                        <td>:<span t-field="o.partner_id.contact_address"/></td>
+                        <td>:
+                            <!-- Street -->
+                            <t t-if="o.partner_id.street">
+                                <span t-field="o.partner_id.street"/>
+                            </t>
+                        
+                            <!-- Street 2 -->
+                            <t t-if="o.partner_id.street2">
+                                <t t-if="o.partner_id.street">, </t>
+                                <span t-field="o.partner_id.street2"/>
+                            </t>
+                        
+                            <!-- City -->
+                            <t t-if="o.partner_id.city">
+                                <t t-if="o.partner_id.street or o.partner_id.street2">, </t>
+                                <span t-field="o.partner_id.city"/>
+                            </t>
+                        
+                            <!-- ZIP -->
+                            <t t-if="o.partner_id.zip">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city"> - </t>
+                                <span t-field="o.partner_id.zip"/>
+                            </t>
+                        
+                            <!-- State -->
+                            <t t-if="o.partner_id.state_id">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city or o.partner_id.zip">, </t>
+                                <span t-field="o.partner_id.state_id"/>
+                            </t>
+                        
+                            <!-- Country -->
+                            <t t-if="o.partner_id.country_id">
+                                <t t-if="o.partner_id.street or o.partner_id.street2 or o.partner_id.city or o.partner_id.zip or o.partner_id.state_id">, </t>
+                                <span t-field="o.partner_id.country_id"/>
+                            </t>
+                        </td>
                         <td><strong>Brand</strong></td>
                         <td>:<span t-field="o.od_brand_id"/></td>
                     </tr>
@@ -54,8 +89,8 @@
                     </tr>
 
                     <tr>
-                        <td/>
-                        <td/>
+                        <td><strong>Salesperson</strong></td>
+                        <td>:<span t-field="o.user_id"/></td>
                         <td><strong>Km</strong></td>
                         <td>:<span t-field="o.od_kms"/>
                             <span style="margin-left:25px;">
@@ -150,7 +185,7 @@
 
                 <!-- VEHICLE DIAGRAM -->
                 <div class="d-flex justify-content-center mt-4" style="page-break-inside: avoid;">
-                    <img src="/orchid_garage/static/description/job_digram.jpg" alt="Vehicle Diagram" style="max-width: 450px; width: 100%;"/>
+                    <img src="/orchid_garage/static/description/job_digram.jpg" alt="Vehicle Diagram" style="max-width: 400px; width: 100%;"/>
                 </div>
 
                 <p style="page-break-inside: avoid;">
