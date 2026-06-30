@@ -157,9 +157,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//field[@name='name']" position="before">
                 <field name="od_vehicle_id"
                filter_domain="['|', ('od_vin_no', 'ilike', self), ('od_vehicle_id', 'ilike', self)]"/>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="od_estimation_id"/>
                 <field name="od_job_status"/>
             </xpath>
