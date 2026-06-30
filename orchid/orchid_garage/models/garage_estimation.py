@@ -107,6 +107,8 @@ class GarageEstimation(models.Model):
         readonly=True
     )
 
+    salesperson_id = fields.Many2one('res.users', string='Salesperson', tracking=True)
+
     # ---------------------------------------------------------
     # LINES
     # ---------------------------------------------------------
@@ -272,6 +274,18 @@ class GarageEstimation(models.Model):
             rec.year = vehicle.year
             rec.kms = vehicle.kms
 
+    @api.onchange('partner_id', 'vehicle_id')
+    def _onchange_salesperson(self):
+        for rec in self:
+            # Priority 1: Vehicle salesperson
+            if rec.vehicle_id and rec.vehicle_id.user_id:
+                rec.salesperson_id = rec.vehicle_id.user_id
+            # Priority 2: Customer salesperson
+            elif rec.partner_id and rec.partner_id.user_id:
+                rec.salesperson_id = rec.partner_id.user_id
+            else:
+                rec.salesperson_id = False
+
     def _prepare_sale_order_line_vals(self, line):
         vals = {
             'sequence': line.sequence,
@@ -301,7 +315,7 @@ class GarageEstimation(models.Model):
         return {
             'od_date': self.date,
             'partner_id': partner.id if partner else False,
-            'user_id': self.user_id.id if self.user_id else False,
+            'user_id': self.salesperson_id.id if self.salesperson_id else False,
             'company_id': self.company_id.id,
             'origin': self.name,
             'od_vehicle_id': vehicle.id,

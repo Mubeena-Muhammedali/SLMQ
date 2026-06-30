@@ -14,6 +14,7 @@ class GarageVehicle(models.Model):
 
     plate_no = fields.Char(string='Plate Number', required=True, tracking=True)
     partner_id = fields.Many2one('res.partner', string='Customer', tracking=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', tracking=True)
     vin_no = fields.Char(string='VIN / Chassis Number', tracking=True)
     brand_id = fields.Many2one('garage.brand', string='Brand', tracking=True)
     model_id = fields.Many2one(

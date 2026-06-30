@@ -24,28 +24,28 @@
                         <td><strong>Address</strong></td>
                         <td>:<span t-field="o.partner_id.contact_address"/></td>
                         <td><strong>Brand</strong></td>
-                        <td>:<span t-field="o.vehicle_id.brand_id"/></td>
+                        <td>:<span t-field="o.brand_id"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Email</strong></td>
                         <td>:<span t-field="o.partner_id.email"/></td>
                         <td><strong>Model</strong></td>
-                        <td>:<span t-field="o.vehicle_id.model_id"/></td>
+                        <td>:<span t-field="o.model_id"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Contact No</strong></td>
                         <td>:<span t-field="o.partner_id.phone"/></td>
                         <td><strong>VIN No</strong></td>
-                        <td>:<span t-field="o.vehicle_id.vin_no"/></td>
+                        <td>:<span t-field="o.vin_no"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>TRN</strong></td>
                         <td>:<span t-field="o.partner_id.vat"/></td>
                         <td><strong>Plate No</strong></td>
-                        <td>:<span t-field="o.vehicle_id.plate_no"/></td>
+                        <td>:<span t-field="o.vehicle_id"/></td>
                     </tr>
 
                     <tr>
@@ -59,10 +59,10 @@
                         <td></td>
                         <td></td>
                         <td><strong>Km</strong></td>
-                        <td>:<span t-field="o.vehicle_id.kms"/>
+                        <td>:<span t-field="o.kms"/>
                             <span style="margin-left:25px;">
                                 <strong>Year</strong>
-                            </span>:<span t-field="o.vehicle_id.year"/>
+                            </span>:<span t-field="o.year"/>
                         </td>
                     </tr>
                 </table>

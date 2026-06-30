@@ -18,7 +18,7 @@
     'website': 'https://orchiderp.com',
 
     'category': 'Services',
-    'version': 'saas~19.2.1.0',
+    'version': '19.0.1.0.0',
 
     'license': 'LGPL-3',
 

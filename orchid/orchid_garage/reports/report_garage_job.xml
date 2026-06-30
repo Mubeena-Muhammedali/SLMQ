@@ -15,52 +15,52 @@
                         <td><strong>Customer</strong></td>
                         <td>:<span t-field="o.partner_id"/></td>
                         <td><strong>Date</strong></td>
-                        <td>:<span t-field="o.date"/></td>
+                        <td>:<span t-field="o.date_order"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Address</strong></td>
                         <td>:<span t-field="o.partner_id.contact_address"/></td>
                         <td><strong>Brand</strong></td>
-                        <td>:<span t-field="o.vehicle_id.brand_id"/></td>
+                        <td>:<span t-field="o.od_brand_id"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Email</strong></td>
                         <td>:<span t-field="o.partner_id.email"/></td>
                         <td><strong>Model</strong></td>
-                        <td>:<span t-field="o.vehicle_id.model_id"/></td>
+                        <td>:<span t-field="o.od_model_id"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Contact No</strong></td>
                         <td>:<span t-field="o.partner_id.phone"/></td>
                         <td><strong>Chassis No</strong></td>
-                        <td>:<span t-field="o.vehicle_id.vin_no"/></td>
+                        <td>:<span t-field="o.od_vin_no"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>TRN</strong></td>
                         <td>:<span t-field="o.partner_id.vat"/></td>
                         <td><strong>Plate No</strong></td>
-                        <td>:<span t-field="o.vehicle_id.plate_no"/></td>
+                        <td>:<span t-field="o.od_vehicle_id"/></td>
                     </tr>
 
                     <tr>
                         <td><strong>Estimation No</strong></td>
-                        <td>:<span t-field="o.estimation_no"/></td>
+                        <td>:<span t-field="o.od_estimation_id"/></td>
                         <td><strong>Color</strong></td>
-                        <td>:<span t-field="o.colour"/></td>
+                        <td>:<span t-field="o.od_colour"/></td>
                     </tr>
 
                     <tr>
                         <td></td>
                         <td></td>
                         <td><strong>Km</strong></td>
-                        <td>:<span t-field="o.vehicle_id.kms"/>
+                        <td>:<span t-field="o.od_kms"/>
                             <span style="margin-left:25px;">
                                 <strong>Year</strong>
-                            </span>:<span t-field="o.vehicle_id.year"/>
+                            </span>:<span t-field="o.od_year"/>
                         </td>
                     </tr>
                 </table>
@@ -74,7 +74,7 @@
                 <!-- SIGNATURE -->
                 <div class="row">
                     <div class="col-6">
-                        <b>Advisor</b>:<span t-field="o.advisor_id"/>
+                        <b>Advisor</b>:<span t-field="o.od_advisor_id"/>
                     </div>
                     <div class="col-5 col-offset-1">
                         <b>Customer Signature</b>
