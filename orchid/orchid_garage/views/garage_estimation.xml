@@ -110,21 +110,21 @@
             <group>
               <field name="partner_id" readonly="state != 'draft'" options="{'no_quick_create': True}"/>
               <field name="date" readonly="state != 'draft'"/>
-              <field name="user_id" readonly="state != 'draft'"/>
+              <field name="user_id" readonly="state != 'draft'" options="{'no_create': True}"/>
               <field name="salesperson_id" readonly="state != 'draft'" options="{'no_create': True}"/>
-              <field name="currency_id" required="1"/>
+              <field name="currency_id" required="1" options="{'no_create': True}"/>
               <field name="remarks"/>
             </group>
 
             <group>
-              <field name="vehicle_id" readonly="state != 'draft'" context="{'default_partner_id':partner_id}"/>
-              <field name="brand_id" readonly="state != 'draft'"/>
-              <field name="model_id" readonly="state != 'draft'" context="{'default_brand_id':brand_id}"/>
+              <field name="vehicle_id" readonly="state != 'draft'" context="{'default_partner_id':partner_id}" options="{'no_quick_create': True}"/>
+              <field name="brand_id" readonly="state != 'draft'" options="{'no_quick_create': True}"/>
+              <field name="model_id" readonly="state != 'draft'" context="{'default_brand_id':brand_id}" options="{'no_quick_create': True}"/>
               <field name="vin_no" readonly="state != 'draft'"/>
               <field name="colour" readonly="state != 'draft'"/>
               <field name="kms" readonly="state != 'draft'"/>
               <field name="year" readonly="state != 'draft'"/>
-              <field name="company_id" invisible="1"/>
+              <field name="company_id" invisible="1" options="{'no_create': True}"/>
             </group>
           </group>
 

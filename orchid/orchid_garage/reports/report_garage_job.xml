@@ -54,8 +54,8 @@
                     </tr>
 
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td/>
+                        <td/>
                         <td><strong>Km</strong></td>
                         <td>:<span t-field="o.od_kms"/>
                             <span style="margin-left:25px;">
@@ -67,8 +67,8 @@
 
                 <t t-set="lines_to_report" t-value="o._get_order_lines_to_report()"/>
 
-                <div class="d-flex justify-content-center">
-                    <table class="o_has_total_table table o_main_table table-borderless" style="width: 80%; max-width: 900px;">
+                <div>
+                    <table class="o_has_total_table table o_main_table table-borderless">
                         <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                         <thead style="display: table-row-group">
                             <tr>
@@ -78,7 +78,6 @@
                             </tr>
                         </thead>
                         <tbody class="sale_tbody">
-
                             <t t-set="sl_no" t-value="1"/>
 
                             <t t-set="current_section" t-value="None"/>
@@ -128,8 +127,8 @@
                                     </td>
                                 </tr>
                                 <tr t-else="" name="tr_product">
-                                    <td>
-                                        <span t-esc="sl_no"/>
+                                    <td name="td_sl_no" class="text-start">
+                                        <t t-out="sl_no"/>
                                     </td>
                                     <td name="td_description" t-att-class="padding_class">
                                         <span t-field="line.name">Bacon Burger</span>
@@ -142,7 +141,7 @@
                                             <br/><span t-esc="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
                                         </span>
                                     </td>
-                                        <t t-set="sl_no" t-value="sl_no + 1"/>
+                                    <t t-set="sl_no" t-value="sl_no + 1"/>
                                 </tr>
                             </t>
                         </tbody>
@@ -151,12 +150,10 @@
 
                 <!-- VEHICLE DIAGRAM -->
                 <div class="d-flex justify-content-center mt-4" style="page-break-inside: avoid;">
-                    <img src="/orchid_garage/static/description/job_digram.jpg"
-                         alt="Vehicle Diagram"
-                         style="max-width: 450px; width: 100%;"/>
+                    <img src="/orchid_garage/static/description/job_digram.jpg" alt="Vehicle Diagram" style="max-width: 450px; width: 100%;"/>
                 </div>
 
-                <p>
+                <p style="page-break-inside: avoid;">
                     <strong>Terms &amp; Conditions</strong><br/>
                     I here by authorize the repair work listed overleaf to be done with the necessary materials and grant this workshop authorities to drive the vehicle for the purpose of road test. You will not be held responsible for any loss or any damage to the vehicles or contents during repairs. I certify that there are no valuables in the vehicle.
                 </p>
@@ -167,7 +164,7 @@
                         <b>Advisor</b>:<span t-field="o.od_advisor_id"/>
                     </div>
                     <div class="col-5 col-offset-1">
-                        <b>Customer Signature</b>
+                        <b>Customer Signature:</b>
                     </div>
                 </div>
             </div>

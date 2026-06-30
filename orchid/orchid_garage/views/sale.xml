@@ -51,9 +51,9 @@
                     <group>
                         <group>
                             <field name="od_date"/>
-                            <field name="od_vehicle_id"/>
-                            <field name="od_brand_id"/>
-                            <field name="od_model_id"/>
+                            <field name="od_vehicle_id"  options="{'no_quick_create': True}"/>
+                            <field name="od_brand_id"  options="{'no_quick_create': True}"/>
+                            <field name="od_model_id"  options="{'no_quick_create': True}"/>
                             <field name="od_vin_no"/>
                             <field name="od_colour"/>
                             <field name="od_kms"/>
