@@ -61,18 +61,6 @@ class AccountMove(models.Model):
             words = num2words(self.amount_total, lang='en_US')
         return words.replace(',', '').capitalize()
 
-    def od_get_vat_label(self):
-        """'No VAT' / 'Zero Rated' / 'Standard Invoice' based on the taxes
-        actually applied on the invoice lines (replaces the Odoo 8 hack of
-        reading it off the journal's sequence name)."""
-        self.ensure_one()
-        taxes = self.invoice_line_ids.filtered(lambda l: not l.display_type).mapped('tax_ids')
-        if not taxes:
-            return 'No VAT'
-        if set(taxes.mapped('amount')) == {0.0}:
-            return 'Zero Rated'
-        return 'Standard Invoice'
-
     def od_get_bank_details(self):
         """Return (account_no, iban) for this invoice's group + currency."""
         self.ensure_one()

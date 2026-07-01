@@ -6,7 +6,7 @@
     "category" : "Human Resources",
     "description": """Orchid GPCA """,
     "website": "http://www.orchiderp.com",
-    "depends": ['base','sale_management','account'],
+    "depends": ['base','sale_management'],
     "data" : [
             'security/ir.model.access.csv',
             'views/product.xml',
@@ -14,10 +14,8 @@
             'views/masters.xml',
             'views/menu.xml',
             'report/report_invoice_templates.xml',
-            'report/report_actions.xml',
-
-            
-        
+            'report/external_layout_inherit.xml',
+            'report/menu.xml',
             ],
     'installable': True,
     'auto_install': False,
