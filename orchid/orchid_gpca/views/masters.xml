@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Group -->
+    <record id="od_product_group_form" model="ir.ui.view">
+        <field name="name">od.product.group.form</field>
+        <field name="model">od.product.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="active" column_invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="od_product_group_list" model="ir.ui.view">
+        <field name="name">od.product.group.list</field>
+        <field name="model">od.product.group</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name" required="1"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_od_product_group" model="ir.actions.act_window">
+        <field name="name">Product Groups</field>
+        <field name="res_model">od.product.group</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

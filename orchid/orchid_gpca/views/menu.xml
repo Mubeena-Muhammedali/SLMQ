@@ -1,0 +1,11 @@
+<odoo>
+
+  <menuitem
+        id="menu_od_product_group"
+        name="Product Groups"
+        parent="sale.prod_config_main"
+        action="action_od_product_group"
+        sequence="1"/>
+
+    
+</odoo>

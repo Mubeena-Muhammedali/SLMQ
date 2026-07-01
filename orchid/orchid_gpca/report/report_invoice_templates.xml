@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================= Reusable sub-blocks ================= -->
+
+    <template id="partner_invoice_info_block">
+        <div class="row">
+            <div class="col-6">
+                <b>
+                    <span t-field="o.partner_id.name"/><br/>
+                    <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+                    <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/><br/></span>
+                    <span t-if="o.partner_id.city"><span t-field="o.partner_id.city"/><br/></span>
+                    <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/><br/></span>
+                    <span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id"/><br/></span>
+                    <span t-if="o.partner_id.vat"><span t-field="o.partner_id.vat"/><br/></span>
+                </b>
+            </div>
+            <div class="col-6">
+                <table style="width:100%;" class="table table-borderless">
+                    <tr style="border-top:1px solid white;">
+                        <td style="width:45%;">Invoice Date</td>
+                        <td>:&#160;<span t-field="o.invoice_date"/></td>
+                    </tr>
+                    <tr>
+                        <td>Date of Supply</td>
+                        <td>:&#160;<span t-field="o.invoice_date"/></td>
+                    </tr>
+                    <tr>
+                        <td>Invoice No</td>
+                        <td>:&#160;<span t-field="o.name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Reference No</td>
+                        <td>:&#160;<span t-field="o.ref"/></td>
+                    </tr>
+                    <tr>
+                        <td>Payment Terms</td>
+                        <td>:&#160;<span t-field="o.invoice_payment_term_id"/></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid white;">
+                        <td><b>GPCA TRN</b></td>
+                        <td>:&#160;<b><t t-esc="o.company_id.vat"/></b></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="items_table_block">
+        <t t-set="is_usd" t-value="o.currency_id.name == 'USD'"/>
+        <!--
+            FIX: display_type is no longer False for a normal product line
+            in current Odoo — it's the literal string 'product'. Filtering
+            on "not l.display_type" therefore silently excludes every real
+            line. Filter positively for the values that represent an actual
+            sellable line instead.
+        -->
+        <t t-set="print_lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type in ('product', False))"/>
+        <!--
+            VAT category is a business classification driven by which
+            journal the invoice was posted to (GPCA keeps a separate
+            journal per VAT category), same convention as Odoo 8's
+            o.journal_id.sequence_id.name. In v13+, account.journal has no
+            `sequence_id` field any more (numbering is handled internally),
+            so the direct equivalent is the journal's own `name` — this
+            assumes your v19 journals are named exactly 'No VAT',
+            'Zero Rated', 'Standard Invoice' like the old sequences were.
+        -->
+        <t t-set="vat_category" t-value="o.journal_id.name"/>
+
+        <table class="table" style="margin-top:8px;">
+            <thead style="background-color:#caccce;">
+                <tr>
+                    <th class="text-center" style="border:1px solid black; width:55%;">Description</th>
+                    <th class="text-center" style="border:1px solid black; width:10%;">Qty</th>
+                    <th class="text-center" style="border:1px solid black; width:10%;">Unit Price</th>
+                    <th class="text-center" style="border:1px solid black; width:10%;">Discount</th>
+                    <th class="text-center" style="border:1px solid black; width:15%;">
+                        Net Amount (<span t-field="o.currency_id.name"/>)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="print_lines" t-as="l" t-attf-style="{{ 'border-bottom:1px solid black;' if l_last else '' }}">
+                    <td style="border-left:1px solid black;"><span t-field="l.name"/></td>
+                    <td class="text-center" style="border-left:1px solid black;"><span t-field="l.quantity"/></td>
+                    <td class="text-center" style="border-left:1px solid black;"><span t-field="l.price_unit"/></td>
+                    <td class="text-center" style="border-left:1px solid black;">
+                        <span t-esc="'{:,.2f}'.format((l.price_unit * l.quantity * l.discount) / 100)"/>
+                    </td>
+                    <td class="text-end" style="border-left:1px solid black; border-right:1px solid black;">
+                        <span t-esc="'{:,.2f}'.format(l.price_subtotal)"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Totals now live in their own summary box, separate from the
+             item grid, so borders/alignment stay clean regardless of how
+             many optional notes (USD-equivalent / AED-conversion) print. -->
+        <div class="row" style="margin-top:4px;">
+            <div class="col-7">
+                <b>Total Amount <span t-field="o.currency_id"/></b>:
+                <span t-esc="o.od_get_amount_in_words()"/> Only
+
+                <t t-if="not is_usd">
+                    <div style="border:1px solid black; padding:8px; margin-top:10px;width:90%">
+                        <b>Note:</b> The invoice is to be settled equivalent to USD
+                        <span t-esc="'{:,.2f}'.format(o.od_convert_usd(o.amount_total))"/>/-
+                    </div>
+                </t>
+
+                <t t-if="is_usd and vat_category == 'Standard Invoice'">
+                    <table style="width:80%; border:1px solid black; margin-top:10px;">
+                        <tr style="border:1px solid black;">
+                            <td style="padding:8px;">
+                                <b>Amount payable in (AED):</b>
+                                <span t-field="o.od_amount_in_local_currency"/><br/>
+
+                                <b>5% VAT Amount payable in (AED):</b>
+                                <span t-esc="'{:,.2f}'.format(
+                                    o.currency_id._convert(
+                                        o.amount_tax,
+                                        o.company_id.currency_id,
+                                        o.company_id,
+                                        o.invoice_date or o.company_id.currency_id.today()
+                                    )
+                                )"/><br/>
+
+                                <b>Exchange rate:</b>
+                                1 <span t-field="o.currency_id"/> =
+                                <span t-esc="round(
+                                    o.currency_id._get_conversion_rate(
+                                        o.currency_id,
+                                        o.company_id.currency_id,
+                                        o.company_id,
+                                        o.invoice_date
+                                    ),
+                                    4
+                                )"/> AED
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+            </div>
+            <div class="col-5">
+                <table style="width:100%; border:1px solid black; border-collapse:collapse;">
+                    <tr style="border-top:1px solid black;">
+                        <td style="padding:3px 6px; border-bottom:1px solid black;">Total before VAT</td>
+                        <td class="text-end" style="padding:3px 6px; border-bottom:1px solid black; border-left:1px solid black;">
+                            <span t-field="o.amount_untaxed"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:3px 6px; border-bottom:1px solid black;">
+                            <t t-if="vat_category == 'No VAT'">VAT</t>
+                            <t t-elif="vat_category == 'Zero Rated'">VAT @0%</t>
+                            <t t-elif="vat_category == 'Standard Invoice'">VAT @5%</t>
+                            <t t-else="">VAT</t>
+                        </td>
+                        <td class="text-end" style="padding:3px 6px; border-bottom:1px solid black; border-left:1px solid black;">
+                            <t t-if="vat_category == 'No VAT'">-</t>
+                            <t t-else=""><span t-field="o.amount_tax"/></t>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid black;">
+                        <td style="padding:3px 6px;"><b>Total</b></td>
+                        <td class="text-end" style="padding:3px 6px; border-left:1px solid black;">
+                            <b><span t-field="o.amount_total"/></b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="bank_details_block">
+        <t t-set="bank" t-value="o.od_get_bank_details()"/>
+        <div class="row" style="padding-top:1px; font-size:11px;margin-top:6px;">
+            <div class="col-12">
+                <b><u>Payment Instruction</u></b><br/>
+                <b>Please remit to:</b><br/>
+                <b>Mashreq Bank</b><br/>
+                <b>Riqa Branch, Deira, P.O. Box 5511, Dubai</b><br/>
+                <b><span t-esc="o.currency_id.name"/> Acct No. <span t-esc="bank[0]"/></b><br/>
+                <b>IBAN No. <span t-esc="bank[1]"/></b><br/>
+                <b>Swift Code BOMLAEAD</b><br/>
+                <b>In favor of: Gulf Petrochemicals &amp; Chemicals Association</b>
+            </div>
+        </div>
+    </template>
+
+    <!--
+        FIX: nested col-1 / col-11 <div>s with no intervening .row never get
+        flex context from Bootstrap 5, so they don't sit side-by-side and
+        long lines clip/overflow off the page (the "Cancellat..." artifact).
+        A plain table is immune to that and renders identically across
+        wkhtmltopdf / Chromium report engines.
+    -->
+    <template id="terms_conditions_block">
+        <div style="font-size:10px; margin-top:6px;">
+            <b><u>Terms and Conditions</u></b>
+            <table class="table table-borderless" style="width:100%; margin-top:2px;">
+                <tr style="border-top:1px solid white;">
+                    <td style="width:18px; vertical-align:top; text-align:right; padding-right:4px;">1.</td>
+                    <td style="vertical-align:top;">
+                        Cancellations must be made in writing within 15 days of receiving the invoice.
+                        Cancellations received after this deadline will not be accepted, and the full
+                        invoice amount must be settled.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align:top; text-align:right; padding-right:4px;">2.</td>
+                    <td style="vertical-align:top;">
+                        If a delegate is unable to attend, a substitute delegate can be nominated at no
+                        additional cost. Please notify us in writing via email at
+                        forumregistration@gpca.org.ae with the full name, job title, email address, and
+                        phone number of both the registered and substitute delegates.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align:top; text-align:right; padding-right:4px;">3.</td>
+                    <td style="vertical-align:top;">
+                        If you have registered within the early bird time frame, payment must be
+                        completed before the deadline. Otherwise, the registration fee will automatically
+                        reflect the standard rate.
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid white;">
+                    <td style="vertical-align:top; text-align:right; padding-right:4px;">4.</td>
+                    <td style="vertical-align:top;">
+                        Refund Policy
+                        <div style="text-indent:20px; margin-top:2px;">
+                            4.1&#160;&#160;If a delegate cancels their registration 31 days or more
+                            before the event, they will receive a refund of 75% of the paid registration
+                            fee.
+                        </div>
+                        <div style="text-indent:20px;">
+                            4.2&#160;&#160;If a delegate cancels their registration less than 31 days
+                            before the event, no refund will be issued.
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <template id="note_block">
+        <div style="text-indent:10px; font-size:10px; margin-top:6px;">
+            <b>Note: Please quote the invoice number during payment and ensure that all bank charges
+            should be borne by the sender to avoid underpayments.</b>
+        </div>
+    </template>
+
+    <!-- ================= Main routed report ================= -->
+
+    <template id="main_report">
+        <div class="row">
+            <div class="col-6" style="color:#b35900; text-align:left;">
+                <h2><b>TAX INVOICE</b></h2>
+            </div>
+        </div>
+
+        <t t-call="orchid_gpca.partner_invoice_info_block"/>
+        <t t-call="orchid_gpca.items_table_block"/>
+        <t t-call="orchid_gpca.bank_details_block"/>
+
+        <t t-if="o.od_show_terms()">
+            <t t-call="orchid_gpca.terms_conditions_block"/>
+        </t>
+        <t t-if="o.od_invoice_type == 'Membership' and o.currency_id.name == 'USD'">
+            <div class="row">
+				<div style="font-size:10px; margin-top:6px;">
+					<b><u>Terms &amp; Conditions</u></b><br/>
+					<span t-field="o.narration"/>
+				</div>
+			</div>
+        </t>
+        <t t-call="orchid_gpca.note_block"/>
+
+        <br/><br/><br/><br/>
+        <div class="row">
+            <div class="col-12" style="color:#b35900;">
+                <b>Authorized Signatory</b><br/>
+                <b>For Gulf Petrochemicals and Chemicals Association</b>
+            </div>
+        </div>
+
+    </template>
+
+
+
+    <template id="report_invoice_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <t t-call="orchid_gpca.main_report"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
