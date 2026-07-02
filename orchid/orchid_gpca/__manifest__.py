@@ -14,7 +14,6 @@
             'views/masters.xml',
             'views/menu.xml',
             'report/report_invoice_templates.xml',
-            'report/external_layout_inherit.xml',
             'report/menu.xml',
             ],
     'installable': True,

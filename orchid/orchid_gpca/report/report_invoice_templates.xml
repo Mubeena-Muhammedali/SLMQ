@@ -17,30 +17,30 @@
                 </b>
             </div>
             <div class="col-6">
-                <table style="width:100%;" class="table table-borderless">
+                <table style="width:100%; border-collapse:collapse;" class="table table-borderless">
                     <tr style="border-top:1px solid white;">
-                        <td style="width:45%;">Invoice Date</td>
-                        <td>:&#160;<span t-field="o.invoice_date"/></td>
+                        <td style="width:45%; padding:1px 0;">Invoice Date</td>
+                        <td style="padding:1px 0;">:&#160;<span t-field="o.invoice_date"/></td>
                     </tr>
                     <tr>
-                        <td>Date of Supply</td>
-                        <td>:&#160;<span t-field="o.invoice_date"/></td>
+                        <td style="padding:1px 0;">Date of Supply</td>
+                        <td style="padding:1px 0;">:&#160;<span t-field="o.invoice_date"/></td>
                     </tr>
                     <tr>
-                        <td>Invoice No</td>
-                        <td>:&#160;<span t-field="o.name"/></td>
+                        <td style="padding:1px 0;">Invoice No</td>
+                        <td style="padding:1px 0;">:&#160;<span t-field="o.name"/></td>
                     </tr>
                     <tr>
-                        <td>Reference No</td>
-                        <td>:&#160;<span t-field="o.ref"/></td>
+                        <td style="padding:1px 0;">Reference No</td>
+                        <td style="padding:1px 0;">:&#160;<span t-field="o.ref"/></td>
                     </tr>
                     <tr>
-                        <td>Payment Terms</td>
-                        <td>:&#160;<span t-field="o.invoice_payment_term_id"/></td>
+                        <td style="padding:1px 0;">Payment Terms</td>
+                        <td style="padding:1px 0;">:&#160;<span t-field="o.invoice_payment_term_id"/></td>
                     </tr>
                     <tr style="border-bottom:1px solid white;">
-                        <td><b>GPCA TRN</b></td>
-                        <td>:&#160;<b><t t-esc="o.company_id.vat"/></b></td>
+                        <td style="padding:1px 0;"><b>GPCA TRN</b></td>
+                        <td style="padding:1px 0;">:&#160;<b><t t-esc="o.company_id.vat"/></b></td>
                     </tr>
                 </table>
             </div>
@@ -99,8 +99,8 @@
         <!-- Totals now live in their own summary box, separate from the
              item grid, so borders/alignment stay clean regardless of how
              many optional notes (USD-equivalent / AED-conversion) print. -->
-        <div class="row" style="margin-top:4px;">
-            <div class="col-7">
+        <div class="row">
+            <div class="col-7" style="margin-top:1px;">
                 <b>Total Amount <span t-field="o.currency_id"/></b>:
                 <span t-esc="o.od_get_amount_in_words()"/> Only
 
@@ -112,7 +112,7 @@
                 </t>
 
                 <t t-if="is_usd and vat_category == 'Standard Invoice'">
-                    <table style="width:80%; border:1px solid black; margin-top:10px;">
+                    <table style="width:80%; border:1px solid black; margin-top:6px;">
                         <tr style="border:1px solid black;">
                             <td style="padding:8px;">
                                 <b>Amount payable in (AED):</b>
@@ -144,7 +144,7 @@
                     </table>
                 </t>
             </div>
-            <div class="col-5">
+            <div class="col-5" style="margin-top:1px;">
                 <table style="width:100%; border:1px solid black; border-collapse:collapse;">
                     <tr style="border-top:1px solid black;">
                         <td style="padding:3px 6px; border-bottom:1px solid black;">Total before VAT</td>
@@ -201,45 +201,45 @@
     <template id="terms_conditions_block">
         <div style="font-size:10px; margin-top:6px;">
             <b><u>Terms and Conditions</u></b>
-            <table class="table table-borderless" style="width:100%; margin-top:2px;">
+            <table class="table table-borderless" style="width:100%; margin-top:2px; border-collapse:collapse;">
                 <tr style="border-top:1px solid white;">
-                    <td style="width:18px; vertical-align:top; text-align:right; padding-right:4px;">1.</td>
-                    <td style="vertical-align:top;">
-                        Cancellations must be made in writing within 15 days of receiving the invoice.
-                        Cancellations received after this deadline will not be accepted, and the full
-                        invoice amount must be settled.
+                    <td style="width:18px; vertical-align:top; text-align:right; padding:1px 4px 1px 0;">1.</td>
+                    <td style="vertical-align:top; padding:1px 0;">
+                                            Cancellations must be made in writing within 15 days of receiving the invoice.
+                                            Cancellations received after this deadline will not be accepted, and the full
+                                            invoice amount must be settled.
                     </td>
                 </tr>
                 <tr>
-                    <td style="vertical-align:top; text-align:right; padding-right:4px;">2.</td>
-                    <td style="vertical-align:top;">
-                        If a delegate is unable to attend, a substitute delegate can be nominated at no
-                        additional cost. Please notify us in writing via email at
-                        forumregistration@gpca.org.ae with the full name, job title, email address, and
-                        phone number of both the registered and substitute delegates.
+                    <td style="vertical-align:top; text-align:right; padding:1px 4px 1px 0;">2.</td>
+                    <td style="vertical-align:top; padding:1px 0;">
+                                            If a delegate is unable to attend, a substitute delegate can be nominated at no
+                                            additional cost. Please notify us in writing via email at
+                                            forumregistration@gpca.org.ae with the full name, job title, email address, and
+                                            phone number of both the registered and substitute delegates.
                     </td>
                 </tr>
                 <tr>
-                    <td style="vertical-align:top; text-align:right; padding-right:4px;">3.</td>
-                    <td style="vertical-align:top;">
-                        If you have registered within the early bird time frame, payment must be
-                        completed before the deadline. Otherwise, the registration fee will automatically
-                        reflect the standard rate.
+                    <td style="vertical-align:top; text-align:right; padding:1px 4px 1px 0;">3.</td>
+                    <td style="vertical-align:top; padding:1px 0;">
+                                            If you have registered within the early bird time frame, payment must be
+                                            completed before the deadline. Otherwise, the registration fee will automatically
+                                            reflect the standard rate.
                     </td>
                 </tr>
                 <tr style="border-bottom:1px solid white;">
-                    <td style="vertical-align:top; text-align:right; padding-right:4px;">4.</td>
-                    <td style="vertical-align:top;">
-                        Refund Policy
-                        <div style="text-indent:20px; margin-top:2px;">
-                            4.1&#160;&#160;If a delegate cancels their registration 31 days or more
-                            before the event, they will receive a refund of 75% of the paid registration
-                            fee.
-                        </div>
-                        <div style="text-indent:20px;">
-                            4.2&#160;&#160;If a delegate cancels their registration less than 31 days
-                            before the event, no refund will be issued.
-                        </div>
+                    <td style="vertical-align:top; text-align:right; padding:1px 4px 1px 0;">4.</td>
+                    <td style="vertical-align:top; padding:1px 0;">
+                                            Refund Policy
+                    <div style="text-indent:20px; margin-top:2px;">
+                                                4.1&#160;&#160;If a delegate cancels their registration 31 days or more
+                                                before the event, they will receive a refund of 75% of the paid registration
+                                                fee.
+                    </div>
+                    <div style="text-indent:20px;">
+                                                4.2&#160;&#160;If a delegate cancels their registration less than 31 days
+                                                before the event, no refund will be issued.
+                    </div>
                     </td>
                 </tr>
             </table>
@@ -279,7 +279,7 @@
         </t>
         <t t-call="orchid_gpca.note_block"/>
 
-        <br/><br/><br/><br/>
+        <br/><br/><br/>
         <div class="row">
             <div class="col-12" style="color:#b35900;">
                 <b>Authorized Signatory</b><br/>
@@ -297,6 +297,26 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <t t-call="orchid_gpca.main_report"/>
+                    </div>
+                    <div t-attf-class="footer o_company_#{o.company_id.id}_layout">
+                        <table style="width:100%; border-top:1px solid #000; margin-top:5px; font-size:11px; color:blue; font-family:'Times New Roman';">
+                            <tr style="border:1px solid white;border-top:1px solid #000;">
+                                <td style="width:50%; vertical-align:top;">
+                                    Gulf Petrochemicals &amp; Chemicals Association<br/>
+                                    P.O. Box 123055, Dubai, United Arab Emirates<br/>
+                                    Tel: +97144510666, Fax: +97144510777<br/>
+                                    Email: info@gpca.org.ae<br/>
+                                    Web: www.gpca.org.ae
+                                </td>
+                                <td style="width:50%; vertical-align:top; text-align:right;" dir="rtl">
+                                    الاتحـاد الخليجـي للبتروكيماويـات والكيماويـات<br/>
+                                    ص. ب. ١٢٣٠٥٥، دبي، الإمارات العربية المتحدة<br/>
+                                    هاتف: +٩٧١٤٤٥١٠٦٦٦، فاكس: +٩٧١٤٤٥١٠٧٧٧<br/>
+                                    البريد الإلكتروني: info@gpca.org.ae<br/>
+                                    موقع الإنترنت: www.gpca.org.ae
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </t>
             </t>
