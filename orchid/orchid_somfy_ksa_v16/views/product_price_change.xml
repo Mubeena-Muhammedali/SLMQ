@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_product_price_change_tree_view">
+            <field name="name">od.product.price.change.tree</field>
+            <field name="model">od.product.price.change</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+			    <tree string="tree_string">
+                    <field name="date_from" />
+					<field name="date_to" />
+					<field name="state"/>
+                </tree>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="od_product_price_change_form_view">
+            <field name="name">od.product.price.change</field>
+            <field name="model">od.product.price.change</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <header>
+                        <button name="button_search" string="Search" type="object" class="oe_highlight" attrs="{'invisible': ['|',('data_file', '!=',False),('state','!=','draft')]}" />
+                        <button name="button_download_template" string="Download Template" type="object" class="oe_highlight" attrs="{'invisible': ['|',('data_file', '!=',False),('state','!=','draft')]}" />
+                        <button name="button_upload" string="Upload" type="object" class="oe_highlight" attrs="{'invisible': ['|',('data_file', '=',False),('state','!=','draft')]}" />
+                        <button name="button_update" string="Confirm" confirm="Are you sure that you want to update the prices?" type="object" class="oe_highlight"  attrs="{'invisible': ['|',('data_file', '=',False),('state','!=','validate')]}"/>
+                        <button name="reset_to_draft" string="Reset to Draft" attrs="{'invisible': [('state','!=','validate')]}"/>
+                        <button name="button_download_template" string="Download" type="object" class="oe_highlight" states="confirm"/>
+                        <field name="state" widget="statusbar"/>
+                      </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" invisible="1"/>
+                                <field name="price_type" required="1" attrs="{'readonly': [('state', '!=','draft')]}"/>
+                                <label for="date_from" string="Date From"/>
+                                <div name="date_div" class="d-flex">
+                                    <field name="date_from" required="1" attrs="{'readonly': [('state', '!=','draft')]}" />
+                                    <span class="oe_inline o_form_label mx-3 oe_read_only">to</span>
+                                    <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only">to</span>
+                                    <field name="date_to" required="1" attrs="{'readonly': [('state', '!=','draft')]}" />
+                                </div>
+                            </group>
+                            <group>
+                                <field name="data_file" attrs="{'readonly': ['|',('state', '!=','draft'),('customer_pricing_line_ids', '=',[]),('base_pricing_line_ids', '=',[])]}"/>
+                                <field name="excel_file" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="base_price_lines" string="Lines" attrs="{'invisible': [('price_type', '!=','base')]}">
+                                <field name="base_pricing_line_ids" nolabel="1">
+                                    <tree string="Lines" editable="false" create="false">
+                                        <field name="date_from" attrs="{'readonly': [('parent.state', '!=','draft')]}"/>
+                                        <field name="date_to" attrs="{'readonly': [('parent.state', '!=','draft')]}"/>
+                                        <field name="product_id" options="{'no_create': True, 'no_create_edit':True}" readonly="1" required="1"/>
+                                        <field name="current_price" readonly="1"/>
+                                        <field name="new_price" readonly="1"/>
+                                        <field name="price_change_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="customer_price_lines" string="Lines" attrs="{'invisible': [('price_type', '!=','customer')]}">
+                                <field name="customer_pricing_line_ids" nolabel="1">
+                                    <tree string="Lines" editable="false" create="false">
+                                        <field name="date_from" attrs="{'readonly': [('parent.state', '!=','draft')]}"/>
+                                        <field name="date_to" attrs="{'readonly': [('parent.state', '!=','draft')]}"/>
+                                        <field name="pricelist_id" options="{'no_create': True, 'no_create_edit':True}" readonly="1" required="1"/>
+                                        <field name="product_id" options="{'no_create': True, 'no_create_edit':True}" readonly="1" required="1"/>
+                                        <field name="current_price" readonly="1"/>
+                                        <field name="new_price" readonly="1"/>
+                                        <field name="line_id" invisible="1"/>
+                                        <field name="price_change_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_od_product_price_change">
+            <field name="name">Price Upload</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.product.price.change</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_product_price_change_tree_view"/>
+        </record>
+
+
+        
+    </data>
+</odoo>
+
+
+                                
+                                

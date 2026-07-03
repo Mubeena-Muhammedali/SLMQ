@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="vat_output_report_wizard" model="ir.ui.view">
+            <field name="name">VAT Output Report</field>
+            <field name="model">orchid.vat.output.report</field>
+            <field name="arch" type="xml">
+                <form string="VAT Output Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Excel' name="generate_excel" type="object" class="btn-primary"/>
+                        <field name="excel_file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_vat_output_report_wizard" model="ir.actions.act_window">
+            <field name="name">VAT Output Report</field>
+            <field name="res_model">orchid.vat.output.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_vat_output_report_wizard" id="menu_vat_output_report" name="VAT Output Report" parent="account.menu_finance_reports" sequence="10"/>
+
+    </data>
+</odoo>

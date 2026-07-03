@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="orchid_stock_aging_report_form" model="ir.ui.view">
+            <field name="name">od.stock.aging.report.form</field>
+            <field name="model">od.stock.aging.report</field>
+            <field name="arch" type="xml">
+                <form string="Stock Aging Report">
+                    <group>
+                        <group>
+                             <field name="date_from"/>
+                             <!-- <field name="category"  attrs="{'invisible': [('group','=',True)]}"/> -->
+                             <!-- <field name="category"/> -->
+                             <!-- <field name="group" attrs="{'invisible': [('category','=',True)]}"/> -->
+                             <!-- <field name="summary"/> -->
+                              <!-- <field name="location_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('usage','=','internal')]"/> -->
+                        </group>  
+                         <group>
+                            <field name="period_length" />
+                            <field name="company_id" invisible="1"/>
+                         </group>
+                    </group>
+                    <notebook>
+                        <page string="Locations">
+                            <field name="location_ids" options="{'no_create': True}" domain="[('usage','=','internal')]">
+                                <tree string="Stock Location">
+                                    <field name="active" invisible="1"/>
+                                    <field name="display_name"/>
+                                    <field name="usage"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook> 
+                    <footer>
+                        <button string='Excel' name="generate_excel" type="object" class="btn-primary"/>
+                        <field name="excel_file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+	
+		<record id="action_orchid_stock_aging_report" model="ir.actions.act_window">
+            <field name="name">Stock Aging Report</field>
+            <field name="res_model">od.stock.aging.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="orchid_stock_aging_report_form"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_orchid_stock_aging_report" id="menu_orchid_stock_aging_report" parent="stock.menu_warehouse_report" name="Stock Aging Report" sequence="1" />
+	</data>
+</odoo>

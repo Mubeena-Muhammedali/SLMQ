@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="od_seq_hr_expense" model="ir.sequence">
+            <field name="name">Expense</field>
+            <field name="code">od.hr.expense</field>
+            <field name="prefix">EXP/</field>
+            <field name="padding">3</field>
+        </record>
+    </data>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@data-key='hr_expense']/div[hasclass('o_settings_container')][2]" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Income Account</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                Default income account for expenses paid by employees.
+                            </div>
+                            <div class="row mt8">
+                                <field name="od_expense_account_id"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!-- <record id="hr_expense_view_form" model="ir.ui.view">
+            <field name="name">hr.expense.view.form.inherit</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <label for="name" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </label>
+                <field name="name" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//div[hasclass('oe_title')]/h1" position="before">
+                    <label for="od_name"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_title')]/h1" position="inside">
+                    <field name="od_name" readonly="1" force_save="1"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
+            <field name="name">hr.expense.view.form.inherit</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="od_name" readonly="1" force_save="1"/>
+                </field>
+            </field>
+        </record> -->
+        <record id="view_hr_expense_sheet_form" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.form.inherit</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='tax_ids']" position="before">
+                    <field name="attachment_ids" widget="many2many_binary"/> 
+                    <field name="od_tax_apply"/>
+                </xpath>
+                    <field name="attachment_ids" widget="many2many_binary"/> 
+                <xpath expr="//page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='total_amount_company']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='tax_ids']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <field name="accounting_date" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ['post', 'done'])]}</attribute>
+                </field>
+                <button name="action_sheet_move_create" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <button name="action_register_payment" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <button name="action_unpost" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+            </field>
+        </record>
+        <!-- <record id="hr_expense_sheet_form_view_inherit_sale_expense" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.form.inherit</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="sale_expense.hr_expense_sheet_form_view_inherit_sale_expense"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='sale_order_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>
+
+<!-- from front comment the existing expenseline ids, and copy and remove the many2many widget -->

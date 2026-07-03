@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_packing_list_document">
+    <t t-call="web.external_layout">
+    	<t t-set="o" t-value="o.with_context(lang=lang)" />
+    	<div class="page">
+    		<h3><center><b>PACKING LIST</b></center></h3>
+    		<!--<center><b>Packing List No. : <span t-field="o.od_packing_list_no"/></b></center><br/><br/>-->
+    		<center><b>Packing List No. : <t t-if="o.od_packing_list_no"><span t-field="o.od_packing_list_no"/></t><t t-if="not o.od_packing_list_no"> A-<span t-field="o.name"/></t></b></center><br/><br/>
+
+    		<table class="table table-condensed" style="width:100%;border: 1px solid black;">
+				<thead style="border-bottom: 1px solid white;">
+					<!-- <tr> -->
+						<th style="width:35%;border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid white;"></th>
+						<th style="width:30%;border-top: 1px solid black;border-right: 1px solid white;"></th>
+						<th style="width:35%;border-top: 1px solid black;border-right: 1px solid black;"></th>
+					<!-- </tr> -->
+				</thead>
+				<tbody style="border-top: 1px solid white;">
+					<tr>
+						<td style="text-align:left; border-right: 1px solid white;border-top: 1px solid white;background-color:#FFFFFF;"><b>SOMFY MIDDLE EAST CO LTD</b><br/>
+                            <!-- <div t-field="o.company_id" t-options="{&quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/> -->
+
+                            <div>SOMFY GULF <br/>
+                                 JEBEL ALI FREEZONE<br/>
+                                 P.O.BOX. 61456, DUBAI,U.A.E<br/>
+                                 TEL:(971) 4 8832808<br/>
+                                 FAX:(971) 4 8832809<br/>
+                            </div>
+                    	</td>
+                        <td style="border-top: 1px solid white;border-right: 1px solid white;background-color:#FFFFFF;"></td>
+                        <td style="text-align:left; border-top: 1px solid white;background-color:#FFFFFF;">
+                        	<div>
+                            	<span t-field="o.partner_id"/>
+                            	<t t-if="o.partner_id.street">
+                            		<br/><span t-field="o.partner_id.street"/>
+                            	</t>
+                            	<t t-if="o.partner_id.street2">
+                            		<br/><span t-field="o.partner_id.street2"/>
+                            	</t>
+                            	<t t-if="o.partner_id.city">
+									<br/><span t-field="o.partner_id.city"/>
+								</t>
+								<t t-if="o.partner_id.state_id">
+									<br/><span t-field="o.partner_id.state_id"/>&#160;&#160;
+								</t>
+								<t t-if="o.partner_id.zip">
+									<span t-field="o.partner_id.zip"/>
+								</t>
+								<t t-if="o.partner_id.country_id">
+									<br/><span style="text-transform:uppercase;" t-field="o.partner_id.country_id"/>
+								</t>
+							</div>
+                       <!--  <b>AL MUWARDOUN</b><br/>
+                         <div>P. O. BOX 231994, <br/>
+                              DUBAI,UNITED ARAB EMIRATES<br/>
+                              00 971 4 323 3228<br/>
+                          </div>
+                             -->
+                        </td>
+					</tr>
+					<tr>
+						<td style="text-align:left; border-right: 1px solid white;background-color:#FFFFFF;">
+							<div>
+                            	SOMFY SAUDI ARABIA Co. L.L.C<br/>
+                            	444 Building, 2nd floor, Office 12<br/>
+                            	KING ABDUL AZIZ RD, 21312<br/>
+                            	JEDDAH<br/>
+                            	SAUDI ARABIA<br/>
+                            	TEL:(966)126077265<br/>
+                            	<b>TRN No. 3130353868200003</b><br/>
+                            	<b>CR No. 4030313521</b>
+                            </div>
+                        </td>
+                        <td style="border-top: 1px solid white;border-right: 1px solid white;background-color:#FFFFFF;"></td>
+                        <td style="text-align:left; border-top: 1px solid white;background-color:#FFFFFF;"><b><u>Contact details for Goods Collections:</u></b><br/>
+						<!--<b>GEBRUDER WEISS LLC BRANCH</b><br/>-->
+
+                            <!-- <div t-field="o.company_id" t-options="{&quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/> -->
+                            <!-- <div>
+                            	JEBEL ALI FREEZONE SOUTH, Gate No:12,<br/>
+                            	DUBAI,UAE.<br/>
+                            	Contact Mr.James Gakuru<br/>
+                            	TEL:(971)4 8113790<br/>
+                            	Timings: Sunday to Thursday.<br/>
+                            	8:00 AM to 5:00 PM<br/>
+                            	<b>Date</b> :&#160;<span t-field="o.date_invoice"/><br/>
+                            </div> -->
+                            <b>GAC Logistics Park</b><br/>
+                            <div>
+                            	JEBEL ALI FREEZONE, Near Gate No:4,<br/>
+                            	JAFZA North, / Warehouse Door No:35,<br/>
+                            	DUBAI,UAE.<br/>
+                            	Contact Mr.Mansoor/Mr. Hardik Navin<br/>
+                            	Tel: 04 8059171 / 04 80596501<br/>
+                            	Timings: 8:00 AM to 5:00 PM<br/>
+                            	<b>Date</b> :&#160;<span t-field="o.invoice_date"/><br/>
+                            </div>
+                        </td>
+					</tr>
+					<!-- <tr>
+						<td style="border-right: 1px solid white;">
+							
+							Incoterm CC1 2010:<span t-field="o.incoterms_id"/><br/>
+							Packing List No.: <span t-field="o.od_packing_list_no"/>
+							<br/><b>Terms of Payment</b>:<span t-field="o.payment_term_id.name"/>
+						</td>
+					</tr> -->
+				</tbody>
+			</table>
+
+			<t t-set="qty_tt" t-value="0"/>
+			<t t-set="od_gross_weight_tt" t-value="0"/>
+			<t t-set="od_cbm_tt" t-value="0"/>
+			<table class="table table-condensed" style="width:100%;border:1px solid black;">
+				<thead style="border-bottom:1px solid black;">
+					<tr>
+						<th style="width:12.5%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>PRODUCT CODE</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>SERIAL NO</b></center></th>
+						<th style="width:30%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>PRODUCT DESCRIPTION</b></center></th>
+						<th style="width:10%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>QTY/PCS</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>GROSS WEIGHT</b></center></th>
+						<th style="width:8%;border-right:1px solid black;border-bottom:1px solid black;color:#666666;"><center><b>CBM</b></center></th>
+					</tr>
+				</thead>
+				<tbody style="border-top: 1px solid white;">
+					<tr t-foreach="o.invoice_line_ids" t-as="l">
+						<t t-if="l.product_id.type in ('product','consu') ">
+						<t t-set="qty" t-value="0"/>
+						<t t-set="qty" t-value="qty+l.quantity+l.od_free_qty+l.od_adjustment_qty"/>
+						<td style="border-right:1px solid black;text-align:left;border-top:1px solid black;background-color:#FFFFFF;">
+							<span t-field="l.product_id.default_code"/>
+						</td>
+						<td style="border-right:1px solid black;text-align:left;border-top:1px solid black;background-color:#FFFFFF;">
+							<span t-field="l.product_id.barcode"/>
+						</td>
+						<td style="border-right:1px solid black;text-align:left;border-top:1px solid black;background-color:#FFFFFF;">
+							<span t-field="l.product_id.name"/>
+						</td>
+						<td style="border-right:1px solid black;text-align:center;border-top:1px solid black;background-color:#FFFFFF;">
+						    <span t-esc="int(qty)"/>
+						    <t t-set="qty_tt" t-value="qty_tt+qty"/>
+						</td>
+						<td style="border-right:1px solid black;text-align:center;border-top:1px solid black;background-color:#FFFFFF;">
+							<span t-esc="'{0:,.2f}'.format(float(l.od_gross_weight))"/>
+						    <t t-set="od_gross_weight_tt" t-value="od_gross_weight_tt+l.od_gross_weight"/>
+
+						</td>
+						<td style="border-right:1px solid black;text-align:center;border-top:1px solid black;background-color:#FFFFFF;">
+							<span t-esc="'{0:,.2f}'.format(float(l.product_id.od_cbm_vol))"/>
+						    <t t-set="od_cbm_tt" t-value="od_cbm_tt+l.product_id.od_cbm_vol"/>
+
+						</td></t>
+					</tr>
+					<tr>
+						<td colspan="3" style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>TOTAL QTY/GROSS WEIGHT</b></td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"><span t-esc="int(qty_tt)"/></td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"><span t-esc="'{0:,.2f}'.format(float(od_gross_weight_tt))"/></td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"><span t-esc="'{0:,.2f}'.format(float(od_cbm_tt))"/></td>
+					</tr>
+					
+				</tbody>
+			</table>
+			<div class="row" style="border:1px solid white;">
+	            <div class="col-6" style="border:1px solid white;">
+	            	<!-- <b>NO OF PCS&#160;&#160; <span t-esc="grand_no_of_pcs"/><br/>
+	            	No.of Packages&#160;&#160; <span t-field="o.od_no_of_packages"/><br/>
+					Gross Weight&#160;&#160;&#160;:&#160;<span t-field="o.od_gross_weight"/><br/>
+					<br/></b>
+	                </div> -->
+	                <table style="width:100%; border:1px solid white;">
+	                	<tbody>
+	                		<tr>
+	                			<td style="width:40%; border:1px solid white;background-color:#FFFFFF;">Gross Weight&#160;</td>
+	                			<td style="width:60%; border:1px solid white;background-color:#FFFFFF;">: &#160;<span t-esc="'{0:,.2f}'.format(float(o.od_gross_weight))"/>&#160; KG</td>
+	                		</tr>
+	                		
+	                		<tr >
+	                			<td style="width:40%; border:1px solid white;background-color:#FFFFFF;">No.of Packages&#160;</td>
+	                			<td style="width:60%; border:1px solid white;background-color:#FFFFFF;">: &#160;<span t-field="o.od_no_of_packages"/></td>
+	                		</tr>
+	                		<tr>
+	                			<td style="width:40%; border:1px solid white;background-color:#FFFFFF;">CBM &#160;</td>
+	                			<td style="width:60%; border:1px solid white;background-color:#FFFFFF;">: <span t-esc="'{0:,.2f}'.format(float(o.od_cbm_vol))"/></td>
+	                		</tr>
+	                		<!-- <div class="col-6" style="text-align:right;border:1px solid white;background-color:#FFFFFF;color:#000000;">
+	            				<t t-if="o.od_stamp">
+	            					<t t-foreach="o.company_id.header_image" t-as="images">
+	                        			<t t-if="images.name == 'seal'">
+	                            			<img t-if="images.img" t-att-src="image_data_uri(images.img)" alt="Logo" style="height: 60px;width: 30%;"/>
+	                        			</t>
+	                    			</t>                           
+	            				</t>	                    	
+	            	
+							</div> -->
+	                	</tbody>
+	                </table>
+	            </div>
+	            <div class="col-6" style="text-align:right;border:1px solid white;background-color:#FFFFFF;color:#000000;">
+                	<t t-if="o.od_stamp">
+                		<t t-foreach="o.company_id.header_image" t-as="images">
+                			<t t-if="images.name == 'seal'">
+                    			<img t-if="images.img" t-att-src="image_data_uri(images.img)" alt="Logo" style="height: 60px;width: 30%;"/>
+                			</t>
+                            <t t-if="images.name == 'stamp'">
+                                <img t-if="images.img" t-att-src="image_data_uri(images.img)" alt="Logo" style="height: 80px;width: 30%;"/>
+                            </t>
+                            <t t-if="images.name == 'sign'">
+                                <img t-if="images.img" t-att-src="image_data_uri(images.img)" alt="Logo" style="height: 30px;width: 50%;"/>
+                            </t>
+                        </t>
+                	</t>	                    	
+                	<br/><br/><br/><br/>
+                	For __________________________
+                </div>
+	        </div>
+        </div>
+    </t>
+</template>
+            
+        
+<template id="report_packing_list">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="lang" t-value="o.partner_id.lang"/>
+            <t t-call="orchid_somfy_ksa_v16.report_packing_list_document" t-lang="lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_ksa_sale_order_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=lang)" />
+            <div class="page" style="color:#000000;">
+                <div class="oe_structure"/>
+                <t t-if="doc.od_adjustment_qty_status=='need_approval'">
+                    <span>Adjustment QTY not approved</span>
+                </t>
+                <t t-else="">
+                    <div class="row">
+                        <div class="col-6">
+                            <t t-if="doc.partner_shipping_id == doc.partner_invoice_id                              and doc.partner_invoice_id != doc.partner_id                              or doc.partner_shipping_id != doc.partner_invoice_id">
+                                <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
+                                <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
+                                <div t-field="doc.partner_invoice_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
+                                    <strong>Shipping address:</strong>
+                                    <div t-field="doc.partner_shipping_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-5 col-offset-1" style="padding-left:3cm;">
+                           
+                            <!-- <span>BP Code&#160;:&#160;</span><span t-field="doc.partner_id.od_ban_bp"/> -->
+                            <div> 
+                                <span t-field="doc.partner_id.name"/> 
+                                <t t-if="doc.partner_id.street">
+                                    <br/><span t-field="doc.partner_id.street"/>
+                                </t>
+                                <t t-if="doc.partner_id.street2">
+                                    <br/><span t-field="doc.partner_id.street2"/>
+                                </t>
+                                <t t-if="doc.partner_id.city">
+                                    <br/><span t-field="doc.partner_id.city"/>
+                                </t>
+                                <t t-if="doc.partner_id.state_id">
+                                    <br/><span t-field="doc.partner_id.state_id"/> &#160;&#160;
+                                </t>
+                                <t t-if="doc.partner_id.zip">
+                                   <span t-field="doc.partner_id.zip"/>
+                                </t>
+                                <t t-if="doc.partner_id.country_id">
+                                    <br/><span t-field="doc.partner_id.country_id"/>
+                                </t>
+                                <t t-if="doc.partner_id.phone">
+                                    <br/><span t-field="doc.partner_id.phone"/>
+                                </t>
+                            </div>
+                            <!-- <br/> -->
+                            <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
+                        </div>
+                    </div>
+
+                    <!-- <h2>
+                        <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                            <span t-if="doc.state not in ['draft','sent']">Order # </span>
+                            <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                        </t>
+                        <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                            <span>Pro-Forma Invoice # </span>
+                        </t>
+                        <span t-field="doc.name"/>
+                    </h2> -->
+                    <br/>
+                    <span class="mt16" style="font-size:25px;">
+                        <b><t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                            <span t-if="doc.state not in ['draft','sent']">Sales Order # </span>
+                            <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                        </t>
+                        <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                            <span>Pro-Forma Invoice # </span>
+                        </t>
+                        <span t-field="doc.name"/></b>
+                    </span>
+                    <br/><br/>
+
+                    <div class="row mt32 mb32" id="informations" style="border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black;padding-top:0.2cm;">
+                        <div t-if="doc.client_order_ref" class="col-3">
+                            <strong>Your Reference:</strong>
+                            <p t-field="doc.client_order_ref"/>
+                        </div>
+                        <div t-if="doc.date_order and doc.state not in ['draft','sent']" class="col-3">
+                            <strong>Date Ordered:</strong>
+                            <p t-field="doc.date_order"/>
+                        </div>
+                        <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-3">
+                            <strong>Quotation Date:</strong>
+                            <p t-field="doc.date_order"/>
+                        </div>
+                        <div t-if="doc.user_id.name" class="col-3">
+                            <strong>Salesperson:</strong>
+                            <p t-field="doc.user_id"/>
+                        </div>
+                        <div name="payment_term" t-if="doc.payment_term_id" class="col-3">
+                            <strong>Payment Terms:</strong>
+                            <t t-if="doc.payment_term_id.note">
+                                <br/><span t-field="doc.payment_term_id.note"/>
+                            </t>
+                            <t t-else="">
+                                <br/><span t-field="doc.payment_term_id"/>
+                            </t>
+
+                        </div>
+                        <div name="payment_term" t-if="doc.incoterm" class="col-3">
+                            <strong>Delivery Terms:</strong>
+                            <p t-field="doc.incoterm"/>
+                        </div>
+                       <!--  <div name="payment_term" t-if="doc.warehouse_id" class="col-3">
+                            <strong>Delivery From:</strong>
+                            <p t-field="doc.warehouse_id.name"/>
+                        </div>
+                        <div name="payment_term" t-if="doc.od_transportation" class="col-3">
+                            <strong>Transport Mode:</strong>
+                            <p t-field="doc.od_transportation"/>
+                        </div> -->
+
+                    <!-- </div> -->
+                    <!-- <div class="row mt32 mb32" id="informations" style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;padding-top:0.2cm;"> -->
+                        <div name="payment_term" t-if="doc.warehouse_id" class="col-3">
+                            <strong>Delivery From:</strong>
+                            <p t-field="doc.warehouse_id.name"/>
+                        </div>
+                        <div name="payment_term" t-if="doc.od_transportation" class="col-3">
+                            <strong>Transport Mode:</strong>
+                            <p t-field="doc.od_transportation"/>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <!-- Is there a discount on at least one line? -->
+                    <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+                    <t t-set="separate_qty" t-value="False"/>
+                    <t t-set="adjustment_qty" t-value="False"/>
+                    <t t-set="total_incl_foc" t-value="0"/>
+                    <t t-set="total_separate_only" t-value="0"/>
+                    <t t-set="total_adjustment_only" t-value="0"/>
+                    <t t-foreach="doc.order_line" t-as="line">
+                        <t t-if="(line.product_uom_qty==0) and (not line.od_free_qty==0)">
+                            <t t-set="separate_qty" t-value="True"/>
+                        </t>
+                    </t>
+                    <t t-foreach="doc.order_line" t-as="line">
+                        <t t-if="(line.product_uom_qty==0)  and (not line.od_adjustment_qty==0)">
+                            <t t-set="adjustment_qty" t-value="True"/>
+                        </t>
+                    </t>
+
+                    <!-- <t t-foreach="doc.order_line" t-as="page"> -->
+                        <table class="table table-sm o_main_table" style="border-bottom: 1px solid black;border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;">
+                            <thead  style="color:#000000;">
+                                <tr>
+                                    <!-- <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">H.S Code</th> -->
+                                    <th t-if="not doc.od_service" style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Product Code</th>
+                                    <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Product Description</th>
+                                    <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Quantity</th>
+                                    <t t-if="separate_qty"><th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Free Qty</th></t>
+                                    <t t-if="adjustment_qty"><th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Adjust Qty</th></t>
+                                    <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center">Unit Price</th>
+                                    <th t-if="display_discount" class="text-center" groups="product.group_discount_per_so_line" style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;">Disc.(%)</th>
+                                    <!-- <th class="text-end">Taxes</th> -->
+                                    <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center" groups="account.group_show_line_subtotals_tax_excluded">Amount</th>
+                                    <th style="border-right: 1px solid black;border-top: 1px solid black;border-bottom: 1px solid black;" class="text-center price_tax_included" groups="account.group_show_line_subtotals_tax_included">Total Price</th>
+                                </tr>
+                           </thead>
+                           <tbody class="sale_tbody" style="color:#000000;">
+                                <!-- <t t-foreach="page" t-as="layout_category"> -->
+
+                                    <!-- <t t-if="layout_category_size &gt; 1 or page_size &gt; 1" groups="sale.group_sale_layout">
+                                        <tr class="active">
+                                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                                <t t-esc="layout_category['name']"/>
+                                            </td>
+                                        </tr>
+                                    </t> -->
+
+                                    <!-- Lines associated -->
+                                    <t t-foreach="doc.order_line" t-as="l">
+                                        <t t-set="free_count" t-value="0"/>
+                                        <t t-set="adj_count" t-value="0"/>
+                                        <!-- <t t-if="not l.product_uom_qty==0"> -->
+
+                                        <tr >
+                                            <t t-set="total_incl_foc" t-value="total_incl_foc+(l.price_unit*(l.product_uom_qty+l.od_free_qty+l.od_adjustment_qty))"/>
+                                            <t t-if="l.product_uom_qty==0 and (l.od_free_qty!=0 or  l.od_adjustment_qty!=0)" t-set="total_separate_only" t-value="total_separate_only+((l.price_unit)*(l.product_uom_qty+l.od_free_qty+l.od_adjustment_qty))"/>
+                                            <!-- <td style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-field="l.product_id.orchid_hscode_id.name"/>
+                                            </td> -->
+                                            <td t-if="not doc.od_service" style="border-top: 1px solid black;border-right: 1px solid black;"><span t-field="l.product_id.default_code"/></td>
+                                            <td style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <t t-if="not doc.od_service"><span t-field="l.product_id.name"/></t>
+                                                <t t-if="doc.od_service"><span t-field="l.name"/></t>
+                                            </td>
+                                            <td class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-esc="int(l.product_uom_qty)"/>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+                                            <td t-if="l.product_uom_qty==0 and (not l.od_free_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-esc="int(l.od_free_qty)"/>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+                                            <td t-if="separate_qty and (not l.product_uom_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span>0</span>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+                                            <td t-if="separate_qty and (l.product_uom_qty==0 and (not l.od_adjustment_qty==0) and l.od_free_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span>0</span>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+                                            <td t-if="l.product_uom_qty==0 and (not l.od_adjustment_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-esc="int(l.od_adjustment_qty)"/>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+                                            <td t-if="adjustment_qty and (not l.product_uom_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span>0</span>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+
+                                            <td t-if="adjustment_qty and (l.product_uom_qty==0 and (not l.od_free_qty==0) and l.od_adjustment_qty==0)" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span>0</span>
+                                                <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                            </td>
+
+
+
+
+                                            <td class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-field="l.price_unit"/>
+                                            </td>
+                                            <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <span t-field="l.discount"/>
+                                            </td>
+                                           <!--  <td class="text-end">
+                                                <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                            </td> -->
+                                            <td class="text-end" groups="account.group_show_line_subtotals_tax_excluded" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                               <!--  <span t-field="l.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+
+                                                <t t-if="not l.product_uom_qty==0"><span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float(l.price_subtotal))"/></t>
+                                                <t t-if="l.product_uom_qty==0"><span>
+                                                    <!-- <span t-esc="'{0:,.2f}'.format(float((line.od_free_qty+line.od_adjustment_qty)*(line.product_id.standard_price*1.1)))"/></span> commented on 6may2021-->
+                                                    <span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float((l.od_free_qty+l.od_adjustment_qty)*(l.price_unit)))"/></span>
+                                                </t>
+                                               
+                                            </td>
+                                            <td class="text-end" groups="account.group_show_line_subtotals_tax_included" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                <!-- <span t-field="l.price_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+
+                                                <t t-if="not l.product_uom_qty==0"><span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float(l.price_total))"/></t>
+                                               
+                                                <t t-if="l.product_uom_qty==0"><span>
+                                                    <!-- <span t-esc="'{0:,.2f}'.format(float((line.od_free_qty+line.od_adjustment_qty)*(line.product_id.standard_price*1.1)))"/></span> commented on 6may2021-->
+                                                    <span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float((l.od_free_qty+l.od_adjustment_qty)*(l.price_unit)))"/></span>
+                                                </t>
+                                            </td>
+                                            <!-- </td> -->
+                                        </tr>
+                                        <!-- </t> -->
+                                        <t t-set="free_count" t-value="free_count+1"/>
+                                        <t t-if="free_count==1">
+                                        <t t-if="(not l.od_free_qty==0 )and (not l.product_uom_qty==0)">
+                                            <tr>
+                                                <!-- <td style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-field="l.product_id.orchid_hscode_id.name"/>
+                                                </td> -->
+                                                <td style="border-top: 1px solid black;border-right: 1px solid black;"><span t-field="l.product_id.default_code"/></td>
+                                                <td style="border-top: 1px solid black;border-right: 1px solid black;"><span t-field="l.product_id.name"/></td>
+                                                <td class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-esc="int(l.od_free_qty)"/>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+                                                <td  t-if="separate_qty" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0</span>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+                                                <td  t-if="adjustment_qty" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0</span>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+                                                <td   class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0.00</span>
+                                                </td>
+                                                <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-field="l.discount"/>
+                                                </td>
+                                               <!--  <td class="text-end">
+                                                    <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                                </td> -->
+                                                <td class="text-end" groups="account.group_show_line_subtotals_tax_excluded" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0.00</span>
+                                                    <!-- <span t-field="l.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+                                                </td>
+                                                <td class="text-end" groups="account.group_show_line_subtotals_tax_included" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0.00</span>
+                                                    <!-- <span t-field="l.price_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+                                                </td>
+                                                <t t-set="free_count" t-value="0"/>
+                                            </tr>
+                                        </t>
+                                        </t>
+                                        <t t-set="adj_count" t-value="adj_count+1"/>
+                                        <t t-if="adj_count==1">
+                                        <t t-if="(not l.od_adjustment_qty==0) and (not l.product_uom_qty==0)">
+                                            <tr>
+                                                <!-- <td style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-field="l.product_id.orchid_hscode_id.name"/>
+                                                </td> -->
+                                                <td style="border-top: 1px solid black;border-right: 1px solid black;"><span t-field="l.product_id.default_code"/></td>
+                                                <td style="border-top: 1px solid black;border-right: 1px solid black;"><span t-field="l.product_id.name"/></td>
+                                                <td class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-esc="int(l.od_adjustment_qty)"/>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+                                                <td t-if="separate_qty" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                   <span>0</span>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+                                                <td t-if="adjustment_qty" class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                   <span>0</span>
+                                                    <!-- <span t-field="l.product_uom" groups="product.group_uom"/> -->
+                                                </td>
+
+
+
+
+                                                <td class="text-end" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                   <span>0.00</span>
+                                                </td>
+                                                <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span t-field="l.discount"/>
+                                                </td>
+                                               <!--  <td class="text-end">
+                                                    <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                                </td> -->
+                                                <td class="text-end" groups="account.group_show_line_subtotals_tax_excluded" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                   <span>0.00</span>
+                                                    <!-- <span t-field="l.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+                                                </td>
+                                                <td class="text-end" groups="account.group_show_line_subtotals_tax_included" style="border-top: 1px solid black;border-right: 1px solid black;">
+                                                    <span>0.00</span>
+                                                    <!-- <span t-field="l.price_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/> -->
+                                                </td>
+                                                <t t-set="adj_count" t-value="0"/>
+                                            </tr>
+                                        </t>
+                                        </t>
+
+                                    </t>
+                            </tbody>
+                        </table>
+
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                                <table class="table table-sm">
+                                    <!-- Tax totals -->
+                                    <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                    <tr class="border-black o_subtotal">
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="text-end">
+                                            <t t-if="not separate_qty and not adjustment_qty"><span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/></t>
+
+                                            <t t-if="separate_qty or adjustment_qty"><span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float((doc.amount_untaxed+total_separate_only)))"/></t>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom:1px solid #dddddd;">
+                                        <td><strong>Less Discount</strong></td>
+                                        <td class="text-end">
+                                            <!-- <t t-if="separate_qty"><span t-esc="'{0:,.2f}'.format(float((total_incl_foc-doc.amount_untaxed)))"/></t> -->
+                                            <t t-if="separate_qty or adjustment_qty"><span t-esc="'{0:,.2f}'.format(float((total_separate_only)))"/></t>
+                                            <t t-if="not separate_qty and not adjustment_qty">0.00</t>
+                                        </td>
+                                    </tr>
+                                    <!-- <t t-call="account.document_tax_totals"/> -->
+                                    <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                        <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                        <!-- <t t-call="account.tax_groups_totals"/> -->
+                                        <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
+                                            <tr>
+                                                <t t-if="tax_totals['display_tax_base']">
+                                                    <td>
+                                                        <span t-esc="amount_by_group['tax_group_name']"/>
+                                                        <span class="text-nowrap"> on
+                                                            <!-- <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/> -->
+                                                            <span t-esc="'{0:,.2f}'.format(float((amount_by_group['tax_group_amount'])))"/>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end o_price_total">
+                                                        <span t-field="doc.currency_id.symbol"/>&#160;<span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/></td>
+                                                    <td class="text-end o_price_total">
+                                                        <!-- <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/> -->
+                                                        <span t-field="doc.currency_id.symbol"/>&#160;<span class="text-nowrap" t-esc="'{0:,.2f}'.format(float((amount_by_group['tax_group_amount'])))"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                    <!--Total amount with all taxes-->
+                                    <tr class="border-black o_total">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-end">
+                                            <span t-field="doc.currency_id.symbol"/>&#160;<span t-esc="'{0:,.2f}'.format(float((doc.amount_total)))"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <!-- <p t-field="doc.note"/>
+                    <p t-if="doc.payment_term_id.note">
+                        <span t-field="doc.payment_term_id.note"/>
+                    </p>
+                    <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.note">
+                        <strong>Fiscal Position Remark:</strong>
+                        <span t-field="doc.fiscal_position_id.note"/>
+                    </p> -->
+                    <!-- <t t-if="doc.state in ['draft','sent']"> -->
+                        <p style="color:#000000;" t-if="not doc.od_service">
+                            1) Availability can be confirmed only upon confirmation <br/>
+                            <!-- 2) Freight charges will be computed upon your confirmation with preferred mode of shipment &amp; INCOTERMS -->
+                        </p>
+                        <table class="table table-condensed" style="border-top:1px solid black; border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black; width:100%;">
+                           <!--  <thead>
+                                <tr style="border-right:0px solid white;border-bottom:0px solid white;">
+                                    <th style="border-right:0px solid white;border-bottom:0px solid white;width:10%;">Date:</th>
+                                    <th style="border-right:0px solid white;border-bottom:0px solid white;width:40%;">Name:</th>
+                                    <th style="border-bottom:0px solid white;width:50%;">Signature + stamp</th>
+                                </tr>
+                            </thead> -->
+                            <tbody style="border-right:0px solid white;border-top:0px solid white;color:#000000;">
+                                <tr style="border-right:0px solid white;border-top:0px solid white;">
+                                    <td style="border-right:0px solid white;border-top:0px solid white;width:10%;"><b>Date:</b></td>
+                                    <td style="border-right:0px solid white;border-top:0px solid white;width:40%;"><b>Name:</b><br/><br/><br/><br/></td>
+                                    <td style="border-top:0px solid white;width:50%;"><b>Signature + stamp</b></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-right:0px solid white;border-top:1px solid black;width:30%">
+                                        <b><u>Bank Details</u><br/>
+                                        Account Name <br/>
+                                        Bank Name <br/>
+                                        Bank A/C No <br/> 
+                                        SWIFT Code  <br/>
+                                        IBAN  <br/>
+                                        Bank Address  <br/></b>
+                                    </td>
+                                    <!-- <td  t-if="not (doc.currency_id.name=='SAR')" colspan="2" style="border-top:1px solid black;">
+                                        <br/><b>
+                                        : SOMFY SAUDI ARABIA CO<br/> 
+                                        : Saudi Awwal Bank (SAB)<br/>
+                                        : 262-226111-080<br/>
+                                        : SABBSARI<br/>
+                                        : SA0945000000262226111080<br/>
+                                        : Malek Road, Jeddah 21411- KSA<br/></b>
+                                    </td> -->
+                                    <!-- <td t-if="doc.currency_id.name=='SAR'" colspan="2" style="border-top:1px solid black;"> -->
+                                    <td colspan="2" style="border-top:1px solid black;">
+                                        <br/><b>
+                                        : SOMFY SAUDI ARABIA CO<br/> 
+                                        : Saudi Awwal Bank (SAB)<br/>
+                                        : 262-226111-001<br/>
+                                        : SABBSARI<br/>
+                                        : SA0845000000262226111001<br/>
+                                        : Malek Road, Jeddah 21411- KSA<br/></b>
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <td colspan="3" style="border-top:0px solid white;">Mandatory Information Please refer <span t-field="doc.partner_id.ref"/> On All Bank Transfers.</td>
+                                </tr> -->
+                                <!-- <tr style="border-right:0px solid white;border-top:0px solid white;">
+                                    <td style="border-right:0px solid white;border-top:0px solid white;width:10%;">&#160;<br/><br/><br/><br/></td>
+                                    <td style="border-right:0px solid white;border-top:0px solid white;width:40%;">&#160;<br/><br/><br/><br/></td>
+                                    <td style="border-top:0px solid white;width:50%;">&#160;<br/><br/><br/><br/></td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                        <!-- <div class="oe_structure"/> -->
+                        <br/>
+                       <!--  <div style="position: relative; top: 200; right: 0; bottom: 0; left: 0; margin: 1px 1px 1px 1px; padding : 1px;  background-color : white;   z-index: 1; page-break-inside: avoid; page-break-before: auto;">
+                            <p>
+                                <strong><center>
+                                    Beneficiary A/C Details : SOMFY SAUDI ARABIA CO. The saudi british bank (ASBB), Malek Road, Jeddah - KSA<br/>
+                                    Bank A/C N°  :  262-226111-001<br/>
+                                    SWIFT Code  : SABBASRI<br/>
+                                    IBAN  : SA0845000000262226111001<br/>
+                                    Mandatory Information Please refer <span t-field="doc.partner_id.ref"/> On All Bank Transfers.
+                                </center></strong>
+                            </p>
+                        </div> -->
+                        <!-- <table>
+                            <tbody style="color:#000000;">
+                                <tr>
+                                    <td>
+                                        <h6><p style="align:left;page-break-inside: avoid; page-break-before: auto;"><strong><center>Definitions</center></strong><br/>
+                            
+                            
+                            • Somfy Saudi Arabia Co. L.L.C hereinafter referred as "The Seller".<br/>
+                            • "Buyer" means the person, firm or company who purchases the Goods or Services from the Seller.<br/>
+                            • Goods means, the hardware, product, item, assemblies, integrated solutions, software or any items described in any quotation by the Seller.<br/>
+                            • Services such as Product Installation, Commissioning, Programming, Configuration and any such related services rendered by the Seller can be called "the Services".<br/>
+                            • Days means Gregorian Calendar Days.<br/>
+
+                            <strong><center>General Terms and Conditions of Quotation</center></strong><br/>
+                            These terms and conditions (hereinafter referred as "Terms") apply to all quotations made unless The Seller and Buyer enter into a separate written agreement formally executed by The Seller and specifically waiving the terms set forth herein. The purchase of any goods or services mentioned in this quotation by Buyer shall be deemed acceptance of these Terms. No provisions in any documentation from the Buyer in connection with these Terms will affect these Terms and such provisions being deemed deleted even if such document is accepted by the Seller.<br/>
+
+                            1. All prices are quoted in Euros and exclusive of taxes applicable if any.<br/>
+                            2. Unless otherwise indicated, quotations are open for acceptance by the Buyer within 15 (Fifteen) Days only from the date of quotation. <br/>
+                            3. The quote prices are valid for the quantities quoted only, in case of partial or additional order the unit prices are subject to revision. <br/>
+                            4. This quotation may be accepted to form a binding contract upon any one of the following options: <br/>
+                                a. Signature below and return the signed document or any communication such as letter, facsimile transmission, electronic mail or any comparable means with payment to the Seller for the items listed in this quote prior to the expiration date. <br/>
+                                b. Issuance of a purchase order to The Seller referencing this quote and the terms and conditions herein prior to the expiration date above.<br/>
+                            5. This quotation does not reserve or does not allocate goods in favor of the Buyer and the availability of the goods or services can be confirmed only after confirmation or acceptance of the quotation from the Buyer in the manner mentioned under Clause 5(a) or 5(b) <br/>
+                            6. All quotations are subject to confirmation by the Seller on receipt of any order and the Seller reserves the right to refuse any order.<br/>
+                            7. All quotations, indication of costs and financial commitments given or made by the Seller are based on the assumption of the validity of the information provided by the Buyer being fully accurate and correct in all circumstances.<br/> 
+                            8. The seller reserves the right to correct all typographical or clerical errors which may be present in this quotation.<br/> 
+                            9. If Credit is not approved by the Seller, all orders from the Buyer must be prepaid in full. Seller reserves the right to withhold the shipment in the event of Buyer is in arrears. A storage fee of <strong>SAR 200/-</strong>per day will be applicable if materials are not collected within 3 Days from the date of Invoice. 
+                        </p></h6><br/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+ -->  
+                    <table style="page-break-inside:avoid;">
+                        <tbody style="color:#000000;">
+                            <tr><td style="padding-left:0.2cm;">
+                                <br/>
+                                We would like to inform you that we have recently updated the terms and conditions of sale. These changes are designed to provide you with a better experience and ensure clarity in our transactions.<br/><br/>
+
+                                <!-- To review the new terms and conditions, <a href="https://www.somfy.me/en-gc/discover-somfy/general-terms-and-conditions-of-sale-ksa" target="_blank">click here</a>.<br/><br/> -->
+
+                                We appreciate your understanding and continued support. Should you have any questions or require further clarification, please do not hesitate to contact us<br/>
+                                 
+                            </td></tr>
+                        </tbody>
+                    </table> 
+                    <p style="page-break-after:always">
+                        <span t-field="doc.od_terms_conditions"/>
+                    </p> 
+                    <!-- </t> -->
+                </t>
+            </div>
+            <div class="footer">
+                <div t-if="report_type == 'pdf'" class="text-end">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </t>
+    </template>
+                
+    <template id="report_ksa_sale_order">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="lang" t-value="doc.partner_id.lang"/>
+                <t t-call="orchid_somfy_ksa_v16.report_ksa_sale_order_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+
+            

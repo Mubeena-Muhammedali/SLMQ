@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od_asset_depreciation_post_wizard" model="ir.ui.view">
+        <field name="name">od.asset.depreciation.post.wizard.form</field>
+        <field name="model">od.asset.depreciation.post.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Depreciation Entries">
+                <div class="alert alert-info" role="alert">
+                    Post existing draft depreciation journal entries up to the selected date.
+                </div>
+                <group>
+                    <field name="od_date"/>
+                </group>
+                <footer>
+                    <button name="od_action_generate_depreciation_entries" type="object" string="Generate Depreciation Entries" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od_asset_depreciation_post_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Depreciation Entries</field>
+        <field name="res_model">od.asset.depreciation.post.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_od_asset_depreciation_post_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_od_asset_depreciation_post_wizard"
+        name="Generate Depreciation Entries"
+        parent="account.menu_finance_entries_management"
+        action="action_od_asset_depreciation_post_wizard"
+        sequence="105"
+        groups="account.group_account_user"/>
+</odoo>

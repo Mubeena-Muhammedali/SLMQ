@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="od_account_report_partner_ledger_view" model="ir.ui.view">
+        <field name="name">Partner Ledger</field>
+        <field name="model">account.report.partner.ledger</field>
+        <field name="inherit_id" ref="account.account_report_partner_ledger_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="amount_currency" position="after">
+                    <field name="fc_currency" groups="account.group_account_invoice"/>
+                    <field name="od_initial"/>
+                </field>
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" options="{'no_open': True, 'no_create': True}" domain="['|', ('customer','=',True),('supplier','=',True)]"/>
+                </field>
+            </data>
+        </field>
+    </record>
+    <record id="od_account_report_partner_ledger_view_inher" model="ir.ui.view">
+        <field name="name">Partner Ledger</field>
+        <field name="model">account.report.partner.ledger</field>
+        <field name="inherit_id" ref="orchid_account_reports_v11.od_account_report_partner_ledger_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="od_summary" position="replace">
+                    <field name="od_summary" invisible="True"/>
+                </field>
+            </data>
+        </field>
+    </record>
+</odoo>

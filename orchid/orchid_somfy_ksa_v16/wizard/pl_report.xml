@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="pl_report_wizard" model="ir.ui.view">
+            <field name="name">od.account.pl.report.wiz.form</field>
+            <field name="model">od.account.pl.report.wiz</field>
+            <field name="arch" type="xml">
+                <form string="P&amp;L Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="cost_center"/>
+                            <field name="cost_center_ids" domain="[('include_pl','=',True)]" widget="many2many_tags" options="{'no_create_edit':True,'no_create':True}" attrs="{'invisible':[('cost_center','=',False)]}"/>
+                            <field name="analysis" attrs="{'invisible':['|',('cost_center','=',True),('report_options','!=','pl')]}"/>
+                        </group>
+                        <group>
+                            <field name="report_options" required="1"/>
+                            <field name="excel_file" filename="file_name"/>
+                            <field name ="file_name" invisible="1"/>
+                            <field name ="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generate Excel" name="generate_excel" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pl_report_wizard" model="ir.actions.act_window">
+            <field name="name">P&amp;L Report</field>
+            <field name="res_model">od.account.pl.report.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_pl_report_wizard" id="menu_pl_report_wizard" name="P&amp;L Report" parent="account.account_reports_legal_statements_menu" sequence="10" groups="account.group_account_user" />
+
+    </data>
+</odoo>

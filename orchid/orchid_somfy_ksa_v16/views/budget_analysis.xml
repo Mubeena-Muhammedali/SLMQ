@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="view_orchid_budget_analysis_form_inherit">
+            <field name="name">orchid.budget.analysis</field>
+            <field name="model">orchid.budget.analysis</field>
+            <field name="inherit_id" ref="orchid_budget_v16.view_orchid_budget_analysis_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='od_budget_line']/tree/field[@name='account_id']" position="after">
+                    <field name="report_template_id" optional="hide" force_save="1"/>
+                    <field name="name" readonly="1" required="1" force_save="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[1]/field[@name='od_budget_line']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

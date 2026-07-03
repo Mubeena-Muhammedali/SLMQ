@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_delivery_advice_document">
+	<t t-call="web.external_layout">
+    	<t t-set="o" t-value="o.with_context(lang=lang)" />
+    	<div class="page">
+    		<h3><center><b>DELIVERY ADVICE</b></center></h3>
+    		<table class="table table-condensed" style="width:100%;border-top:1px solid white;border-right:1px solid white;border-left:1px solid white;font-size: 11px;">
+				<thead style="border-bottom: 1px solid white;">
+					<th style="width:50%;border-bottom:1px solid white;font-size: 11px;"></th>
+					<th style="width:50%;border-bottom:1px solid white;font-size: 11px;"></th>
+				</thead>
+				<tbody style="border-top: 1px solid white;">
+					<tr>
+						<td style="border-right:1px solid white;background-color:#FFFFFF;">
+							&#160;
+						</td>
+						<td style="border-right:1px solid white;border-left:1px solid white;background-color:#FFFFFF;">
+							<table class="table table-condensed" style="width:100%;border:1px solid black;font-size: 11px;font-size: 11px;">
+								<thead>
+									<th style="width:40;border-bottom:1px solid black;border-right:1px solid black;background-color:#FFFFFF;color:#666666;"><center>IMP CODE</center></th>
+									<th style="width:30;border-bottom:1px solid black;border-right:1px solid black;padding-bottom:0.5cm;background-color:#FFFFFF;color:#666666;"><center>AGENT CODE</center></th>
+									<th style="width:40;border-bottom:1px solid black;background-color:#FFFFFF;color:#666666;"><center>REP.CARD NO.</center></th>
+								</thead>
+								<tbody>
+									<tr>
+										<td style="border-right:1px solid black;background-color:#FFFFFF;"></td>
+										<td style="border-right:1px solid black;background-color:#FFFFFF;"><center>AE 1001343</center></td>
+										<td style="background-color:#FFFFFF;"></td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr><td colspan="2" style="border-right:1px solid white;background-color:#FFFFFF;">
+						Date :&#160;<span t-field="o.invoice_date"/><br/>
+							THE DIRECTOR
+					</td></tr>
+					<tr><td colspan="2" style="border-right:1px solid white;background-color:#FFFFFF;">DEPARTMENTS OF PORTS &amp; CUSTOMS</td></tr>
+					<tr><td colspan="2" style="border-bottom:1px solid white;border-right:1px solid white;background-color:#FFFFFF;">PLEASE AUTHORIZE RELEASE OF THE BELOW MENTIONED GOODS FROM OUR WAREHOUSE TO &#160;&#160;<b><span t-field="o.partner_id.name"/></b></td></tr>
+				</tbody>
+			</table>
+
+			<t t-set="hs_code" t-value="[]"/>
+
+			<t t-foreach="o.invoice_line_ids" t-as="l">
+
+			    <t t-set="hs_code" t-value="hs_code+[l.product_id.orchid_hscode_id]"/>
+
+			</t>
+			<table class="table table-condensed" style="width:100%;border:1px solid black;font-size: 11px;">
+				<thead>
+					<tr>
+						<th style="width:20%;border-right:1px solid black;color:#666666;"><center><b>Marks &amp; Number </b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>Type</b></center></th>
+						<th style="width:30%;border-right:1px solid black;color:#666666;"><center><b>Qty</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>Gross Weight<br/>Kgs/MT</b></center></th>
+						<!-- <th style="width:12.5%;border-right:1px solid black;"><center><b>Quantity</b></center></th> -->
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>Volume<br/>CBM</b></center></th>
+						<th style="width:12.5%;color:#666666;"><center><b>INV No</b></center></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="background-color:#FFFFFF;"></td>
+						<td style="background-color:#FFFFFF;"><center><span t-field="o.od_packing_type"/></center></td>
+						<!-- <td><center><span t-field="o.od_packing_qty"/></center></td> -->
+						<td style="background-color:#FFFFFF;"><center><span t-field="o.od_no_of_packages"/></center></td>
+						<td style="background-color:#FFFFFF;"><center><span t-esc="'{0:,.2f}'.format(float(o.od_gross_weight))"/></center></td>
+						<td style="background-color:#FFFFFF;"><center><span t-esc="'{0:,.2f}'.format(float(o.od_cbm_vol))"/></center></td>
+						<td style="background-color:#FFFFFF;"><center><span t-field="o.name"/></center></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="border-top:1px solid black;border-bottom:1px solid black;background-color:#FFFFFF;"> <center>HS Code</center></td>
+						<td colspan="2" style="border-top:1px solid black;border-bottom:1px solid black;background-color:#FFFFFF;"> <center>Country of Origin</center></td>
+						<td colspan="2" style="border-top:1px solid black;border-bottom:1px solid black;background-color:#FFFFFF;"> <center>Description</center></td>
+					</tr>
+					<t t-set="grand_price_subtotal" t-value="0"/>
+					<t t-foreach="o.get_hscode_data()" t-as="l">
+
+						<tr>
+							<t t-set="grand_price_subtotal" t-value="grand_price_subtotal+l[4]"/>
+							<!-- <td style="border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;color:#666666;" colspan="2">
+								<center><span t-esc="l[0]"/></center>
+							</td> -->
+							<td style="border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;color:#666666;">
+								<center><span t-esc="l[0]"/></center>
+							</td>
+							
+							<td style="border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;color:#666666;" colspan="2">
+								<center><span t-esc="l[1]"/></center>
+							</td>
+
+							<td style="border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;color:#666666;" colspan="3">
+								<span t-esc="l[2]"/>
+							</td>
+						</tr>
+					</t>
+				</tbody>
+			</table>
+			<table class="table table-condensed" style="width:100%;border:1px solid black;">
+				<thead>
+					<th colspan="2" style="width:50%;border-right:1px solid black;color:#666666;">
+						<center>Payment Method</center>
+					</th>
+					<th colspan="2" style="width:50%;color:#666666;">
+						<center>Mark Where Appropriate</center>
+					</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="border-right:1px solid white; padding-left:0.8cm;background-color:#FFFFFF;">
+							<input type="checkbox"/> CDR Cash <br/><br/>
+							<input type="checkbox"/> Credit A/C <br/><br/>
+							<input type="checkbox"/> FIT <br/><br/>
+						</td>
+						<td colspan="2" style="border-right:1px solid white;background-color:#FFFFFF; text-align:left;padding-left:1cm">
+							<input type="checkbox"/> CDR Bank <br/><br/>
+							<input type="checkbox"/> STAN. G <br/><br/>
+							<input type="checkbox"/> Alcohol <br/><br/>
+						</td>
+						<td style="text-align:left;padding-right:0.8cm;padding-left:4cm;background-color:#FFFFFF;">
+							<input type="checkbox"/> Deposit <br/><br/>
+							<input type="checkbox"/> Bank.G <br/><br/>
+							<input type="checkbox"/> Other <br/><br/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;border-bottom:1px solid black;background-color:#FFFFFF;">
+							<b>Exit Point : JEBEL ALI FREEZONE</b>
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							<center><b>DESTINATION : <span t-field = "o.od_destination"/></b></center>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							B/E Ref. Nos <br/>
+							<span t-field="o.od_be_ref_no"/>
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							<center>Carriers Agent</center>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:30%;border-right:1px solid white;border-top:1px solid white;border-bottom:1px solid black;background-color:#FFFFFF;">
+							Customs Bill Type 
+						</td>
+						<td style="width:20%;border-right:1px solid black;border-top:1px solid white;border-bottom:1px solid black;background-color:#FFFFFF;">
+							Mark Where Appropriate 
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							<center><b>Value in Euro</b></center>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:30%;border-right:1px solid white;border-top:1px solid white;background-color:#FFFFFF;">
+							<t t-if="o.od_customs_bill == 'import'">
+								<input type="checkbox" checked="checked"/> Import <br/>
+							</t>
+							<t t-if=" not o.od_customs_bill == 'import'">
+								<input type="checkbox"/> Import <br/>
+							</t>
+						</td>
+						<td style="width:20%;border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;">
+							<input type="checkbox"/> Import For Re-Export <br/>
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							<!-- <center><b><span t-esc="'{0:,.2f}'.format(float(o.amount_total))"/></b></center>changed as per zia's mail on 3 nov 2022 -->
+							<center><b><span t-esc="'{0:,.2f}'.format(float(o.amount_total+o.get_discount_data()))"/></b></center>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:30%;border-right:1px solid white;border-top:1px solid white;background-color:#FFFFFF;">
+							<t t-if="o.od_customs_bill == 'temporary_exit'">
+								<input type="checkbox" checked="checked"/> Temporary Exit <br/>
+							</t>
+							<t t-if=" not o.od_customs_bill == 'temporary_exit'">
+								<input type="checkbox"/> Temporary Exit <br/>
+							</t>
+
+							<t t-if="o.od_customs_bill == 'export'">
+								<input type="checkbox" checked="checked"/> Export <br/>
+							</t>
+							<t t-if=" not o.od_customs_bill == 'export'">
+								<input type="checkbox"/> Export <br/>
+							</t>
+						</td>
+						<td style="width:20%;border-right:1px solid black;border-top:1px solid white;background-color:#FFFFFF;">
+							<input type="checkbox"/> Freezone Internal Transfer <br/><br/>
+							<input type="checkbox"/> FZE Bill of Entry <br/><br/><br/>
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							I/We Declare the details given herein to be true and complete 
+							<br/>
+							<br/>
+							License/Agent Stamp &amp; signature
+							<br/>
+							<br/>
+							<t t-if="o.od_stamp">
+	                    		<t t-foreach="o.company_id.header_image" t-as="images">
+                                    <t t-if="images.name == 'stamp'">
+                                        <img t-if="images.img" t-att-src="'data:image/png;base64,%s' % to_text(images.img)" style="height: 40px;width: 50%;"/>
+                                    </t>
+                                    <t t-if="images.name == 'sign'">
+                                        <img t-if="images.img" t-att-src="'data:image/png;base64,%s' % to_text(images.img)" style="height: 30px;width: 50%;"/>
+                                    </t>
+                                </t>
+	                    	</t>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;" colspan="2">
+							Customs Use Only
+						</td>
+						<td colspan="2" style="width:50%;border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+							I/We Declare the details given herein to be true and complete 
+							<br/>
+							<br/>
+							Importers Stamp &amp; signature
+							<br/>
+
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+    	</div>
+    </t>
+</template>
+<template id="report_delivery_advice">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="lang" t-value="o.partner_id.lang"/>
+            <t t-call="orchid_somfy_ksa_v16.report_delivery_advice_document" t-lang="lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

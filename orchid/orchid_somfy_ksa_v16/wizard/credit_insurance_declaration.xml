@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="credit_insurance_report_wizard" model="ir.ui.view">
+            <field name="name">Credit Insurance Declaration Report</field>
+            <field name="model">orchid.credit.insurance.report.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Credit Insurance Declaration Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="company_id" invisible="1"/>
+                            <!-- <field name="summary"/> -->
+                           
+                        </group>
+                        <group>
+                            <field name="credit_note"/>
+                            <field name="coverage_type"/>
+                            <field name="excel_file" filename="file_name"/>
+                            <field name ="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generate Excel" name="generate_excel" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_credit_insurance_report_wizard" model="ir.actions.act_window">
+            <field name="name">Credit Insurance Declaration Report</field>
+            <field name="res_model">orchid.credit.insurance.report.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_credit_insurance_report_wizard" id="menu_credit_insurance_report"
+            name="Credit Insurance Declaration Report" parent="sale.menu_sale_report" sequence="3" />
+
+    </data>
+</odoo>

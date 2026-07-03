@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_commercial_invoice" model="ir.actions.report">
+            <field name="name">Commercial Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_commercial_invoice</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_commercial_invoice</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Commercial Invoice - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        </record>
+        <record id="action_report_ksa_sale_order" model="ir.actions.report">
+            <field name="name">Quotation Order</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_ksa_sale_order</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_ksa_sale_order</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        </record>
+        <record id="action_report_grn" model="ir.actions.report">
+            <field name="name">Goods Receipt Note</field>
+            <field name="model">orchid.grn.no</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_grn</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_grn</field>
+            <field name="binding_model_id" ref="orchid_somfy_ksa_v16.model_orchid_grn_no"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Goods Receipt Note'</field>
+        </record>
+        <record id="action_report_packing_list" model="ir.actions.report">
+            <field name="name">Packing List</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_packing_list</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_packing_list</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- <record id="action_report_hscode" model="ir.actions.report">
+            <field name="name">Hs code</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_hscode</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_hscode</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_delivery_advice" model="ir.actions.report">
+            <field name="name">Delivery Advice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_delivery_advice</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_report_delivery_advice</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_tax_invoice" model="ir.actions.report">
+            <field name="name">Tax Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_tax_invoice</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_tax_invoice</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record> -->
+        <record id="action_report_service_invoice" model="ir.actions.report">
+            <field name="name">Commercial Tax Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_service_invoice</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_service_invoice</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Tax Invoice - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        </record>
+        <record id="action_report_service_invoice_sar" model="ir.actions.report">
+            <field name="name">Commercial Tax Invoice SAR</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_service_invoice_sar</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_service_invoice_sar</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Tax Invoice - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        </record>
+        <record id="action_report_purchase_enquiry" model="ir.actions.report">
+            <field name="name">Purchase Enquiry</field>
+            <field name="model">od.purchase.enquiry</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.od_report_purchaseenquiry</field>
+            <field name="report_file">orchid_somfy_ksa_v16.od_report_purchaseenquiry</field>
+            <field name="print_report_name">('Purchase Enquiry - %s' % (object.name))</field>
+            <field name="binding_model_id" ref="model_od_purchase_enquiry"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_account_payment_voucher" model="ir.actions.report">
+            <field name="name">Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_account_payment_voucher</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_account_payment_voucher</field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!--Report action for Asset Register Report-->
+        <record id="od_asset_paper_format" model="report.paperformat">
+            <field name="name">Orchid Asset</field>
+            <field name="default" eval="True" />
+            <field name="format">A3</field>
+            <field name="orientation">Landscape</field>
+        </record>
+        <record id="action_report_asset_statement" model="ir.actions.report">
+            <field name="name">Asset Register PDF</field>
+            <field name="model">od.asset.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_asset_statement</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_asset_statement</field>
+            <field name="paperformat_id" ref="od_asset_paper_format"/>
+        </record>
+
+        <record id="action_report_report_od_hr_expense" model="ir.actions.report">
+            <field name="name">Expense Report</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">orchid_somfy_ksa_v16.report_od_hr_expense</field>
+            <field name="report_file">orchid_somfy_ksa_v16.report_od_hr_expense</field>
+            <field name="binding_model_id" ref="hr_expense.model_hr_expense_sheet"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

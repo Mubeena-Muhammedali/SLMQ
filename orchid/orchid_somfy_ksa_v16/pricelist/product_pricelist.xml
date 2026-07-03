@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="product_pricelist_item_form_view_inher" model="ir.ui.view">
+            <field name="name">product.pricelist.item.form</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+       				<field name="categ_id" position="before">
+	       				<field name="orchid_brand_id" options="{'no_create':1}" attrs="{'invisible':[('applied_on', '!=', '2_rproduct_brand')],'required':[('applied_on', '=', '2_rproduct_brand')]}" string="Product Brand"/>
+	       				<field name="orchid_type_id" options="{'no_create':1}" attrs="{'invisible':[('applied_on', '!=', '2_qproduct_ftype')],'required':[('applied_on', '=', '2_qproduct_ftype')]}" string="Product Type"/>
+	       				<field name="orchid_group_id" options="{'no_create':1}" attrs="{'invisible':[('applied_on', '!=', '2_qproduct_group')],'required':[('applied_on', '=', '2_qproduct_group')]}" string="Product Group"/>
+	       			</field>
+                    <field name="product_id" position="after">
+                        <field name="od_product_segment_id" options="{'no_create':1}" attrs="{'invisible':[('applied_on', '!=', '1_product_segment')],'required':[('applied_on', '=', '1_product_segment')]}" string="Product Segment"/>
+                    </field>
+	       		</data>
+	       	</field>
+	    </record>
+	    <record id="product_pricelist_view_tree_inher" model="ir.ui.view">
+            <field name="name">product.pricelist.tree</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="after">
+            		<field name="partner_id" />
+                    <field name="od_bp_code"/>
+            	</field>
+            </field>
+        </record>
+	    <record id="product_pricelist_view_inher" model="ir.ui.view">
+            <field name="name">product.pricelist.form</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+            	<field name="currency_id" position="after">
+            		<field name="partner_id"  domain="[('parent_id','=',False)]" options="{'no_create':True}"/>
+                    <field name="od_bp_code" readonly="1" force_save="1"/>
+            	</field>
+            </field>
+        </record>
+	</data>
+</odoo>

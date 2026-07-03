@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_grn_document">
+        <t t-call="web.external_layout">
+            <!-- <t t-set="doc" t-value="doc.with_context(lang=lang)" /> -->
+            <div class="page">
+                <div class="oe_structure"/>
+                <div align="center">
+                    <h2>
+                        <span>Goods Receipt Note</span><br/> 
+                    </h2>   
+                </div>
+                <table class="table table-condensed" style="width:100%;border-top:1px solid white;border-right:1px solid white;border-left:1px solid white;">
+                    <tbody>
+                        <tr>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:15%">
+                                Supplier
+                                <!-- Customer Code<br/> -->
+                                <!-- Account Type<br/> -->
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:42%">
+                                <div style="text-transform:uppercase;" >
+                                    :<span t-field="o.supplier_id.name"/> 
+                                    <t t-if="o.supplier_id.street">
+                                        <br/><span t-field="o.supplier_id.street"/>
+                                    </t>
+                                    <t t-if="o.supplier_id.street2">
+                                        <br/><span t-field="o.supplier_id.street2"/>
+                                    </t>
+                                    <t t-if="o.supplier_id.city">
+                                        <br/><span t-field="o.supplier_id.city"/>,
+                                    </t>
+                                    <t t-if="o.supplier_id.zip">
+                                        <span t-field="o.supplier_id.zip"/>
+                                    </t>
+                                    <t t-if="o.supplier_id.state_id">
+                                        <br/><span t-field="o.supplier_id.state_id.name"/>,
+                                    </t>
+                                    <!-- <t t-if="o.supplier_id.zip">
+                                        <span t-field="o.supplier_id.zip"/>
+                                    </t> -->
+                                    <t t-if="o.supplier_id.country_id">
+                                        <span t-field="o.supplier_id.country_id"/>
+                                    </t>
+                                </div>
+                                <p t-if="o.supplier_id.vat"><b>TRN No: <span t-field="o.supplier_id.vat"/></b></p>
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:1%"> </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:28%">
+                                GRN No.<br/>
+                                GRN Date<br/>
+                                Import Invoice No.<br/>
+                                Warehouse receipt No.<br/>
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:14%">
+                                : <span t-field="o.name"/><br/>
+                                : <span t-field="o.grn_date"/><br/>
+                                : <span t-field="o.import_invoice_no"/><br/>
+                                : <span t-field="o.warehouse_recipt_no"/><br/>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:15%">
+                                 
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:50%">
+                                 
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:1%"> </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:20%">
+                                Import Invoice No.<br/>
+                                Warehouse receipt No.<br/>
+                            </td>
+                            <td style="border-top:1px solid white;border-right:1px solid white;border-bottom:1px solid white;width:14%">
+                                : <span t-field="o.grn_no.import_invoice_no"/>
+                                : <span t-field="o.grn_no.warehouse_recipt_no"/><br/>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+                <table class="table table-condensed" style="width:100%;">
+                     <thead>
+                        <tr>
+                            <th style="width:14%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>PO Number</b></center></th>
+                            <th style="width:20%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>Product Code</b></center></th>
+                            <th style="width:25%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>Product Description</b></center></th>
+                            <th style="width:12%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>Quantity</b></center></th>
+                            <th style="width:14%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>Unit Price</b></center></th>
+                            <th style="width:15%;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-top:1px solid black;"><center><b>Total</b></center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="total" t-value="0.00"/>
+                        <t t-set="total_qty" t-value="0"/>
+                        <!-- <t t-set="total_unit" t-value="0"/> -->
+                        <tr t-foreach="o.grn_lines" t-as="line">
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:center;">
+                                <span t-field="line.origin"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:center;">
+                                <span t-field="line.product_id.default_code"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:left;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:right;">
+                                <!-- <span t-field="line.quantity"/> -->
+                                <span t-esc="int(line.quantity)"/>
+                                <t t-set="total_qty" t-value="total_qty+line.quantity"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:right;">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;text-align:right;">
+                                <span t-field="line.total"/>
+                                <t t-set="total" t-value="total+line.total"/>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                                Total in Local Currency:AED<span t-esc="'{0:,.2f}'.format(float(total*o.od_exchange_rate))"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                              Exchange Rate @<span t-esc="'{0:,.2f}'.format(float(o.od_exchange_rate))"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                               Total in Euro:<span t-esc="'{0:,.2f}'.format(float(total))"/>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                                Cheque No:&#160;<span t-field="o.cheque_reference"/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                                Cheque Date:&#160;<span t-field="o.effective_date" t-options='{"format": "dd-MM-yyyy"}'/>
+                            </td>
+                            <td style="border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;text-align:left;">
+                                Drawn on:&#160;<span t-field="o.od_drawn_on"/>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td style="text-align:left;border-top:1px solid black;border-left:1px solid black;border-bottom:1px solid black;border-right:1px solid white;" colspan="1">
+                                <b>Total</b>
+                            </td>
+                            <td style="text-align:right;border-bottom:1px solid black;border-top:1px solid black;border-right:1px solid white;">
+                                
+                            </td>
+                            <td style="text-align:right;border-bottom:1px solid black;border-top:1px solid black;border-right:1px solid white;">
+                                
+                            </td>
+                            <td style="text-align:right;border-bottom:1px solid black;border-top:1px solid black;border-right:1px solid white;">
+                               <b><span t-esc="int(total_qty)"/></b>
+                            </td>
+                            <td style="text-align:right;border-bottom:1px solid black;border-top:1px solid black;border-right:1px solid white;">
+                                
+                            </td>
+                            <td style="text-align:right;border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                               <b><span t-esc="'{0:,.2f}'.format(float(total))"/></b>
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+        
+    <template id="report_grn">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <!-- <t t-set="lang" t-value="o.partner_id.lang"/> -->
+                <t t-call="orchid_somfy_ksa_v16.report_grn_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
+

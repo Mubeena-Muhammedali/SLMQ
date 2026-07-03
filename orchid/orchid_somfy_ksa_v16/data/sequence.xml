@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    	<record id="sequence_res_partner_orchid" model="ir.sequence">
+            <field name="name">Partner Internal Reference Sequence</field>
+            <field name="code">res.partner</field>
+            <field name="prefix"></field>
+            <!-- <field eval="True" name="use_date_range"/> -->
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+	    </record>
+	    <record id="sequence_service_invoice_somfy" model="ir.sequence">
+            <field name="name">Orchid Service Invoice Sequence</field>
+            <field name="code">od.service.invoice.sale</field>
+            <field name="prefix">SERV/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_purchase_noninventory" model="ir.sequence">
+            <field name="name">Non Inventroy Purchase Sequence</field>
+            <field name="code">od.noninvetory.purchase.order</field>
+            <field name="prefix">NONI/PO/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">5</field>
+        </record>
+        <record id="sequence_product_opening_form" model="ir.sequence">
+            <field name="name">Orchid Producct Opening Form Sequence</field>
+            <field name="code">od.product.opening.form</field>
+            <field name="prefix">Product Opening/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_purchase_enquiry" model="ir.sequence">
+            <field name="name">Orchid Purchase Enquiry Sequence</field>
+            <field name="code">od.purchase.enquiry</field>
+            <field name="prefix">RFP/%(year)s/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_purchase_nontradeinventory" model="ir.sequence">
+            <field name="name">Non Trade Inventory Purchase Sequence</field>
+            <field name="code">od.nontradeinvetory.purchase.order</field>
+            <field name="prefix">NONTI/PO/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">5</field>
+        </record>
+        <record id="od_sequence_purchase_return" model="ir.sequence">
+            <field name="name">Orchid Purchase Return Sequence</field>
+            <field name="code">od.purchase.return</field>
+            <field name="prefix">RET/%(year)s/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_product_opening_form_batch" model="ir.sequence">
+            <field name="name">Orchid Producct Opening Form Batch Sequence</field>
+            <field name="code">od.product.opening.form.batch</field>
+            <field name="prefix">Product Opening Batch/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_od_inventory_adjustment" model="ir.sequence">
+            <field name="name">Inventory Adjustment</field>
+            <field name="code">od.inventory.adjustment</field>
+            <field name="prefix">Inventory Adjustment/</field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="seq_salary_provision" model="ir.sequence">
+            <field name="name">Salary Provision</field>
+            <field name="code">od.salary.provision</field>
+            <field name="prefix">PR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+            <field name="use_date_range">True</field>
+        </record>
+
+	</data>
+</odoo>

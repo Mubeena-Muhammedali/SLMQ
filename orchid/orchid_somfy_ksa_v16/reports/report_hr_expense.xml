@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_od_hr_expense_document">
+    <t t-call="web.external_layout">
+		<t t-set="o" t-value="o.with_context(lang=lang)" />
+    	<div class="page o_content_pdf">
+            <div class="oe_structure"/>
+            <h2>Expenses Report</h2>
+            <h3><span t-out="o.name">Business Trip</span></h3>
+            <div class="row o_header">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-3 fw-bold"><span>Employee:</span> </div>
+                        <div class="col-9 text-muted"><span t-field="o.employee_id.name">Marc Demo</span></div>
+                    </div>
+                    <div class="row" t-if="o.accounting_date">
+                        <div class="col-3 fw-bold"><span>Date:</span></div>
+                        <div class="col-9 text-muted"><span t-field="o.accounting_date">2023-08-11</span></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row" t-if="o.user_id.name">
+                        <div class="col-3 fw-bold"><span>Manager:</span></div>
+                        <div class="col-9 text-muted"><span t-field="o.user_id">Mitchell Admin</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3 fw-bold"><span>Paid by:</span></div>
+                        <div class="col-9 text-muted"><span t-field="o.payment_mode">Credit Card</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+            <t t-set="od_display_tax" t-value="any(l.tax_ids for l in o.expense_line_ids)"/>
+            <table class="o_has_total_table table table-borderless">
+                <thead>
+                    <tr>
+                        <th class="text-start">Date</th>
+                        <th class="text-start">Name</th>
+                        <!-- <th class="text-end">Unit Price</th> -->
+                        <th t-if="od_display_tax" class="text-end">Taxes</th>
+                        <th t-if="od_display_tax" class="text-end">Tax Amt</th>
+                        <!-- <t t-set="foreign_currencies" t-value="o.expense_line_ids.currency_id - o.company_id.currency_id"/> -->
+                        <!-- <th t-if="foreign_currencies" class="text-end">Subtotal in currency</th> -->
+                        <th class="text-end">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="untaxed_amount" t-value="0"/>
+                    <t t-set="tax_amount" t-value="0"/>
+                    <t t-set="total" t-value="0"/>
+                    <t t-set="line_currency_id" t-value="o.currency_id"/>
+                    <t t-foreach="o.expense_line_ids" t-as="line">
+                        <tr>
+                            <t t-set="line_currency_id" t-value="line.currency_id"/>
+                            <td class="text-start"><span t-field="line.date"/></td>
+                            <td t-att-class="'text-start' + (' o_overflow' if len(line.name) &gt; 30 else '')">
+                                <span t-field="line.product_id.name">Flight Ticket</span>
+
+                            </td>
+                            <!-- <td class="text-end"><span t-field="line.price_unit">$100.00</span></td> -->
+                            <t t-set="taxes" t-value="', '.join([(tax.name) for tax in line.tax_ids])"/>
+                            <td t-if="od_display_tax" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                            </td>
+                            <td t-if="od_display_tax" class="text-end"><span t-field="line.amount_tax">1</span></td>
+                            <td class="text-end">
+                                <span t-field="line.total_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line.currency_id}">$120.00</span>
+                            </td>
+                            <!-- <td class="text-end">
+                                <span t-field="line.total_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_currency_id}">$100.00</span>
+                            </td> -->
+                            <t t-set="untaxed_amount" t-value="untaxed_amount+(line.total_amount-line.amount_tax)"/>
+                            <t t-set="tax_amount" t-value="tax_amount+line.amount_tax"/>
+                        </tr>
+                        <tr t-if="line.name" style="border-bottom:1px solid grey;line-height: 0.8;">
+                            <td colspan="99">
+                                <i><span t-field="line.name"/></i>
+                            </td>
+                        </tr>
+                    </t>
+                    <t t-set="total" t-value="(untaxed_amount+tax_amount)"/>
+
+                </tbody>
+            </table>
+
+            <div class="row justify-content-end o_total mt-n3">
+                <div class="col-4">
+                    <div class="oe_structure"/>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td>Untaxed Amount</td>
+                                <td class="text-end"><span t-esc="untaxed_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line_currency_id}"/></td>
+                            </tr>
+                            <tr>
+                                <td>Taxes</td>
+                                <td class="text-end"><span t-esc="tax_amount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line_currency_id}"/></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td>Total</td>
+                                <td class="text-end">
+                                    <span t-esc="total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: line_currency_id}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"/>
+                </div>
+            </div>
+
+    	</div>
+    </t>
+
+</template>
+
+<template id="report_od_hr_expense">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="lang" t-value="o.employee_id.lang"/>
+            <t t-call="orchid_somfy_ksa_v16.report_od_hr_expense_document" t-lang="lang"/>
+        </t>
+    </t>
+</template>
+</odoo>
+
+        

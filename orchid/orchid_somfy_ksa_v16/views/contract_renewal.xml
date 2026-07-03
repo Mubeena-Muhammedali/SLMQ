@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="view_od_contract_renewal_form" model="ir.ui.view">
+	    <field name="name">od.contract.renewal.form</field>
+	    <field name="model">od.contract.renewal</field>
+	    <field name="arch" type="xml">
+	        <form string="Contract Renewal">
+	            <header>
+	                <button name="action_fetch_contracts" type="object"
+	                        string="Search" states="draft"/>
+
+	                <button name="action_confirm" type="object"
+	                        string="Confirm" states="draft"/>
+
+	                <button name="action_validate" type="object"
+	                        string="Validate" states="confirm"/>
+
+	                <button name="action_reset_draft" type="object"
+	                        string="Reset to Draft" states="confirm"/>
+
+	                <field name="state" widget="statusbar"/>
+	            </header>
+
+	            <sheet>
+	                <group>
+	                    <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+	                    <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+	                    <field name="previous_contract_end_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+	                    <field name="company_id" attrs="{'readonly':[('state','!=','draft')]}" invisible="1"/>
+	                </group>
+
+	                <notebook>
+	                    <page string="Lines">
+	                        <field name="line_ids" attrs="{'readonly':[('state','!=','draft')]}">
+	                            <tree editable="bottom">
+	                                <field name="employee_id" readonly="1" force_save="1"/>
+	                                <field name="old_contract_id" readonly="1" force_save="1"  invisible="1"/>
+	                                <field name="renew"/>
+	                                <field name="wage"/>
+	                                <field name="hra"/>
+	                                <field name="da"/>
+	                                <field name="travel_allowance"/>
+	                                <field name="mobile_allowance"/>
+	                                <field name="month_13"/>
+	                                <field name="other_allowance"/>
+	                            </tree>
+	                        </field>
+	                    </page>
+	                </notebook>
+	            </sheet>
+	        </form>
+	    </field>
+	</record>
+	<record id="view_od_contract_renewal_tree" model="ir.ui.view">
+	    <field name="name">od.contract.renewal.tree</field>
+	    <field name="model">od.contract.renewal</field>
+	    <field name="arch" type="xml">
+	        <tree>
+	            <field name="name"/>
+	            <field name="start_date"/>
+	            <field name="company_id" invisible="1"/>
+	            <field name="state"/>
+	        </tree>
+	    </field>
+	</record>
+	<record id="action_od_contract_renewal" model="ir.actions.act_window">
+	    <field name="name">Contract Renewal</field>
+	    <field name="res_model">od.contract.renewal</field>
+	    <field name="view_mode">tree,form</field>
+	</record>
+	<menuitem id="menu_od_contract_renewal"
+          name="Renewals"
+          parent="hr.menu_hr_employee_payroll"
+          action="action_od_contract_renewal"
+          sequence="10"/>
+</odoo>

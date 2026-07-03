@@ -1,0 +1,169 @@
+<odoo>
+
+    <record id="view_salary_provision_tree" model="ir.ui.view">
+        <field name="name">od.salary.provision.tree</field>
+        <field name="model">od.salary.provision</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_salary_provision_form" model="ir.ui.view">
+        <field name="name">od.salary.provision.form</field>
+        <field name="model">od.salary.provision</field>
+        <field name="arch" type="xml">
+            <form string="Salary Provision">
+
+                <header>
+
+                    <button name="action_fetch_data"
+                        string="Fetch Data"
+                        type="object"
+                        class="btn-info"
+                        states="draft"/>
+
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            states="draft"/>
+
+                    <button name="action_post"
+                            string="Post"
+                            type="object"
+                            class="btn-success"
+                            states="confirm"/>
+
+                    <button name="action_reset_to_draft"
+                            string="Reset To Draft"
+                            type="object"
+                            states="confirm"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm,done"/>
+                </header>
+
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="date"/>
+                            <field name="journal_id"/>
+                            <field name="move_id" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+
+                        <!-- 13th Month Salary -->
+                        <page string="13th Month Salary">
+
+                            <field name="thirteenth_line_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="amount" sum="total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+
+                        <!-- GOSI -->
+                        <page string="GOSI">
+
+                            <field name="gosi_line_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="amount" sum="total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+
+                        <!-- Bonus -->
+                        <page string="Bonus">
+
+                            <field name="bonus_line_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="amount" sum="total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+
+                        <!-- End Of Service -->
+                        <page string="End Of Service">
+
+                            <field name="eos_line_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="amount" sum="total"/>
+                                </tree>
+                            </field>
+
+                        </page>
+
+                        <!-- Configuration -->
+                        <page string="Configuration">
+
+                            <group string="13th Month Salary Accounts">
+                                <group>
+                                    <field name="thirteenth_debit_account_id"/>
+                                </group>
+
+                                <group>
+                                    <field name="thirteenth_credit_account_id"/>
+                                </group>
+                            </group>
+
+                            <group string="Bonus Accounts">
+                                <group>
+                                    <field name="bonus_debit_account_id"/>
+                                </group>
+
+                                <group>
+                                    <field name="bonus_credit_account_id"/>
+                                </group>
+                            </group>
+
+                            <group string="End Of Service Accounts">
+                                <group>
+                                    <field name="eos_debit_account_id"/>
+                                </group>
+
+                                <group>
+                                    <field name="eos_credit_account_id"/>
+                                </group>
+                            </group>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_salary_provision" model="ir.actions.act_window">
+        <field name="name">Salary Provision</field>
+        <field name="res_model">od.salary.provision</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_salary_provision"
+              name="Salary Provision"
+              parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+              action="action_salary_provision"
+              sequence="10"/>
+
+
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="od_create_po_wiz" model="ir.ui.view">
+            <field name="name">Create Po</field>
+            <field name="model">od.create.po.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Create Po">
+                    <group>
+                        <group>
+                            <field name="operation_type" required="1"/>
+                            <field name="enquiry_ids" readonly="1" force_save="1" attrs="{'invisible':[('operation_type','!=','create')]}" widget="many2many_tags"/>
+                            <field name="purchase_id" force_save="1" invisible="1"/>
+                            <button string="Load Lines" name="load_enquiry_lines" type="object" class="btn-primary" attrs="{'invisible':[('operation_type','!=','create')]}"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <notebook>
+                        <page name="wiz_line" string="Lines" attrs="{'invisible':[('operation_type','!=','create')]}">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="wiz_id" invisible="1"/>
+                                    <field name="enquiry_line_id" readonly="0" force_save="1" invisible="1"/>
+                                    <field name="enquiry_id" readonly="1" force_save="1"/>
+                                    <field name="product_id" readonly="1" force_save="1"/>
+                                    <field name="name" readonly="1" force_save="1"/>
+                                    <field name="remaining_qty" readonly="1" force_save="1"/>
+                                    <field name="price_unit" readonly="1" force_save="1"/>
+                                    <field name="quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="wiz_line" string="Purchase Lines" attrs="{'invisible':[('operation_type','!=','edit')]}">
+                            <field name="order_line"/>
+                        </page>
+                    </notebook>
+
+                    <footer>
+                        <button string="Create PO" name="create_po" type="object" class="btn-primary" attrs="{'invisible':[('operation_type','!=','create')]}"/>
+                        <button string="Update" special="save" type="object" class="btn-primary" attrs="{'invisible':[('operation_type','!=','edit')]}"/>
+                        <button string="Cancel" special="cancel" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_od_create_po_wiz" model="ir.actions.act_window">
+            <field name="name">Create Po</field>
+            <field name="res_model">od.create.po.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

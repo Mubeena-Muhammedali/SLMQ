@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_hscode_document">
+	<t t-call="web.external_layout">
+    	<t t-set="o" t-value="o.with_context(lang=lang)" />
+    	<div class="page">
+    		<div class="o.state=='posted'">
+        		<h3><center><b>HS CODE FORM</b></center></h3>
+        		<br/><br/><br/><br/><br/>
+        	</div>
+        	<table class="table table-condensed" style="width:100%;border:1px solid black;">
+							
+				<thead>
+					<tr>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>H.S CODE</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>Country of Origin</b></center></th>
+						<th style="width:25%;border-right:1px solid black;color:#666666;"><center><b>DESCRIPTION</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>UOM</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>NO.OF PCS</b></center></th>
+						<th style="width:12.5%;border-right:1px solid black;color:#666666;"><center><b>GROSS WEIGHT</b></center></th>
+						<th style="width:12.5%;color:#666666;"><center><b>TOTAL PRICE<br/>(CURRENCY)EUR</b></center></th>
+					</tr>
+				</thead>
+				<tbody>
+					<t t-set="grand_no_of_pcs" t-value="0"/>
+					<t t-set="grand_od_gross_weight" t-value="0"/>
+					<t t-set="grand_price_subtotal" t-value="0"/>
+					<t t-foreach="o.get_hscode_data()" t-as="l">
+						<tr>			
+							<td style="border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+								<center><span t-esc="l[0]"/></center>
+							</td>
+							<td style="border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+								<center><span t-esc="l[1]"/></center>
+
+							</td>
+							<td style="border-right:1px solid black;border-top:1px solid black;background-color:#FFFFFF;">
+								<center><span t-esc="l[2]"/></center>
+							</td>
+
+							<td style="border-right:1px solid black;border-top:1px solid black;text-align:center;background-color:#FFFFFF;">
+								Nos
+							</td>
+							<td style="border-right:1px solid black;text-align:right;border-top:1px solid black;text-align:center;background-color:#FFFFFF;">
+								<span t-esc="int(l[3])"/>
+								<t t-set="grand_no_of_pcs" t-value="grand_no_of_pcs+l[3]"/>
+							</td>
+							<td style="border-right:1px solid black;text-align:right;border-top:1px solid black;background-color:#FFFFFF;">
+								<span t-esc="'{0:,.2f}'.format(float(l[5]))"/>
+								<t t-set="grand_od_gross_weight" t-value="grand_od_gross_weight+l[5]"/>
+							</td>
+							<td style="border-right:1px solid black;text-align:right;border-top:1px solid black;background-color:#FFFFFF;">
+								<span t-esc="'{0:,.2f}'.format(float(l[4]))"/>
+								<t t-set="grand_price_subtotal" t-value="grand_price_subtotal+l[4]"/>
+							</td>
+						</tr>
+					</t>
+					<tr>
+						<td colspan="3" style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>Total</b></td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"><b><span t-esc="int(grand_no_of_pcs)"/></b></td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b><span t-esc="'{0:,.2f}'.format(float(grand_od_gross_weight))"/></b></td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>
+							<span t-esc="'{0:,.2f}'.format(float(grand_price_subtotal))"/>
+						</b></td>
+					</tr>
+					<tr>
+						<td colspan="3" style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>Less Discount</b></td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>
+							<span t-esc="'{0:,.2f}'.format(float(o.get_discount_data()))"/>
+						</b></td>
+					</tr>
+					<tr>
+						<td colspan="3" style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>Grand Total</b></td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:center;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"> </td>
+						<td style="border-top:1px solid black;text-align:right;background-color:#FFFFFF;"><b>
+							<span t-esc="'{0:,.2f}'.format(float(grand_price_subtotal-o.get_discount_data()))"/>
+						</b></td>
+					</tr>
+				</tbody>
+			</table>
+
+
+			<div class="row">
+                <div class="col-6">
+                    <table style="width:100%; border:1px solid white;">
+                    	<tbody>
+                    		<tr>
+                    			<td style="width:40%; border:1px solid white;">No of Pcs  </td>
+                    			<td style="width:60%; border:1px solid white;">:  <span t-esc="int(grand_no_of_pcs)"/></td>
+                    		</tr>
+                    		<tr>
+                    			<td style="width:40%; border:1px solid white;">No.of Packages </td>
+                    			<td style="width:60%; border:1px solid white;">:  <span t-field="o.od_no_of_packages"/></td>
+                    		</tr>
+                    		<tr>
+                    			<td style="width:40%; border:1px solid white;">Gross Weight </td>
+                    			<td style="width:60%; border:1px solid white;">:  <span t-esc="'{0:,.2f}'.format(float(o.od_gross_weight))"/> KG</td>
+                    		</tr>
+                    	</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+<template id="report_hscode">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="lang" t-value="o.partner_id.lang"/>
+            <t t-call="orchid_somfy_ksa_v16.report_hscode_document" t-lang="lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

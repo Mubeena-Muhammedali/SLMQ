@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_account_payment_voucher_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                <div align="center">
+                    <h2>
+                        <div t-if="o.payment_type=='outbound' and not (o.payment_method_code=='pdc')">
+                            <span>Payment Voucher</span><br/>
+                            <span t-field="o.name"/>
+                        </div>
+                        <div t-if="o.payment_type=='inbound' and not (o.payment_method_code=='pdc')">
+                            <span>Receipt Voucher</span><br/> 
+                        </div>
+                        <div t-if="o.payment_type=='outbound' and o.payment_method_code=='pdc'">
+                            <span>PDC Payment</span><br/>
+                            <span t-field="o.name"/>
+                        </div>
+                        <div t-if="o.payment_type=='inbound' and o.payment_method_code=='pdc'">
+                            <span>PDC Receipt</span><br/> 
+                        </div>
+                        
+                        <br/>
+                        
+                    </h2>
+                    
+                </div>
+                <!-- <h4><strong>Payment Receipt</strong></h4> -->
+                <div class="row mb64">
+                    <div class="col-6" t-if="o.amount">
+                        <strong><span t-esc="o.partner_id.name"/><br/> TRN: </strong><span t-esc="o.partner_id.vat"/>
+                    </div>
+                </div>
+                <table class="table table-sm" style="border:1px solid black;">
+                    <table style="width:60%">
+                        <thead>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:45%; padding-left: 5px"><span><strong>Receipt No</strong></span>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc= "o.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:45%; padding-left: 5px;"><span><strong>Receipt Date</strong></span>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-field= "o.date"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:45%; padding-left: 5px"><span><strong>Payment Method</strong></span>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc= "o.payment_method_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:45%; padding-left: 5px"><span><strong>Issued By</strong></span>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc= "o.user_id.name"/>
+                                </td>
+                            </tr>
+                        
+                        </thead>
+                    </table>
+                </table>
+                <br>
+                </br>
+                <h4>Received from:</h4>
+                 <table class="table table-sm" style="border:1px solid black;">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:25%; padding-left: 5px"><strong>Customer Name</strong>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc="o.partner_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:25%; padding-left: 5px"><strong>Customer No.</strong>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc="o.partner_id.od_ban_bp"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:25%; padding-left: 5px"><strong>Amount</strong>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-field="o.od_total_amount"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:25%; padding-left: 5px"><strong>Amount in Words</strong>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-esc="o.currency_id.amount_to_text(o.od_total_amount)"/>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </table>
+                
+                <table class="table table-sm" style="border:1px solid black;">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <td class="text-left" style="border:1px solid black; width:25%; padding-left: 5px"><strong>Note</strong>
+                                </td>
+                                <td class="text-left" style="border:1px solid black; padding-left: 5px">
+                                    <span t-field="o.ref"/>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </table>
+                 <br/>   
+<!--                 <table class="table table-sm" style="border:1px solid black;">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="border:1px solid black; width:20%">Payment Summary
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </table> -->
+                    
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="5" class="text-center" style="border:1px solid black; width:20%">Payment Summary
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="text-center" style="border:1px solid black;"><span>Invoice Number</span></th>
+                            <th class="text-center" style="border:1px solid black;"><span>Due date</span></th>
+                            <th class="text-right" style="border:1px solid black;"><span>Invoice Amount</span></th>
+                            <th class="text-right" style="border:1px solid black;"><span>Paid Amount</span></th>
+                            <!-- <th class="text-center" style="border:1px solid black;"><span>Remaining Amount</span></th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
+                        <t t-set="od_total" t-value="0"/>
+                        <tr t-foreach="partials" t-as="rec">
+                            <t t-set="od_local_amount" t-value="rec[1]"/>
+                            <t t-set="od_total" t-value="od_total+od_local_amount"/>
+                            <t t-set="inv" t-value="rec[2].move_id"/>
+                            <t t-if="inv.move_type != 'entry'">
+                                <td style="text-align:center;border:1px solid black;"><span t-field="inv.name"/></td>
+                                <td style="text-align:center;border:1px solid black;"><span t-field="o.date"/></td>
+                                <td style="text-align:right;border:1px solid black;"><span t-field="inv.amount_total"/></td>
+                                <td style="text-align:right;border:1px solid black;"><span t-field="o.currency_id.symbol"/>&#160;<t t-esc="'{0:,.2f}'.format(float(od_local_amount))"/></td>
+                                <!-- <td style="text-align:center;border:1px solid black;"><span t-field="inv.amount_residual"/></td> -->
+                            </t>
+                        </tr>
+                        <tr style="border:1px solid black;">
+                         
+                            <td colspan="3" style="border:1px solid black;text-align:right">
+                                <strong>Total:</strong></td>
+                             <td style="border:1px solid black;text-align:right;">
+                                <strong><span t-field="o.currency_id.symbol"/>&#160;<t t-esc="'{0:,.2f}'.format(float(od_total))"/></strong>
+                            </td>
+                           <!--  <td style="border:1px solid black;text-align:center;">
+                                <strong><span t-field="o.amount_residual"/></strong>
+                                
+                            </td> -->
+                        </tr>
+                        <tr style="border:1px solid black;">
+                         
+                            <td colspan="3" style="border:1px solid black;text-align:right">
+                                <strong>Bank Charges:</strong></td>
+                             <td style="border:1px solid black;text-align:right;">
+                                <strong><span t-field="o.od_bank_charges"/></strong>
+                            </td>
+                            <!-- <td style="border:1px solid black;text-align:center;"></td> -->
+                        </tr>
+                        <tr style="border:1px solid black;">
+                            <td colspan="3" style="border:1px solid black;text-align:right">
+                                <strong>Unallocated Amount:</strong></td>
+                             <td style="border:1px solid black;text-align:right;">
+                                <!-- <strong><span t-field="o.amount_residual"/></strong> -->
+                                <t t-set="unallocated_amt" t-value="0"/>
+                                <t t-set="unallocated_amt" t-value="o.od_total_amount-(od_total+o.od_bank_charges)"/>
+                                <strong><span t-field="o.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(float(unallocated_amt))"/></strong>
+                            </td>
+                            <!-- <td style="border:1px solid black;text-align:center;"></td> -->
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <br>
+                    </br>
+                    <br>
+
+                    </br>
+                    <center> THIS IS A SYSTEM GENERATED RECEIPT AND DOES NOT REQUIRE SIGNATURE AND STAMP</center>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template id="report_account_payment_voucher">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="orchid_somfy_ksa_v16.report_account_payment_voucher_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+
+
+           
+       

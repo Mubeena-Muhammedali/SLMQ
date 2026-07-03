@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_od_expense_batch" model="ir.sequence">
+            <field name="name">OD Expense Batch</field>
+            <field name="code">od.expense.batch</field>
+            <field name="prefix">EB/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+
+    <!-- ===================================================== -->
+    <!-- TREE VIEW -->
+    <!-- ===================================================== -->
+
+    <record id="view_od_expense_batch_tree" model="ir.ui.view">
+        <field name="name">od.expense.batch.tree</field>
+        <field name="model">od.expense.batch</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="company_id" invisible="1"/>
+                <field name="state"/>
+                <field name="provision_move_id" invisible="1"/>
+                <field name="payment_move_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- SEARCH VIEW -->
+    <!-- ===================================================== -->
+
+    <!-- <record id="view_od_expense_batch_search" model="ir.ui.view">
+        <field name="name">od.expense.batch.search</field>
+        <field name="model">od.expense.batch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="company_id"/>
+
+                <filter string="Draft" name="draft"
+                        domain="[('state','=','draft')]"/>
+
+                <filter string="Confirmed" name="confirm"
+                        domain="[('state','=','confirm')]"/>
+
+                <filter string="Provision Created" name="provision"
+                        domain="[('state','=','provision')]"/>
+
+                <filter string="Paid" name="paid"
+                        domain="[('state','=','paid')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Company"
+                            domain="[]"
+                            context="{'group_by':'company_id'}"/>
+                    <filter string="State"
+                            domain="[]"
+                            context="{'group_by':'state'}"/>
+                    <filter string="Month"
+                            domain="[]"
+                            context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+
+    <!-- ===================================================== -->
+    <!-- FORM VIEW -->
+    <!-- ===================================================== -->
+
+    <record id="view_od_expense_batch_form" model="ir.ui.view">
+        <field name="name">od.expense.batch.form</field>
+        <field name="model">od.expense.batch</field>
+        <field name="arch" type="xml">
+            <form string="Expense Batch">
+
+                <header>
+
+                    <!-- Draft Buttons -->
+                    <button name="action_search_sheets"
+                            type="object"
+                            string="Search Sheets"
+                            states="draft"
+                            class="btn-primary"/>
+
+                    <button name="action_confirm"
+                            type="object"
+                            string="Confirm"
+                            states="draft"
+                            confirm="Are you sure you want to confirm this batch?"
+                            class="btn-primary"/>
+
+                    <!-- Confirm State -->
+                    <button name="reset_to_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            states="confirm"
+                            class="btn-secondary"/>
+
+                    <button name="action_create_provision"
+                            type="object"
+                            string="Create Provision"
+                            states="confirm"
+                            class="btn-primary"/>
+
+                    <!-- Provision State -->
+                    <button name="action_create_payment"
+                            type="object"
+                            string="Create Payment"
+                            states="provision"
+                            class="btn-success"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirm,provision,paid"/>
+
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="date" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="posting_date" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="payment_date" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="company_id"
+                                   invisible="1"/>
+                        </group>
+
+                        <group>
+                            <field name="provision_move_id" readonly="1" attrs="{'invisible':[('provision_move_id','=',False)]}"/>
+                            <field name="payment_move_id" readonly="1" attrs="{'invisible':[('provision_move_id','=',False)]}"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Expense Sheets">
+                            <field name="line_ids"
+                                   attrs="{'readonly':[('state','!=','draft')]}" force_save="1">
+                                <tree>
+                                    <field name="expense_sheet_id"/>
+                                    <field name="employee_id"/>
+                                    <field name="amount" sum="total"/>
+                                    <field name="sheet_state"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <button name="action_view_sheet"
+                                            type="object"
+                                            string="View"
+                                            class="btn-link"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_od_expense_batch" model="ir.actions.act_window">
+        <field name="name">Expense Batch</field>
+        <field name="res_model">od.expense.batch</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="search_view_id" ref="view_od_expense_batch_search"/> -->
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- MENU -->
+    <!-- ===================================================== -->
+
+    <!-- Parent: Expense -->
+    <menuitem id="menu_od_expense_batch_root"
+              name="Expense Batch"
+              parent="hr_expense.menu_hr_expense_root"
+              sequence="25"/>
+
+    <menuitem id="menu_od_expense_batch"
+              name="Expense Batches"
+              parent="menu_od_expense_batch_root"
+              action="action_od_expense_batch"
+              sequence="1"/>
+
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_product_opening_form_tree_view">
+            <field name="name">od.product.opening.form.tree</field>
+            <field name="model">od.product.opening.form</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+			    <tree string="tree_string">
+                    <field name="date" />
+					<field name="name" />
+                    <field name="product_name"/>
+					<field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+       
+
+        <record model="ir.ui.view" id="od_product_opening_form_form_view">
+            <field name="name">od.product.opening.form.form</field>
+            <field name="model">od.product.opening.form</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+                    <header>
+                        <button name="button_submit" string="Submit" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','draft'),('batch_id','!=',False)]}"/>
+                        <button name="button_reset_to_draft" string="Reset to draft" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','submit'),('batch_id','!=',False)]}" groups="purchase.group_purchase_manager"/>
+                        <button name="button_approve" string="Approve" type="object" class="oe_highlight" groups="purchase.group_purchase_manager" attrs="{'invisible':['|',('state','not in',['draft','submit']),('batch_id','!=',False)]}"/>
+                        <field name="state" widget="statusbar"/>
+                      </header>
+					<sheet>
+                        <div class="oe_title">
+                          <h1>
+                            <field name="name" readonly="1" required="0" placeholder="Form No"/>
+                          </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <!-- <field name="user_id" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}" options="{'no_create': True, 'no_create_edit':True}" domain="['|',('active','=',False),('active','=',True)]"/> -->
+                                <field name="user_id" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}" options="{'no_create': True, 'no_create_edit':True}"/>
+                                <field name="date"  attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}" required="1"/>
+                                <field name="batch_id" force_save="1" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="product_name"  required="1" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                <field name="product_id"  attrs="{'invisible': [('product_id', '=',False)]}" readonly="1" force_save="1" invisible="1"/>
+                                <field name="product_tmpl_id"  attrs="{'invisible': [('product_tmpl_id', '=',False)]}" readonly="1" force_save="1"/>
+                                <field name="supplier_pricelist_id"  attrs="{'invisible': [('supplier_pricelist_id', '=',False)]}" readonly="1" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="General Info" name="general">
+                                <group>
+                                    <group>
+                                        <field name="detailed_type" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="categ_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="default_code" required="1" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="orchid_arabic" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="od_factory_cost" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_sale_price" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_cost_price" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Product Details" name="product_details">
+                                <group>
+                                    <group>
+                                        <field name="orchid_group_id" options="{'no_create': True, 'no_create_edit':True}" required="1" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="orchid_type_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="orchid_class_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="orchid_country_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="orchid_hscode_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Specification" name="specification">
+                                <group>
+                                    <group>
+                                        <field name="od_com_code" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_depth" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_width" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_height" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="od_weight" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_pkg_weight" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_ttl_weight" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                        <field name="od_cbm_vol" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Accounting" name="accounting">
+                                <group>
+                                    <group>
+                                        <field name="property_account_income_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="property_account_expense_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '!=','draft'),('batch_id','!=',False)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                     <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_od_product_opening_form">
+            <field name="name">Product Opening Form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.product.opening.form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_product_opening_form_tree_view"/>
+        </record>
+
+
+		<menuitem id="od_product_opening_form_menu"  name="Product Opening Form" parent="purchase.menu_purchase_root" sequence="11"/>
+            <menuitem id="od_product_opening_form_menu1"  name="Product Opening Form" parent="od_product_opening_form_menu" action="action_od_product_opening_form" sequence="2"/>
+    
+    </data>
+</odoo>
