@@ -8,10 +8,8 @@ import requests
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
-
 TOKEN_ENDPOINT = '/open-apis/auth/v3/tenant_access_token/internal'
-USER_FLOW_ENDPOINT = '/open-apis/attendance/v1/user_flow/query'
+USER_FLOW_ENDPOINT = '/open-apis/attendance/v1/user_flows/query'
 BATCH_SIZE = 50  # Lark API accepts a limited number of user_ids per call
 TIMEOUT = 20
 
@@ -55,48 +53,76 @@ class OdLarkAttendanceSync(models.AbstractModel):
     # API call
     # ------------------------------------------------------------------
     def _fetch_user_flow(self, domain, token, user_ids, ts_from, ts_to):
-        """Call 'Batch Query of Attendance Flow Record'. Returns a list of
-        raw flow records: {user_id, check_time, ...}"""
-        headers = {'Authorization': 'Bearer %s' % token}
-        params = {'employee_type': 'employee_id'}
-        body = {
-            'user_ids': user_ids,
-            'check_time_from': str(ts_from),
-            'check_time_to': str(ts_to),
+        """Fetch attendance punch records from Lark"""
+
+        headers = {
+            "Authorization": "Bearer %s" % token,
+            "Content-Type": "application/json",
         }
+
+        params = {
+            "employee_type": "employee_id",
+        }
+
+        body = {
+            "user_ids": user_ids,
+            "check_time_from": str(ts_from),
+            "check_time_to": str(ts_to),
+        }
+
         try:
-            resp = requests.post(
+            response = requests.post(
                 domain + USER_FLOW_ENDPOINT,
-                headers=headers, params=params, json=body, timeout=TIMEOUT,
+                headers=headers,
+                params=params,
+                json=body,
+                timeout=TIMEOUT,
             )
-            data = resp.json()
+
         except requests.RequestException as exc:
-            raise UserError(_('Could not reach Lark API: %s') % exc)
+            raise UserError(_("Unable to connect to Lark.\n%s") % exc)
 
-        if data.get('code') != 0:
-            raise UserError(_('Lark attendance query failed: %s') % data.get('msg'))
+        try:
+            data = response.json()
+        except Exception:
+            raise UserError(_("Invalid JSON returned by Lark.\n%s") % response.text)
 
-        return (data.get('data') or {}).get('user_flow_results') or []
+        if data.get("code") != 0:
+            raise UserError(
+                _(
+                    "Lark API Error\n\n"
+                    "Code : %s\n"
+                    "Message : %s\n"
+                    "Response : %s"
+                )
+                % (
+                    data.get("code"),
+                    data.get("msg"),
+                    data,
+                )
+            )
+
+        return data.get("data", {}).get("user_flow_results", [])
 
     # ------------------------------------------------------------------
     # Main entry point
     # ------------------------------------------------------------------
     def sync_attendance(self, employees=None):
         """Pull punch records from Lark and create/update hr.attendance.
-        If `employees` is not given, every hr.employee with a lark_user_id
+        If `employees` is not given, every hr.employee with a od_lark_user_id
         set is synced."""
         Employee = self.env['hr.employee'].sudo()
         Attendance = self.env['hr.attendance'].sudo()
-        SyncLog = self.env['lark.sync.log'].sudo()
+        SyncLog = self.env['od.lark.sync.log'].sudo()
 
         created = updated = 0
         try:
             domain, app_id, app_secret, days_back = self._get_config()
 
             if employees is None:
-                employees = Employee.search([('lark_user_id', '!=', False)])
+                employees = Employee.search([('od_lark_user_id', '!=', False)])
             else:
-                employees = employees.filtered('lark_user_id')
+                employees = employees.filtered('od_lark_user_id')
 
             if not employees:
                 SyncLog.create({
@@ -112,7 +138,7 @@ class OdLarkAttendanceSync(models.AbstractModel):
             ts_to = int(now.timestamp())
             ts_from = int((now - timedelta(days=days_back)).timestamp())
 
-            lark_to_employee = {emp.lark_user_id: emp for emp in employees}
+            lark_to_employee = {emp.od_lark_user_id: emp for emp in employees}
             all_ids = list(lark_to_employee.keys())
 
             # Bucket punches by (employee, date) -> sorted list of datetimes
@@ -122,9 +148,9 @@ class OdLarkAttendanceSync(models.AbstractModel):
                 chunk = all_ids[i:i + BATCH_SIZE]
                 records = self._fetch_user_flow(domain, token, chunk, ts_from, ts_to)
                 for rec in records:
-                    lark_user_id = rec.get('user_id')
+                    od_lark_user_id = rec.get('user_id')
                     check_time = rec.get('check_time')
-                    employee = lark_to_employee.get(lark_user_id)
+                    employee = lark_to_employee.get(od_lark_user_id)
                     if not employee or not check_time:
                         continue
                     check_dt = self._epoch_to_datetime(check_time)
@@ -167,7 +193,6 @@ class OdLarkAttendanceSync(models.AbstractModel):
             })
 
         except UserError as exc:
-            _logger.warning('Lark attendance sync failed: %s', exc)
             SyncLog.create({
                 'state': 'error',
                 'attendances_created': created,
@@ -175,8 +200,7 @@ class OdLarkAttendanceSync(models.AbstractModel):
                 'message': str(exc),
             })
             raise
-        except Exception as exc:  # pragma: no cover - safety net for cron
-            _logger.exception('Lark attendance sync failed unexpectedly')
+        except Exception as exc:
             SyncLog.create({
                 'state': 'error',
                 'attendances_created': created,
