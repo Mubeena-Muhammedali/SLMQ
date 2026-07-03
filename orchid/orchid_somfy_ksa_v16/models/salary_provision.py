@@ -227,125 +227,70 @@ class SalaryProvision(models.Model):
         """
         self.ensure_one()
 
-        self._fetch_13th_month_salary_lines()
-        self._fetch_gosi_lines()
-        self._fetch_bonus_lines()
-        # self._fetch_eos_lines()
-
-
-    def _fetch_13th_month_salary_lines(self):
-        """
-        Fetch 13th month salary provision lines.
-
-        Logic:
-        - Take active contracts
-        - Field: x_studio_13th_month_salary
-        - If value > 0
-        - Create provision line
-        - Amount = field / 6
-        """
-
-        self.ensure_one()
-
-        # Optional:
-        # Clear existing lines before regenerate
-        self.thirteenth_line_ids.unlink()
-
-        contracts = self.env['hr.contract'].search([
+        base_domain = [
             ('state', '=', 'open'),
             ('company_id', '=', self.company_id.id),
-            ('x_studio_13th_month_salary', '>', 0),
             ('employee_id', '!=', False),
-        ])
+        ]
+        contracts = self.env['hr.contract'].search(base_domain)
 
-        line_vals = []
+        self._fetch_13th_month_salary_lines(contracts)
+        self._fetch_gosi_lines(contracts)
+        self._fetch_bonus_lines(contracts)
+        self._fetch_eos_lines(contracts)
 
-        for contract in contracts:
+    def _fetch_13th_month_salary_lines(self, contracts):
+        """
+        Fetch 13th month salary provision lines.
+        Amount = x_studio_13th_month_salary / 6
+        """
+        self.ensure_one()
 
-            amount = contract.x_studio_13th_month_salary / 6
-
-            line_vals.append((0, 0, {
+        line_vals = [
+            (0, 0, {
                 'employee_id': contract.employee_id.id,
-                'amount': amount,
-            }))
+                'amount': contract.x_studio_13th_month_salary / 6,
+            })
+            for contract in contracts
+            if contract.x_studio_13th_month_salary > 0
+        ]
 
-        self.write({
-            'thirteenth_line_ids': line_vals
-        })
+        self.write({'thirteenth_line_ids': [(5, 0, 0)] + line_vals})
 
-    def _fetch_gosi_lines(self):
+    def _fetch_gosi_lines(self, contracts):
         """
         GOSI Provision Calculation
 
-        Formula:
-
         L = min((wage + housing), 45000)
-
         M = ROUNDUP(L * 2.25%)
-
         N = ROUNDUP(L * 9%) if Saudi
-
         O = ROUNDUP(L * 1%) if Saudi
-
-        P = ROUNDUP(L * 10%) if:
-            employment_type == 'WFH'
-            AND Saudi
-
+        P = ROUNDUP(L * 10%) if WFH AND Saudi
         Amount = M + N + O + P
         """
-
         self.ensure_one()
 
-        # Remove existing lines
-        self.gosi_line_ids.unlink()
-
         saudi_country = self.env.ref('base.sa')
-
-        contracts = self.env['hr.contract'].search([
-            ('state', '=', 'open'),
-            ('company_id', '=', self.company_id.id),
-            ('employee_id', '!=', False),
-        ])
-
         line_vals = []
 
         for contract in contracts:
-
             employee = contract.employee_id
-
             wage = contract.wage or 0.0
             housing = contract.l10n_sa_housing_allowance or 0.0
+            is_saudi = employee.country_id == saudi_country
 
-            employment_type = employee.x_studio_employment_type
-            nationality = employee.country_id
+            base_amount = min(wage + housing, 45000)
 
-            # L
-            base_amount = min((wage + housing), 45000)
-
-            # M = 2.25%
             m = math.ceil(base_amount * 0.0225)
-
-            # N = 9% Saudi only
-            n = 0
-            if nationality == saudi_country:
-                n = math.ceil(base_amount * 0.09)
-
-            # O = 1% Saudi only
-            o = 0
-            if nationality == saudi_country:
-                o = math.ceil(base_amount * 0.01)
-
-            # P = 10% if WFH + Saudi
-            p = 0
-            if (
-                employment_type == 'WFH'
-                and nationality == saudi_country
-            ):
-                p = math.ceil(base_amount * 0.10)
+            n = math.ceil(base_amount * 0.09) if is_saudi else 0
+            o = math.ceil(base_amount * 0.01) if is_saudi else 0
+            p = (
+                math.ceil(base_amount * 0.10)
+                if is_saudi and employee.x_studio_employment_type == 'WFH'
+                else 0
+            )
 
             amount = m + n + o + p
-
-            # Skip zero amounts
             if amount <= 0:
                 continue
 
@@ -354,48 +299,46 @@ class SalaryProvision(models.Model):
                 'amount': amount,
             }))
 
-        self.write({
-            'gosi_line_ids': line_vals
-        })
+        self.write({'gosi_line_ids': [(5, 0, 0)] + line_vals})
 
-    def _fetch_bonus_lines(self):
+    def _fetch_bonus_lines(self, contracts):
         """
         Fetch Bonus provision lines.
-
-        Logic:
-        - Take active contracts
-        - Field: od_annual_bonus
-        - If value > 0
-        - Create provision line
-        - Amount = field / 6
+        Amount = od_annual_bonus / 12
         """
-
         self.ensure_one()
 
-        # Optional:
-        # Clear existing lines before regenerate
-        self.bonus_line_ids.unlink()
+        line_vals = [
+            (0, 0, {
+                'employee_id': contract.employee_id.id,
+                'amount': math.ceil(contract.od_annual_bonus / 12),
+            })
+            for contract in contracts
+            if contract.od_annual_bonus > 0
+        ]
 
-        contracts = self.env['hr.contract'].search([
-            ('state', '=', 'open'),
-            ('company_id', '=', self.company_id.id),
-            ('employee_id', '!=', False),
-        ])
+        self.write({'bonus_line_ids': [(5, 0, 0)] + line_vals})
+
+    def _fetch_eos_lines(self, contracts):
+        """
+        Fetch End Of Service provision lines.
+        Amount = ((od_previous_year_eosb - od_opening_balance) / 12), rounded up to nearest 100
+        """
+        self.ensure_one()
 
         line_vals = []
-
         for contract in contracts:
-
-            amount = math.ceil(contract.od_annual_bonus / 12)  # Assuming you want to divide by 12 for monthly provision
+            raw = (contract.od_previous_year_eosb - contract.od_opening_balance) / 12
+            amount = math.ceil(raw / 100) * 100
+            if amount <= 0:
+                continue
 
             line_vals.append((0, 0, {
                 'employee_id': contract.employee_id.id,
                 'amount': amount,
             }))
 
-        self.write({
-            'bonus_line_ids': line_vals
-        })
+        self.write({'eos_line_ids': [(5, 0, 0)] + line_vals})
         
 class SalaryProvisionThirteenth(models.Model):
     _name = 'od.salary.provision.thirteenth'

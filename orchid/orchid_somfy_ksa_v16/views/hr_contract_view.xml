@@ -11,6 +11,14 @@
                         <group>
                             <field name="od_bonus_percentage"/>
                             <field name="od_annual_bonus"/>
+                            <field name="od_contract_year"/>
+                            <field name="od_years_of_service"/>
+                        </group>
+                        <group>
+                            <field name="od_gross_annual_salary"/>
+                            <field name="od_current_year_eosb"/>
+                            <field name="od_previous_year_eosb"/>
+                            <field name="od_opening_balance"/>
                         </group>
                     </group>
                 </page>
