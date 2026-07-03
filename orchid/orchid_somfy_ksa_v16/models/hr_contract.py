@@ -49,14 +49,54 @@ class HrContract(models.Model):
         compute="_compute_od_opening_balance"
     )
 
+    def get_cumulative_balance(self, account_code, up_to_date=None):
+        """
+        Returns the cumulative balance (debit - credit) for an account
+        from inception up to a given date — matches what the General
+        Ledger report shows when filtered by year.
+        """
+        self.ensure_one()
+
+        account = self.env['account.account'].search([
+            ('code', '=', account_code),
+            ('company_id', '=', self.company_id.id),
+        ], limit=1)
+
+        if not account:
+            return 0.0
+
+        up_to_date = up_to_date or date(date.today().year - 1, 12, 31)
+
+        move_lines = self.env['account.move.line'].search([
+            ('account_id', '=', account.id),
+            ('date', '<=', up_to_date),
+            ('parent_state', '=', 'posted'),
+            ('company_id', '=', self.company_id.id),
+        ])
+
+        debit = sum(move_lines.mapped('debit'))
+        credit = sum(move_lines.mapped('credit'))
+
+        return debit - credit
+
+
+    @api.depends("od_previous_year_eosb", "state")
     def _compute_od_opening_balance(self):
         for contract in self:
+            if contract.od_previous_year_eosb == 0 or contract.state != 'open':
+                contract.od_opening_balance = 0
+                continue
             open_contracts = self.env['hr.contract'].search([
                 ('state', '=', 'open'),
                 ('company_id', '=', self.company_id.id),
                 ('employee_id', '!=', False),
             ])
-            contract.od_opening_balance = contract.od_previous_year_eosb / sum(open_contracts.mapped('od_previous_year_eosb'))
+            sum_previous_year_eosb = sum(open_contracts.mapped('od_previous_year_eosb'))
+            if sum_previous_year_eosb > 0:
+                balance = contract.get_cumulative_balance('42901001')
+                contract.od_opening_balance = (contract.od_previous_year_eosb / sum_previous_year_eosb) * abs(balance)
+            else:
+                contract.od_opening_balance = 0
 
     @api.depends("wage", "l10n_sa_housing_allowance", "l10n_sa_transportation_allowance", "od_annual_bonus")
     def _compute_od_gross_annual_salary(self):
