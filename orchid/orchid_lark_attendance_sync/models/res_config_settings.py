@@ -22,10 +22,3 @@ class ResConfigSettings(models.TransientModel):
         string='Lark App Secret',
         config_parameter='lark_attendance_sync.app_secret',
     )
-    od_lark_sync_days_back = fields.Integer(
-        string='Days to Look Back on Each Sync',
-        config_parameter='lark_attendance_sync.days_back',
-        default=1,
-        help='Each sync run will pull punch records from N days ago until now. '
-             'Keep this small (1-3) for a cron that runs every few hours.',
-    )

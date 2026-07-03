@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from datetime import timedelta
+from datetime import datetime, time
 from collections import defaultdict
 
 import requests
@@ -26,13 +26,12 @@ class OdLarkAttendanceSync(models.AbstractModel):
         domain = icp.get_param('lark_attendance_sync.domain') or 'https://open.larksuite.com'
         app_id = icp.get_param('lark_attendance_sync.app_id')
         app_secret = icp.get_param('lark_attendance_sync.app_secret')
-        days_back = int(icp.get_param('lark_attendance_sync.days_back') or 1)
         if not app_id or not app_secret:
             raise UserError(_(
                 'Lark App ID / App Secret are not configured. '
                 'Go to Settings > General Settings > Lark Attendance Sync.'
             ))
-        return domain, app_id, app_secret, days_back
+        return domain, app_id, app_secret
 
     def _get_access_token(self, domain, app_id, app_secret):
         try:
@@ -117,7 +116,7 @@ class OdLarkAttendanceSync(models.AbstractModel):
 
         created = updated = 0
         try:
-            domain, app_id, app_secret, days_back = self._get_config()
+            domain, app_id, app_secret = self._get_config()
 
             if employees is None:
                 employees = Employee.search([('od_lark_user_id', '!=', False)])
@@ -134,9 +133,14 @@ class OdLarkAttendanceSync(models.AbstractModel):
 
             token = self._get_access_token(domain, app_id, app_secret)
 
-            now = fields.Datetime.now()
-            ts_to = int(now.timestamp())
-            ts_from = int((now - timedelta(days=days_back)).timestamp())
+            today = fields.Date.context_today(self)
+
+            start_dt = datetime.combine(today, time.min)   # 00:00:00
+            end_dt = datetime.combine(today, time.max)     # 23:59:59.999999
+
+            ts_from = int(start_dt.timestamp())
+            ts_to = int(end_dt.timestamp())
+
 
             lark_to_employee = {emp.od_lark_user_id: emp for emp in employees}
             all_ids = list(lark_to_employee.keys())

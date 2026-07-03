@@ -22,10 +22,6 @@
                             <field name="od_lark_app_secret" password="True"/>
                         </div>
                     </setting>
-                    <setting string="Sync Window" help="Each sync run pulls punch records from N days ago until now.">
-                        <field name="od_lark_sync_days_back" class="text-center" style="width: 5ch;"/>
-                        <span class="ms-2">Days</span>
-                    </setting>
                 </block>
             </xpath>
         </field>
