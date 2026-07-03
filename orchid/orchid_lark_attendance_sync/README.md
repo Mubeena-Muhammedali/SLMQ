@@ -49,7 +49,7 @@ this field are skipped by the sync.
   it and set your preferred interval once credentials are configured.
 
 ### 5. Review
-Attendance ‣ (manager menu) ‣ **Lark Sync Logs** shows the result of every
+Attendance ‣ Reporting ‣ **Lark Sync Logs** shows the result of every
 sync run (success/error, counts, error messages) for troubleshooting.
 
 ## How matching works
@@ -65,7 +65,7 @@ corrected if an earlier punch is found) instead of creating a duplicate.
 - The exact Lark Attendance API path and payload shape can differ slightly
   between the China (Feishu) and International (Lark) platforms and between
   API versions — the module targets the documented
-  `POST /open-apis/attendance/v1/user_flow/query` (Batch Query of Attendance
+  `POST /open-apis/attendance/v1/user_flows/query` (Batch Query of Attendance
   Flow Record) endpoint with `employee_type=employee_id`. If your app uses
   `open_id` instead, change the `employee_type` param in
   `models/lark_attendance_sync.py` and store `open_id` values in
