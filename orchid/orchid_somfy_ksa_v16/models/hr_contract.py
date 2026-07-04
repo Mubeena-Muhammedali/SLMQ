@@ -3,6 +3,7 @@
 from odoo import models, fields, api
 import math
 from datetime import date
+from decimal import Decimal, ROUND_HALF_UP
 
 class HrContract(models.Model):
     _inherit = "hr.contract"
@@ -98,12 +99,28 @@ class HrContract(models.Model):
             else:
                 contract.od_opening_balance = 0
 
-    @api.depends("wage", "l10n_sa_housing_allowance", "l10n_sa_transportation_allowance", "od_annual_bonus")
+    @api.depends("wage", "l10n_sa_housing_allowance", "l10n_sa_transportation_allowance", "od_bonus_percentage")
     def _compute_od_gross_annual_salary(self):
         for contract in self:
-            value1 = contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.x_studio_childrens_education_allowance + contract.x_studio_mobile_allowance
+            value1 = (
+                contract.wage
+                + contract.l10n_sa_housing_allowance
+                + contract.l10n_sa_transportation_allowance
+                + contract.x_studio_childrens_education_allowance
+                + contract.x_studio_mobile_allowance
+            )
             value2 = value1 * 12
-            contract.od_gross_annual_salary = value2 + contract.od_annual_bonus + contract.wage
+
+            annual_bonus = (
+                float(
+                    Decimal(str(contract.wage * 13 * (contract.od_bonus_percentage / 100)))
+                    .quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+                )
+                if contract.od_bonus_percentage
+                else 0.0
+            )
+
+            contract.od_gross_annual_salary = value2 + annual_bonus + contract.wage
 
     @api.depends("od_years_of_service", "od_gross_annual_salary")
     def _compute_od_eosb(self):
