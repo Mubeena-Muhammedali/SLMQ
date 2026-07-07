@@ -1,0 +1,61 @@
+<odoo>
+    <record id="action_report_proof_request" model="ir.actions.report">
+        <field name="name">Proof Request</field>
+        <field name="model">od.proof.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_proof_request</field>
+        <field name="report_file">orchid_radiant_house_v18.report_proof_request</field>
+        <field name="binding_model_id" ref="orchid_radiant_house_v18.model_od_proof_request"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_joborder" model="ir.actions.report">
+        <field name="name">Job Order</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_joborder</field>
+        <field name="report_file">orchid_radiant_house_v18.report_joborder</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="od_job_order_paper_format"/>
+    </record>
+
+    <record id="action_report_deliveryorder" model="ir.actions.report">
+        <field name="name">Delivery Order</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_deliveryorder</field>
+        <field name="report_file">orchid_radiant_house_v18.report_deliveryorder</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_packinglist" model="ir.actions.report">
+        <field name="name">Packing List</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_packinglist</field>
+        <field name="report_file">orchid_radiant_house_v18.report_packinglist</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_stockscrap" model="ir.actions.report">
+        <field name="name">Scrap Note</field>
+        <field name="model">stock.scrap</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_stockscrap</field>
+        <field name="report_file">orchid_radiant_house_v18.report_stockscrap</field>
+        <field name="binding_model_id" ref="stock.model_stock_scrap"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_estimation" model="ir.actions.report">
+        <field name="name">Estimation</field>
+        <field name="model">od.estimation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_estimation</field>
+        <field name="report_file">orchid_radiant_house_v18.report_estimation</field>
+        <field name="binding_model_id" ref="orchid_radiant_house_v18.model_od_estimation"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

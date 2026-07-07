@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_proof_request_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>
+                    <center><u>PROOF REQUEST FORM</u></center>
+                </h2>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="text-right"><b>Doc No:</b></td>
+                        <td class="text-left" colspan="3"><span t-field="o.name"/></td>
+                        <td class="text-right"><b>Date to be submitted:</b></td>
+                        <td class="text-left"><span t-field="o.submission_date"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right"><b>Customer:</b></td>
+                        <td class="text-left" colspan="5"><span t-field="o.partner_id"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right"><b>Product:</b></td>
+                        <td class="text-left" colspan="3"><span t-field="o.product_id.default_code"/></td>
+                        <td class="text-right"><b>Date Created/Received:</b></td>
+                        <td class="text-left"><span t-field="o.date"/></td>
+                    </tr>
+                    <t t-if="o.product_segment not in ('tape','stretched_film','ribbon')">
+                        <tr>
+                            <td class="text-right"><b>Design:</b></td>
+                            <td class="text-left" colspan="5"><span t-field="o.product_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Raw Material:</b></td>
+                            <td class="text-left" colspan="5"><span t-field="o.od_raw_material_id"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Product Segment:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.product_segment"/></td>
+                            <td class="text-right"><b>Embossing:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_embossing"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Print Finishing:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_print_finishing"/></td>
+                            <td class="text-right"><b>Printing Process:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_printing_process"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>WDG Direction:</b></td>
+                            <!-- <td class="text-left" colspan="2"><span t-field="o.od_wdg_direction"/></td> -->
+                            <td class="text-right">Front:<span t-field="o.od_wdg_direction"/></td>
+                            <td class="text-right">Back:<span t-field="o.od_wdg_direction_back"/></td>
+                            <td class="text-right"><b>No. of colors:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_no_of_colors"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Width(mm):</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_width"/></td>
+                            <td class="text-right"><b>Length(mm):</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_length"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">
+                                <t t-if="o.od_screen"><b>Screen:</b><br/></t>
+                                <t t-if="o.od_hot_foil"><b>Hot Foil:</b><br/></t>
+                                <t t-if="o.od_cold_foil"><b>Gold Foil:</b><br/></t>
+                                <t t-if="o.od_cold_foil_light"><b>Gold Foil Light:</b><br/></t>
+                                <t t-if="o.od_silver_foil"><b>Silver Foil:</b><br/></t>
+                                <t t-if="o.od_glossy_lamination"><b>Glossy Lamination:</b><br/></t>
+                                <t t-if="o.od_matt_lamination"><b>Matt Foil:</b><br/></t>
+                                <t t-if="o.od_holographic_foil"><b>Holographic Foil:</b><br/></t>
+                            </td>
+                            <td class="text-left" colspan="2">
+                                <t t-if="o.od_screen"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_hot_foil"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_cold_foil"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_cold_foil_light"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_silver_foil"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_glossy_lamination"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_matt_lamination"><span>[✓]</span><br/></t>
+                                <t t-if="o.od_holographic_foil"><span>[✓]</span><br/></t>
+                            </td>
+                            <td class="text-right"><b>Continous Print:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_continouse_print"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Color Matching Ref:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_color_matching_ref"/></td>
+                            <td class="text-right"><b>Core:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_core"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Print Side:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_printing_sude"/></td>
+                            <td class="text-right"><b>Special Req:</b></td>
+                            <td class="text-left" colspan="2">
+                                <t t-set="od_speacial_req" t-value="', '.join([(sp.name) for sp in o.od_speacial_req_id])"/>
+                                <t t-esc="od_speacial_req"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Artwork Ref No.:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_art_ref_no"/></td>
+                            <td class="text-right"><b>Artwork Code:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_art_work_code"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>PCS/Roll or Pack:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_pcs_roll"/></td>
+                            <td class="text-right"><b>Packs/Roll:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_pack_roll"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>OD of Roll:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_of_roll"/></td>
+                            <td class="text-right"><b>Cartons/Pallet:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_cartons"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><b>Pallet Spec:</b></td>
+                            <td class="text-left" colspan="2"><span t-field="o.od_pallet_spec"/></td>
+                            <td class="text-right"><b>Original Received:</b></td>
+                            <td class="text-left" colspan="2">&#160;</td>
+                        </tr>
+                    </t>
+                    <tr>
+                        <td class="text-right"><b>Salesman:</b></td>
+                        <td class="text-left" colspan="3"><span t-field="o.od_user_id"/></td>
+                        <td class="text-right"><b>Delivery Date:</b></td>
+                        <td class="text-left"><span t-field="o.od_delivery_date"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment in  ('tape','stretched_film')">
+                        <td class="text-right"><b>Printed:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_printed"/></td>
+                        <td class="text-right"><b>Plain:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_plain"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment in  ('tape','stretched_film')">
+                        <td class="text-right"><b>Printed:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_printed"/></td>
+                        <td class="text-right"><b>Plain:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_plain"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment == 'tape'">
+                        <td class="text-right"><b>Yards:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_yards"/></td>
+                        <td class="text-right"><b>Inch:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_inch"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment in ('tape','ribbon')">
+                        <td class="text-right"><b>Roll:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_rolls"/></td>
+                        <td class="text-right"><b>Box</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_box"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment == 'tape'">
+                        <td class="text-right"><b>Micron:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_micron"/></td>
+                        <td class="text-right"><b></b></td>
+                        <td class="text-left" colspan="2"></td>
+                    </tr>
+                    <tr t-if="o.product_segment == 'ribbon'">
+                        <td class="text-right"><b>Plastic:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_plastic"/></td>
+                        <td class="text-right"><b>Core</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_core"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment == 'stretched_film'">
+                        <td class="text-right"><b>Length:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_length"/></td>
+                        <td class="text-right"><b>Width</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_width"/></td>
+                    </tr>
+                    <tr t-if="o.product_segment == 'stretched_film'">
+                        <td class="text-right"><b>Ink In:</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_inkin"/></td>
+                        <td class="text-right"><b>Ink Out</b></td>
+                        <td class="text-left" colspan="2"><span t-field="o.od_inkout"/></td>
+                    </tr>
+                </table>
+
+                <div class="my-2 p-2" style="border:1px solid #B8B8B8;">
+                    <strong>Notes:</strong><br/>
+                    <span t-field="o.od_note_spec"/>
+                </div>
+
+                <br/><br/>
+
+                <div class="row text-center">
+                    <div class="col-4">
+                        <b>Submitted By</b><br/><br/>
+                        _______________________
+                    </div>
+                    <div class="col-4">
+                        <b>Approved By</b><br/><br/>
+                        _______________________
+                    </div>
+                    <div class="col-4">
+                        <b>Received By</b><br/><br/>
+                        _______________________
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_proof_request">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_proof_request_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>
+            

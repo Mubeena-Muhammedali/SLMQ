@@ -1,0 +1,53 @@
+<odoo>
+  <data noupdate="1">
+    <record id="od_product_categ_param" model="ir.config_parameter">
+      <field name="key">product_categ</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_ink_id_param" model="ir.config_parameter">
+      <field name="key">od_ink_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_overhead_journal_param" model="ir.config_parameter">
+      <field name="key">od_overhead_journal</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_production_acc_param" model="ir.config_parameter">
+      <field name="key">od_production_acc</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_overhead_product_id_param" model="ir.config_parameter">
+      <field name="key">od_overhead_product_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_overhead_account_id_param" model="ir.config_parameter">
+      <field name="key">od_overhead_account_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_printing_speed_mtr_hr_param" model="ir.config_parameter">
+      <field name="key">od_printing_speed_mtr_hr</field>
+      <field name="value">0</field>
+    </record>
+    <record id="orchid_class_id_param" model="ir.config_parameter">
+      <field name="key">orchid_class_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_plate_machine_param" model="ir.config_parameter">
+      <field name="key">od_plate_machine</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_kg_uom_id_param" model="ir.config_parameter">
+      <field name="key">od_kg_uom_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_meter_uom_id_param" model="ir.config_parameter">
+      <field name="key">od_meter_uom_id</field>
+      <field name="value">0</field>
+    </record>
+    <record id="od_slitting_loc_param" model="ir.config_parameter">
+      <field name="key">def_slitting_loc</field>
+      <field name="value">15</field>
+      <!-- production loc -->
+    </record>
+  </data>
+</odoo>

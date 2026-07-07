@@ -1,0 +1,48 @@
+<odoo>
+    <template id="report_stockscrap_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-6 text-center">
+                            <h3><span t-field="o.name"/></h3>
+                        </div>
+                    </div>
+
+                    <!-- DETAILS -->
+                    <p><strong>Date :</strong> 
+                        <t t-esc="o.date_done"/>
+                    </p>
+
+                    <p><strong>Product :</strong> 
+                        <t t-esc="o.product_id.display_name"/>
+                    </p>
+
+                    <p><strong>Source Document :</strong> 
+                        <t t-esc="o.origin"/>
+                    </p>
+
+                    <p><strong>Qty :</strong> 
+                        <t t-esc="o.scrap_qty"/>
+                    </p>
+
+                    <p><strong>Cost :</strong> 
+                        <t t-esc="'%.2f' %o.od_production_cost"/>
+                    </p>
+
+                    <p><strong>Reason :</strong> 
+                        <t t-set="reasons" t-value="', '.join([(r.name) for r in o.scrap_reason_tag_ids])"/>
+                        <t t-esc="reasons or ''"/>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+    <template id="report_stockscrap">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_stockscrap_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

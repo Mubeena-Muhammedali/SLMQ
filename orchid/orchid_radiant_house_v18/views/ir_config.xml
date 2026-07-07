@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Inherit system parameter Form View -->
+        <record id="view_ir_config_form_inherit" model="ir.ui.view">
+            <field name="name">ir.config_parameter.form</field>
+            <field name="model">ir.config_parameter</field>
+            <field name="inherit_id" ref="base.view_ir_config_form"/>
+            <field name="arch" type="xml">
+                <field name="value" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

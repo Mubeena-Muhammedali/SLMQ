@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_joborder_document">
+        <template id="od_web_internal_layout_inherit_mrp_print" inherit_id="web.internal_layout">
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header"></div>
+            </xpath>
+        </template>
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h4><center><b><u>Job Order Form</u></b></center></h4>
+                <br/>
+                <span t-field="o.company_id"/>
+                <div class="row">
+                    <table class="table table-sm" style="border-collapse: collapse; width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width:25%;"><b>Job No.</b>: <span t-field="o.name"/></td>
+                                <td style="width:15%;"><b>Print No.</b>:</td>
+                                <td style="width:25%;"><b>Date</b>: <span t-field="o.date_start"/></td>
+                                <td style="width:35%;"><b>Sale No</b>: <span t-field="o.od_analytic_id.code"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%;" colspan="3"><b>Customer:</b> <span t-field="o.od_analytic_id.partner_id"/></td>
+                                <td style="width:35%;"><b>LPO No:</b> <span t-field="o.od_sale_order_line_id.order_id.client_order_ref"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%;" colspan="3"><b>Desc:</b> <span t-field="o.product_id.name"/></td>
+                                <td style="width:35%;"><b>Remarks:</b> <span t-field="o.od_remarks"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%;border-bottom:1px solid black;" colspan="3"><b>Prod Code:</b> <span t-field="o.product_id.default_code"/></td>
+                                <td style="width:35%; border-bottom:1px solid black;"><b>Delivery Date:</b> <span t-field="o.od_validity_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%;border-bottom:1px solid black;" colspan="3"><b>Customer Order:</b> <span t-field="o.od_customer_order"/>&#160;<span t-field="o.od_customer_uom_id"/></td>
+                                <td style="width:35%; border-bottom:1px solid black;"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:25%;"><b>Press:</b></td>
+                                <td style="width:15%;"><b>Width:</b> <span t-field="o.product_id.od_width"/></td>
+                                <td style="width:25%;"><b>Length:</b> <span t-field="o.product_id.od_length"/></td>
+                                <td style="width:35%;"><b>Artwork Ref:</b> <span t-field="o.product_id.od_art_ref_no"/></td>
+                            </tr>
+                            <!-- <t t-foreach="o.od_get_proof_request_specs()" t-as="line">
+                                <t t-if="line[1]">
+                                    <tr t-if="not (line[0] =='Die')">
+                                        <td style="width:25%;" colspan="2"><b><t t-esc="line[0]"/>:</b></td>
+                                        <td style="width:25%;" colspan="2"><t t-esc="line[1]"/></td>
+                                    </tr>
+                                    <tr t-if="line[0]=='Die'">
+                                        <td style="width:25%;" colspan="2"><b>Die:</b><t t-esc="line[1]"/></td>
+                                        <td style="width:25%;" colspan="2"><b>Cylinder:</b>
+                                            <t t-esc="o.od_cylinder.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t> -->
+                            <t t-set="specs" t-value="o.od_get_proof_request_specs()"/>
+                            <t t-set="rows" t-value="[(specs[i:i+2]) for i in range(0, len(specs), 2)]"/>
+                            <t t-foreach="rows" t-as="row">
+                            <!-- CASE: Die appears → print its special 3-row block -->
+                                <!-- <t t-if="row[0][0] == 'Die'">
+                                    <tr>
+                                        <td style="width:25%;" colspan="2"><b>Die:</b> <t t-esc="row[0][1]"/></td>
+                                        <td style="width:25%;" colspan="2"><b>Cylinder:</b> <t t-esc="o.od_cylinder.name"/></td>
+                                    </tr>
+                                </t> -->
+
+                                <!-- CASE: Normal 2-fields-per-row rendering -->
+                                <!-- <t t-if="row[0][0] != 'Die'"> -->
+                                    <tr>
+                                        <!-- FIRST FIELD -->
+                                        <td style="width:25%;"><b><t t-esc="row[0][0]"/>:</b></td>
+                                        <td style="width:25%;"><t t-esc="row[0][1]"/></td>
+
+                                        <!-- SECOND FIELD (if exists) -->
+                                        <t t-if="len(row) > 1">
+                                            <td style="width:25%;"><b><t t-esc="row[1][0]"/>:</b></td>
+                                            <td style="width:25%;"><t t-esc="row[1][1]"/></td>
+                                        </t>
+                                        <t t-else="">
+                                            <!-- fill empty cells -->
+                                            <td style="width:25%;"></td>
+                                            <td style="width:25%;"></td>
+                                        </t>
+                                    </tr>
+                                <!-- </t> -->
+                            </t>
+
+                            <tr>
+                                <td style="width:25%;" colspan="2"><b>Design:</b></td>
+                                <td style="width:25%;" colspan="2">
+                                    <t t-if="o.od_new_die"><b>New Online Die:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_online_die"><b>Old Online Die:</b> <span>[✓]</span><br/></t>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:25%;" colspan="2"><b>Block:</b></td>
+                                <td style="width:25%;" colspan="2">
+                                    <t t-if="o.od_existing_die"><b>Existing Die:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_flat_bed_die"><b>New Flatbed Die:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_old_flat_bed_die"><b>Old Flatbed Die:</b> <span>[✓]</span><br/></t>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:25%;" colspan="2"><b>Block Desc:</b></td>
+                                <td style="width:25%;" colspan="2">
+                                    <t t-if="o.od_new_plate"><b>New Plate:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_new_order"><b>New Job:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_repeat_job"><b>Repeat Job:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_repeat_correction"><b>Repeat+Correction:</b> <span>[✓]</span><br/></t>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:25%;" colspan="2">
+                                    <t t-if="o.od_new_order"><b>New Order:</b> <span>[✓]</span><br/></t>
+                                    <t t-if="o.od_flat_bed_die"><b>Flat Bed Die:</b> <span>[✓]</span><br/></t>
+                                </td>
+                                <td colspan="2"/>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br/>
+
+                <div class="row">
+                    <table class="table table-bordered" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center;">Quantity</th>
+                                <th style="text-align:center;">Meters Req</th>
+                                <th style="text-align:center;">Printing Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:center;border-right:1px solid black;">
+                                    <span t-field="o.product_qty"/>
+                                </td>
+                                <td style="text-align:center;border-right:1px solid black;">
+                                    <t t-esc="'%.2f' % (o.od_good_mtr + o.od_make_ready_waste + o.od_process_waste + o.od_misc_waste)"/>
+                                </td>
+                                <td style="text-align:center;">
+                                    2500
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+
+                <div class="row" style="page-break-inside:avoid">
+                    <table class="table table-sm table-bordered" style="width:100%">  
+                        <thead>
+                            <tr>
+                                <th class="text-center">Product</th>
+                                <th class="text-center">UoM </th>
+                                <th class="text-center"><center>Planned</center></th>
+                                <th class="text-center"><center>Issued</center></th>
+                                <th class="text-center"><center>Return</center></th>
+                                <th class="text-center"><center>Consumed</center></th>
+                            </tr>   
+                        </thead>                            
+                        <tbody style="border-bottom: 1px solid black;">                 
+                            <tr t-foreach="o.move_raw_ids" t-as="l">
+                                <td><span t-field="l.product_id"/></td>
+                                <td><span t-field="l.product_uom"/></td>
+                                <td class="text-right"><t t-esc="'%.2f'%l.product_uom_qty"/></td>
+                                <td class="text-right"><t t-esc="'%.2f'%l.od_issued"/></td>
+                                <td class="text-right"><t t-esc="'%.2f'%l.od_returned"/></td>
+                                <td class="text-right"><t t-esc="'%.2f'%l.od_consumed"/> <span t-field="l.od_product_uom"/></td>
+                            </tr>
+                            <tr>
+                                <td><br/></td>
+                                <td><br/></td>
+                                <td class="text-right"><br/></td>
+                                <td class="text-right"><br/></td>
+                                <td class="text-right"><br/></td>
+                                <td class="text-right"><br/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <div class="row" style="page-break-inside:avoid">
+                    <table class="table table-sm" style="width:100%;">  
+                        <thead>
+                            <tr>
+                                <th><br/></th>
+                                <th class="text-center">Planned</th>
+                                <th class="text-center"><center>Actual</center></th>
+                                <th class="text-center"><center><br/></center></th>
+                                <th class="text-center"><center>Planned</center></th>
+                                <th class="text-center"><center>Actual</center></th>
+                            </tr>
+                            <tr>
+                                <th>Good Meters</th>
+                                <th class="text-center"><span t-field="o.od_good_mtr"/></th>
+                                <th><br/></th>
+                                <th>Printing Time</th>
+                                <th class="text-center"><span t-field="o.od_printing_time"/></th>
+                                <th class="text-center"><br/></th>
+                            </tr>
+                            <tr>
+                                <th>Make Ready Waste</th>
+                                <th class="text-center"><span t-field="o.od_make_ready_waste"/></th>
+                                <th><center><br/></center></th>
+                                <th>Make Ready Time</th>
+                                <th class="text-center"><center><span t-field="o.od_make_ready_time"/></center></th>
+                                <th><center><br/></center></th>
+                            </tr>
+                            <tr>
+                                <th>Process Waste</th>
+                                <th class="text-center"><span t-esc="'%.2f'%o.od_process_waste"/></th>
+                                <th class="text-center"><center><br/></center></th>
+                                <th>Cleaning Time</th>
+                                <th class="text-center"><center><span t-field="o.od_cleaning_time"/></center></th>
+                                <th class="text-center"><center><br/></center></th>
+                            </tr>
+                            <tr>
+                                <th>Miscellaneous Waste</th>
+                                <th class="text-center"><span t-esc="'%.2f'%o.od_misc_waste"/></th>
+                                <th class="text-center"><center><br/></center></th>
+                                <th>Total</th>
+                                <th class="text-center"><span t-esc="o.od_cleaning_time + o.od_make_ready_time + o.od_printing_time"/></th>
+                                <th class="text-center"><center><br/></center></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <br/>
+
+                <div class="row">
+                    <div class="col-4">
+                        <b>RH Sticker</b>
+                    </div>
+                    <div class="col-4">
+                    </div>
+                    <div class="col-4">
+                    </div>
+                </div>
+                <br/>
+
+                <!-- <div class="row" style="page-break-inside:avoid">
+                    <table class="table table-sm" style="width:50%;">
+                        <tbody>
+                            <tr>
+                                <td style="border:1px solid black; width:50%;"><b>Units/Roll or Pack:</b></td>
+                                <td style="border:1px solid black; width:50%;"><span t-field="o.product_id.od_pcs_roll"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid black; width:50%;"><b>Cartons Per Pallet:</b></td>
+                                <td style="border:1px solid black; width:50%;"><span t-field="o.product_id.od_cartons"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid black; width:50%;"><b>Packs/Roll Per Carton:</b></td>
+                                <td style="border:1px solid black; width:50%;"><span t-field="o.product_id.od_pack_roll"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid black; width:50%;"><b>Pallet Spec:</b></td>
+                                <td style="border:1px solid black; width:50%;"><span t-field="o.product_id.od_pallet_spec"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid black; width:50%;"><b>OD of Roll:</b></td>
+                                <td style="border:1px solid black; width:50%;"><span t-field="o.product_id.od_of_roll"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br/><br/><br/> -->
+
+                <div class="row">
+                    <div class="col-4">
+                        <center><b><span t-field="o.create_uid"/></b></center>
+                    </div>
+                    <div class="col-4">
+                        
+                    </div>
+                    <div class="col-4">
+                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <center><b>Prepared By</b></center>
+                    </div>
+                    <div class="col-4">
+                        <center><b>Approved By</b></center>
+                    </div>
+                    <div class="col-4">
+                        <center><b>Verified By</b></center>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_joborder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_joborder_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>
+            

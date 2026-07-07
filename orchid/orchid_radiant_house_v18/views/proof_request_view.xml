@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- List View -->
+        <record model="ir.ui.view" id="od_proof_request_list_view">
+            <field name="name">od.proof.request.list.view</field>
+            <field name="model">od.proof.request</field>
+            <field name="arch" type="xml">
+                <list string="Proof Request">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="submission_date"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="state"/>
+                    <field name="od_sale_line_id"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record model="ir.ui.view" id="od_proof_request_form_view">
+            <field name="name">od.proof.request.form.view</field>
+            <field name="model">od.proof.request</field>
+            <field name="arch" type="xml">
+                <form string="Proof Request">
+                    <header>
+                        <button name="btn_confirm" type="object" string="Confirm" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="btn_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'waiting'"/>
+                        <button name="btn_reset" type="object" string="Reset" class="oe_highlight" invisible="state != 'approved'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,waiting,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="buttons">
+                            <button class="oe_stat_button" name="od_view_bom" type="object" invisible="not product_id" icon="fa-flask">
+                                <field name="od_bom_count" string="Technical Sheets" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="customer" invisible="1" force_save="1" />
+                                <field name="partner_id" domain="[('customer_rank','&gt;',0)]" context="{'default_customer_rank':1, 'default_company_type':'company'}" options="{'no_quick_create':1}"/>
+                                <field name="date"/>
+                                <field name="product_id" invisible="not product_id"/>
+                            </group>
+                            <group>
+                                <field name="submission_date"/>
+                                <field name="od_delivery_date" invisible="product_segment not in ('tape','stretched_film','ribbon')"/>
+                                <field name="od_job_no" invisible="product_segment not in ('tape','stretched_film','ribbon')"/>
+                                <field name="od_user_id" invisible="product_segment not in ('tape','stretched_film','ribbon')"/>
+                                <field name="product_segment"/>
+                                <field name="od_sale_line_id" force_save="1" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <label for="product_name" invisible="product_id"/>
+                            <div class="oe_inline" invisible="product_id">
+                                <field name="product_name" placeholder="Product Name"/>
+                                <button name="od_create_po" string="Create Product" type="object" class="oe_edit_only oe_link" invisible="context.get('no_create_pdt')"/>
+                            </div>
+                        </group>
+
+                        <group>
+                            <label for="raw_mat_id"/>
+                            <div>
+                                <field name="raw_mat_id" placeholder="Raw Material" domain="[('od_product_type', '=','raw_material')]" readonly="product_id"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="uom_id"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Product Specification" invisible="product_segment not in ('tape','stretched_film','ribbon') or not product_id">
+                                <group>
+                                    <group>
+                                        <field name="od_art_work_code" string="Product Code"/>
+                                        <field name="od_micron" invisible="product_segment != 'tape'"/>
+                                        <field name="od_yards" invisible="product_segment != 'tape'"/>
+                                        <field name="od_inch" invisible="product_segment != 'tape'"/>
+                                        <field name="od_rolls" invisible="product_segment not in ('tape','ribbon')"/>
+                                        <field name="od_box" invisible="product_segment not in ('tape','ribbon')"/>
+                                        <field name="od_plastic" invisible="product_segment != 'ribbon'"/>
+                                        <field name="od_inkout" invisible="product_segment != 'stretched_film'"/>
+                                        <field name="od_inkin" invisible="product_segment != 'stretched_film'"/>
+                                        <field name="od_core" invisible="product_segment not in ('stretched_film','ribbon')"/>
+                                        <field name="od_width" invisible="product_segment != 'stretched_film'"/>
+                                        <field name="od_length" invisible="product_segment != 'stretched_film'"/>
+                                    </group>
+                                    <group invisible="product_segment not in ('tape','stretched_film')">
+                                        <field name="od_plain"/>
+                                        <field name="od_printed"/> 
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Product Specification" invisible="product_segment in ('tape','stretched_film','ribbon') or not product_id">
+                                <group>
+                                    <group>
+                                        <field name="od_die_id"/>
+                                        <field name="od_die_ups_across" invisible="not od_die_id"/>
+                                        <field name="od_die_ups_around" invisible="not od_die_id"/>
+                                        <field name="od_die_gap_across" invisible="not od_die_id"/>
+                                        <field name="od_die_gap_around" invisible="not od_die_id"/>
+                                        <field name="od_cylinder_teeth_1" invisible="not od_die_id"/>
+                                        <field name="od_raw_material_id"/>
+                                        <field name="od_width"/>
+                                        <field name="od_length"/>
+                                        <field name="od_lbw"/>
+                                        <field name="od_printing_process"/>
+                                        <field name="od_printing_sude"/>
+                                        <field name="od_application_temp"/>
+                                        <field name="od_storage_temp"/>
+                                        <field name="od_wdg_direction"/>
+                                        <field name="od_wdg_direction_back"/>
+
+                                    </group>
+                                    <group>
+                                        <field name="od_continouse_print"/>
+                                        <field name="od_art_ref_no"/>
+                                        <field name="od_art_work_code"/>
+                                        <field name="od_type_of_primer"/>
+                                        <field name="od_digital_ink"/>
+                                        <field name="od_embossing"/>
+                                        <!-- <field name="od_speacial_req"/> -->
+                                        <field name="od_speacial_req_id" widget="many2many_tags"/>
+                                        <field name="od_type_of_printing"/>
+                                        <field name="od_print_finishing"/>
+                                        <field name="od_sec_printing"/>
+                                    </group>
+                                    <group>
+                                        <field name="od_no_of_colors"/>
+                                        <field name="od_screen"/>
+                                        <field name="od_hot_foil"/>
+                                        <field name="od_cold_foil"/>
+                                        <field name="od_cold_foil_light"/>
+                                        <field name="od_holographic_foil"/>
+                                        <field name="od_silver_foil"/>
+                                        <field name="od_glossy_lamination"/>
+                                        <field name="od_matt_lamination"/>
+                                    </group>
+                                    <group>
+                                        <!-- <field name="od_type_of_primer"/>
+                                        <field name="od_digital_ink"/>
+                                        <field name="od_embossing"/>
+                                        <field name="od_speacial_req"/>
+                                        <field name="od_type_of_printing"/>
+                                        <field name="od_print_finishing"/>
+                                        <field name="od_sec_printing"/> -->
+                                    </group>
+                                    <group>
+                                        <field name="od_adhesive"/>
+                                        <field name="od_color_matching_ref"/>
+                                        <field name="od_conv_format"/>
+                                        <field name="od_core"/>
+                                        <field name="od_pms_no"/>
+                                        <field name="od_prod_to_be_filled"/>
+                                        <field name="od_container_type"/>
+                                        <field name="od_application"/>
+                                    </group>
+                                    <group>
+                                    </group>
+                                </group>
+                                <separator string="__________________________________________________________________________"/>
+                                <group>
+                                    <group>
+                                        <field name="od_pcs_roll"/>
+                                        <field name="od_pack_roll"/>
+                                    </group>
+                                    <group>
+                                        <field name="od_of_roll"/>
+                                        <field name="od_cartons"/>
+                                        <field name="od_pallet_spec"/>
+                                    </group>
+                                    <field name="od_note_spec" placeholder="Remarks...."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record model="ir.ui.view" id="od_proof_request_filter">
+            <field name="name">od.proof.request.filter</field>
+            <field name="model">od.proof.request</field>
+            <field name="arch" type="xml">
+                <search string="Proof Request">
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="raw_mat_id"/>
+                    <field name="date"/>
+                    <field name="submission_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                        <filter string="Raw Material" name="rawmat" context="{'group_by':'raw_mat_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                        <filter string="Submission Date" name="submissiondate" context="{'group_by':'submission_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record model="ir.actions.act_window" id="action_od_proof_request">
+            <field name="name">Proof Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.proof.request</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('customer','=',True)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add new Proof Request.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

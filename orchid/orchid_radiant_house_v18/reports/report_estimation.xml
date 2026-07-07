@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_estimation">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2>Estimation</h2>
+            <h3>
+              <span t-field="o.name"/>
+            </h3>
+
+            <table class="table table-sm o_main_table">
+              <tbody>
+                <tr>
+                  <td><strong>Customer</strong></td>
+                  <td><span t-field="o.partner_id"/></td>
+                  <td><strong>Estimation Date</strong></td>
+                  <td><span t-field="o.estimation_date"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Project Detail</strong></td>
+                  <td><span t-field="o.project_detail"/></td>
+                  <td><strong>Valid Until</strong></td>
+                  <td><span t-field="o.valid_until"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Product</strong></td>
+                  <td><span t-field="o.estimation_product_id"/></td>
+                  <td><strong>Responsible</strong></td>
+                  <td><span t-field="o.user_id"/></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h4>Parameters</h4>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><strong>Width</strong></td>
+                  <td><span t-field="o.width"/></td>
+                  <td><strong>Height</strong></td>
+                  <td><span t-field="o.height"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Across</strong></td>
+                  <td><span t-field="o.across"/></td>
+                  <td><strong>Material Price</strong></td>
+                  <td><span t-field="o.paper_price"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Quantity of Rolls</strong></td>
+                  <td><span t-field="o.quantity_of_rolls"/></td>
+                  <td><strong>No of Colors</strong></td>
+                  <td><span t-field="o.no_of_colors"/></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h4>Total Costing</h4>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><strong>Total Cost</strong></td>
+                  <td><span t-field="o.total_cost"/></td>
+                  <td><strong>Margin</strong></td>
+                  <td><span t-field="o.margin"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Total Sales</strong></td>
+                  <td><span t-field="o.total_sales"/></td>
+                  <td><strong>Selling Price</strong></td>
+                  <td><span t-field="o.selling_price"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Price per Roll</strong></td>
+                  <td><span t-field="o.price_per_roll"/></td>
+                  <td><strong>Net Profit</strong></td>
+                  <td><span t-field="o.net_profit" t-options="{'widget': 'percentage'}"/></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h4>Cylinder / Repeat</h4>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><strong>Height</strong></td>
+                  <td><span t-field="o.cylinder_height_1"/></td>
+                  <td><strong>Around</strong></td>
+                  <td><span t-field="o.cylinder_around_1"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Teeth</strong></td>
+                  <td><span t-field="o.cylinder_teeth_1"/></td>
+                  <td><strong>Repeat Length</strong></td>
+                  <td><span t-field="o.repeat_length_1"/></td>
+                </tr>
+                <tr>
+                  <td><strong>Gap Around</strong></td>
+                  <td><span t-field="o.cylinder_gap_around_1"/></td>
+                  <td/>
+                  <td/>
+                </tr>
+              </tbody>
+            </table>
+
+            <div t-if="o.note">
+              <h4>Notes</h4>
+              <p t-field="o.note"/>
+            </div>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>

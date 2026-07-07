@@ -1,0 +1,29 @@
+<odoo>
+<!-- The top margin on the default A4 format is way too big -->
+    <record id="od_job_order_paper_format" model="report.paperformat">
+        <field name="name">Orchid Job Order</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">35</field>
+        <field name="dpi">105</field>
+    </record>
+
+    <record id="rhl_qatar_invoice_paper_format" model="report.paperformat">
+        <field name="name">RHL Qatar Invoice</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">105</field>
+    </record>
+</odoo>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="od_estimation_teeth_size_64" model="od.estimation.teeth.size">
+    <field name="teeth">64</field>
+    <field name="length">203.2</field>
+  </record>
+  <record id="od_estimation_teeth_size_67" model="od.estimation.teeth.size">
+    <field name="teeth">67</field>
+    <field name="length">212.725</field>
+  </record>
+  <record id="od_estimation_teeth_size_70" model="od.estimation.teeth.size">
+    <field name="teeth">70</field>
+    <field name="length">222.25</field>
+  </record>
+  <record id="od_estimation_teeth_size_75" model="od.estimation.teeth.size">
+    <field name="teeth">75</field>
+    <field name="length">238.125</field>
+  </record>
+  <record id="od_estimation_teeth_size_78" model="od.estimation.teeth.size">
+    <field name="teeth">78</field>
+    <field name="length">247.65</field>
+  </record>
+  <record id="od_estimation_teeth_size_80" model="od.estimation.teeth.size">
+    <field name="teeth">80</field>
+    <field name="length">254</field>
+  </record>
+  <record id="od_estimation_teeth_size_84" model="od.estimation.teeth.size">
+    <field name="teeth">84</field>
+    <field name="length">266.7</field>
+  </record>
+  <record id="od_estimation_teeth_size_87" model="od.estimation.teeth.size">
+    <field name="teeth">87</field>
+    <field name="length">276.225</field>
+  </record>
+  <record id="od_estimation_teeth_size_90" model="od.estimation.teeth.size">
+    <field name="teeth">90</field>
+    <field name="length">285.75</field>
+  </record>
+  <record id="od_estimation_teeth_size_93" model="od.estimation.teeth.size">
+    <field name="teeth">93</field>
+    <field name="length">295.275</field>
+  </record>
+  <record id="od_estimation_teeth_size_96" model="od.estimation.teeth.size">
+    <field name="teeth">96</field>
+    <field name="length">304.8</field>
+  </record>
+  <record id="od_estimation_teeth_size_98" model="od.estimation.teeth.size">
+    <field name="teeth">98</field>
+    <field name="length">311.15</field>
+  </record>
+  <record id="od_estimation_teeth_size_102" model="od.estimation.teeth.size">
+    <field name="teeth">102</field>
+    <field name="length">323.85</field>
+  </record>
+  <record id="od_estimation_teeth_size_104" model="od.estimation.teeth.size">
+    <field name="teeth">104</field>
+    <field name="length">330.2</field>
+  </record>
+  <record id="od_estimation_teeth_size_108" model="od.estimation.teeth.size">
+    <field name="teeth">108</field>
+    <field name="length">342.9</field>
+  </record>
+  <record id="od_estimation_teeth_size_112" model="od.estimation.teeth.size">
+    <field name="teeth">112</field>
+    <field name="length">355.6</field>
+  </record>
+  <record id="od_estimation_teeth_size_114" model="od.estimation.teeth.size">
+    <field name="teeth">114</field>
+    <field name="length">361.95</field>
+  </record>
+  <record id="od_estimation_teeth_size_116" model="od.estimation.teeth.size">
+    <field name="teeth">116</field>
+    <field name="length">368.3</field>
+  </record>
+  <record id="od_estimation_teeth_size_120" model="od.estimation.teeth.size">
+    <field name="teeth">120</field>
+    <field name="length">381</field>
+  </record>
+  <record id="od_estimation_teeth_size_123" model="od.estimation.teeth.size">
+    <field name="teeth">123</field>
+    <field name="length">390.525</field>
+  </record>
+  <record id="od_estimation_teeth_size_126" model="od.estimation.teeth.size">
+    <field name="teeth">126</field>
+    <field name="length">400.05</field>
+  </record>
+  <record id="od_estimation_teeth_size_128" model="od.estimation.teeth.size">
+    <field name="teeth">128</field>
+    <field name="length">406.4</field>
+  </record>
+  <record id="od_estimation_teeth_size_134" model="od.estimation.teeth.size">
+    <field name="teeth">134</field>
+    <field name="length">425.45</field>
+  </record>
+  <record id="od_estimation_teeth_size_144" model="od.estimation.teeth.size">
+    <field name="teeth">144</field>
+    <field name="length">457.2</field>
+  </record>
+  <record id="od_estimation_teeth_size_151" model="od.estimation.teeth.size">
+    <field name="teeth">151</field>
+    <field name="length">479.425</field>
+  </record>
+  <record id="od_estimation_teeth_size_160" model="od.estimation.teeth.size">
+    <field name="teeth">160</field>
+    <field name="length">508</field>
+  </record>
+</odoo>

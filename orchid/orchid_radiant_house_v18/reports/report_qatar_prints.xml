@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="rhl_qatar_partner_address">
+        <t t-if="partner">
+            <strong><t t-esc="partner.name"/></strong><br/>
+            <t t-if="partner.street">
+                <t t-esc="partner.street"/>
+                <t t-if="partner.street2">, <t t-esc="partner.street2"/></t><br/>
+            </t>
+            <t t-elif="partner.street2">
+                <t t-esc="partner.street2"/><br/>
+            </t>
+            <t t-if="partner.city">
+                <t t-esc="partner.city"/>
+                <t t-if="partner.state_id">, <t t-esc="partner.state_id.name"/></t>
+                <t t-if="partner.zip">, <t t-esc="partner.zip"/></t><br/>
+            </t>
+            <t t-elif="partner.state_id or partner.zip">
+                <t t-if="partner.state_id"><t t-esc="partner.state_id.name"/></t>
+                <t t-if="partner.zip">, <t t-esc="partner.zip"/></t><br/>
+            </t>
+            <t t-if="partner.country_id">
+                <t t-esc="partner.country_id.name"/><br/>
+            </t>
+        </t>
+    </template>
+
+    <template id="rhl_qatar_amount_table">
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <tr>
+                <td style="border:1px solid #cfd4da; padding:8px;">Subtotal</td>
+                <td class="text-end" style="border:1px solid #cfd4da; padding:8px;">
+                    <span t-out="subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border:1px solid #cfd4da; padding:8px;">Discount</td>
+                <td class="text-end" style="border:1px solid #cfd4da; padding:8px;">
+                    <span t-out="discount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}"/>
+                </td>
+            </tr>
+            <tr style="background-color:#2f73ad; color:#ffffff;">
+                <td style="border:1px solid #4b5563; padding:8px;"><strong>Total</strong></td>
+                <td class="text-end" style="border:1px solid #4b5563; padding:8px;">
+                    <strong t-out="total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}"/>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <template id="report_qatar_invoice_document">
+        <t t-if="'Radiant House Labels Trading' in o.company_id.name">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-family:Arial, Helvetica, sans-serif; color:#212529; position:relative; min-height:287mm; box-sizing:border-box;">
+                    <t t-call="orchid_radiant_house_v18.rhl_qatar_invoice_page_background"/>
+                    <div style="position:relative; z-index:1;">
+                    <div style="height:74mm;"></div>
+
+                    <div style="display:table; width:100%; margin-top:0;">
+                        <div style="display:table-cell; width:56%; vertical-align:top;">
+                            <h3 style="margin:0 0 14px 0;">
+                                <strong>
+                                    <t t-if="o.move_type in ('out_invoice', 'out_receipt')">Invoice</t>
+                                    <t t-elif="o.move_type == 'out_refund'">Credit Note</t>
+                                    <t t-elif="o.move_type == 'in_invoice'">Vendor Bill</t>
+                                    <t t-elif="o.move_type == 'in_refund'">Vendor Credit Note</t>
+                                    <t t-else="">Invoice</t>
+                                    <t t-if="o.name and o.name != '/'"> <span t-field="o.name"/></t>
+                                </strong>
+                            </h3>
+                            <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                            <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                            <t t-elif="o.move_type == 'in_invoice'"><strong>Date</strong></t>
+                            <t t-else=""><strong>Date</strong></t>:<span t-field="o.invoice_date"/><br/>
+                            <strong>LPNO</strong>:<span t-field="o.ref"/><br/>
+                            <strong>Delivery No</strong>:<span t-field="o.od_picking_name"/><br/>
+                            <strong>Source</strong>:<span t-field="o.invoice_origin"/><br/>
+                            <strong>TRN</strong>:<span t-field="o.company_id.vat"/><br/>
+                        </div>
+                        <div style="display:table-cell; width:44%; vertical-align:top;">
+                            <t t-set="partner" t-value="o.partner_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_partner_address"/>
+                        </div>
+                    </div>
+
+                    <table style="width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563; margin-top:30px; font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-start" style="width:32%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Description</th>
+                                <th class="text-end" style="width:18%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Customer<br/>Order</th>
+                                <th class="text-end" style="width:15%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Quantity</th>
+                                <th class="text-end" style="width:15%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Rate</th>
+                                <th class="text-end" style="width:20%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.invoice_line_ids.filtered(lambda l: not l.display_type or l.display_type == 'product')" t-as="line">
+                                <td style="border:1px solid #cfd4da; padding:8px; vertical-align:top; word-wrap:break-word;">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top;">
+                                    <span t-if="o.move_type in ('out_invoice', 'out_refund', 'out_receipt')" t-field="line.od_customer_order"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.quantity"/>
+                                    <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_unit"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="display:table; width:100%; margin-top:36px;">
+                        <div style="display:table-cell; width:55%; vertical-align:top;">
+                            <p style="margin:0 0 24px 0;">
+                                Total amount in words:<br/>
+                                <span t-field="o.amount_total_words"/>
+                            </p>
+                            <div style="font-size:12px; line-height:1.45; min-height:24px;">
+                                <strong>Bank Details:</strong><br/>
+                                <span><b>Account Name: </b>RADIANT HOUSE LABELS TRADING W.L.L.</span><br/>
+                                <span><b>Bank Name: </b>COMMERCIAL BANK OF QATAR</span><br/>
+                                <span><b>Account No: </b>401056430034001</span><br/>
+                                <span><b>IBAN No: </b>QA43 CBQA 0000 0040 1056 4300 3400 1</span><br/>
+                                <span><b>SWIFT: </b>CBQAQAQA</span><br/>
+                            </div>
+                        </div>
+                        <div style="display:table-cell; width:45%; vertical-align:top;">
+                            <t t-set="subtotal" t-value="o.amount_untaxed"/>
+                            <t t-set="discount" t-value="sum((l.price_unit * l.quantity) - l.price_subtotal for l in o.invoice_line_ids if not l.display_type or l.display_type == 'product')"/>
+                            <t t-set="total" t-value="o.amount_total"/>
+                            <t t-set="currency" t-value="o.currency_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_amount_table"/>
+                        </div>
+                    </div>
+
+                    <div style="display:table; width:100%; margin-top:56px; page-break-inside:avoid;">
+                        <div style="display:table-cell; width:55%; vertical-align:top;">
+                            <strong>
+                                <t t-if="o.move_type in ('in_invoice', 'in_refund')">Vendor's Signature</t>
+                                <t t-else="">Customer's Signature</t>
+                            </strong>
+                        </div>
+                        <div style="display:table-cell; width:45%; vertical-align:top; text-align:center;">
+                            <strong><span t-field="o.company_id"/></strong><br/>
+                            <strong>Authorized Signatory</strong>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:28px; page-break-inside:avoid;">
+                        <strong>Declaration</strong><br/>
+                        We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+                    </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="account.report_invoice_document"/>
+        </t>
+    </template>
+
+    <template id="report_qatar_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_qatar_invoice_document"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qatar_saleorder_document">
+        <t t-if="'Radiant House Labels Trading' in doc.company_id.name">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-family:Arial, Helvetica, sans-serif; color:#212529;">
+                    <t t-call="orchid_radiant_house_v18.rhl_report_letterhead"/>
+                    <div style="display:table; width:100%; margin-top:28px;">
+                        <div style="display:table-cell; width:56%; vertical-align:top;">
+                            <h3 style="margin:0 0 14px 0;"><strong>Sales Order <span t-field="doc.name"/></strong></h3>
+                            <strong>Order Date</strong>:<span t-field="doc.date_order"/><br/>
+                            <strong>Your Reference</strong>:<span t-field="doc.client_order_ref"/><br/>
+                        </div>
+                        <div style="display:table-cell; width:44%; vertical-align:top;">
+                            <t t-set="partner" t-value="doc.partner_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_partner_address"/>
+                        </div>
+                    </div>
+                    <table style="width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563; margin-top:30px; font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-start" style="width:40%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Description</th>
+                                <th class="text-end" style="width:18%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Quantity</th>
+                                <th class="text-end" style="width:18%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Rate</th>
+                                <th class="text-end" style="width:24%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)" t-as="line">
+                                <td style="border:1px solid #cfd4da; padding:8px; vertical-align:top; word-wrap:break-word;">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.product_uom_qty"/>
+                                    <span t-if="not line.od_customer_uom_id" t-field="line.product_uom"/>
+                                    <span t-if="line.od_customer_uom_id" t-field="line.od_customer_uom_id"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_unit"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="display:table; width:100%; margin-top:36px;">
+                        <div style="display:table-cell; width:55%; vertical-align:top;">
+                            <strong>Customer's Signature</strong>
+                        </div>
+                        <div style="display:table-cell; width:45%; vertical-align:top;">
+                            <t t-set="subtotal" t-value="doc.amount_untaxed"/>
+                            <t t-set="discount" t-value="sum(line.product_uom_qty * line.price_unit * (line.discount or 0.0) / 100.0 for line in doc.order_line if not line.display_type and not line.is_downpayment)"/>
+                            <t t-set="total" t-value="doc.amount_total"/>
+                            <t t-set="currency" t-value="doc.currency_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_amount_table"/>
+                            <div style="text-align:center; margin-top:24px;">
+                                <strong><span t-field="doc.company_id"/></strong><br/>
+                                <strong>Authorized Signatory</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="sale.report_saleorder_document"/>
+        </t>
+    </template>
+
+    <template id="report_qatar_saleorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="orchid_radiant_house_v18.report_qatar_saleorder_document"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qatar_purchaseorder_document">
+        <t t-if="'Radiant House Labels Trading' in o.company_id.name">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-family:Arial, Helvetica, sans-serif; color:#212529;">
+                    <t t-call="orchid_radiant_house_v18.rhl_report_letterhead"/>
+                    <div style="display:table; width:100%; margin-top:28px;">
+                        <div style="display:table-cell; width:56%; vertical-align:top;">
+                            <h3 style="margin:0 0 14px 0;"><strong>Purchase Order <span t-field="o.name"/></strong></h3>
+                            <strong>Date</strong>:<span t-field="o.date_order"/><br/>
+                            <strong>Vendor Reference</strong>:<span t-field="o.partner_ref"/><br/>
+                            <strong>Currency</strong>:<span t-field="o.currency_id.name"/><br/>
+                        </div>
+                        <div style="display:table-cell; width:44%; vertical-align:top;">
+                            <t t-set="partner" t-value="o.partner_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_partner_address"/>
+                        </div>
+                    </div>
+                    <table style="width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563; margin-top:30px; font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-start" style="width:40%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Description</th>
+                                <th class="text-end" style="width:18%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Quantity</th>
+                                <th class="text-end" style="width:18%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Rate</th>
+                                <th class="text-end" style="width:24%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.order_line.filtered(lambda l: not l.display_type)" t-as="line">
+                                <td style="border:1px solid #cfd4da; padding:8px; vertical-align:top; word-wrap:break-word;">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.product_qty"/>
+                                    <span t-field="line.product_uom" groups="uom.group_uom"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_unit"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="line.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="display:table; width:100%; margin-top:36px;">
+                        <div style="display:table-cell; width:55%; vertical-align:top;">
+                            <strong>Vendor's Signature</strong>
+                        </div>
+                        <div style="display:table-cell; width:45%; vertical-align:top;">
+                            <t t-set="subtotal" t-value="o.amount_untaxed"/>
+                            <t t-set="discount" t-value="sum(line.product_qty * line.price_unit * (line.discount or 0.0) / 100.0 for line in o.order_line if not line.display_type)"/>
+                            <t t-set="total" t-value="o.amount_total"/>
+                            <t t-set="currency" t-value="o.currency_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_amount_table"/>
+                            <div style="text-align:center; margin-top:24px;">
+                                <strong><span t-field="o.company_id"/></strong><br/>
+                                <strong>Authorized Signatory</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="purchase.report_purchaseorder_document"/>
+        </t>
+    </template>
+
+    <template id="report_qatar_purchaseorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_qatar_purchaseorder_document"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qatar_delivery_document">
+        <t t-if="'Radiant House Labels Trading' in o.company_id.name">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-family:Arial, Helvetica, sans-serif; color:#212529;">
+                    <t t-call="orchid_radiant_house_v18.rhl_report_letterhead"/>
+                    <div style="display:table; width:100%; margin-top:28px;">
+                        <div style="display:table-cell; width:56%; vertical-align:top;">
+                            <h3 style="margin:0 0 14px 0;"><strong>Delivery Note <span t-field="o.name"/></strong></h3>
+                            <strong>Order</strong>:<span t-field="o.origin"/><br/>
+                            <strong>Shipping Date</strong>:
+                            <span t-if="o.state == 'done'" t-field="o.date_done"/>
+                            <span t-else="" t-field="o.scheduled_date"/><br/>
+                        </div>
+                        <div style="display:table-cell; width:44%; vertical-align:top;">
+                            <strong>Delivery Address:</strong><br/>
+                            <t t-set="partner" t-value="o.partner_id"/>
+                            <t t-call="orchid_radiant_house_v18.rhl_qatar_partner_address"/>
+                        </div>
+                    </div>
+                    <table style="width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563; margin-top:30px; font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-start" style="width:60%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Product</th>
+                                <th class="text-end" style="width:20%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Ordered</th>
+                                <th class="text-end" style="width:20%; border:1px solid #4b5563; padding:8px; text-transform:uppercase;">Delivered</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_ids_without_package.filtered(lambda m: m.product_uom_qty or m.quantity)" t-as="move">
+                                <td style="border:1px solid #cfd4da; padding:8px; vertical-align:top; word-wrap:break-word;">
+                                    <span t-field="move.product_id"/>
+                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move._get_report_description_picking()" style="margin:3px 0 0 0;">
+                                        <span t-out="move._get_report_description_picking()"/>
+                                    </p>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="move.product_uom_qty"/>
+                                    <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                </td>
+                                <td class="text-end" style="border:1px solid #cfd4da; padding:8px; vertical-align:top; white-space:nowrap;">
+                                    <span t-field="move.quantity"/>
+                                    <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="display:table; width:100%; margin-top:70px;">
+                        <div style="display:table-cell; width:55%; vertical-align:top;">
+                            <strong>Customer's Signature</strong>
+                        </div>
+                        <div style="display:table-cell; width:45%; vertical-align:top; text-align:center;">
+                            <strong><span t-field="o.company_id"/></strong><br/>
+                            <strong>Authorized Signatory</strong>
+                        </div>
+                    </div>
+                    <p style="margin-top:18px;">Received in good conditions.</p>
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="stock.report_delivery_document"/>
+        </t>
+    </template>
+
+    <template id="report_qatar_delivery">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="orchid_radiant_house_v18.report_qatar_delivery_document"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_qatar_invoice" model="ir.actions.report">
+        <field name="name">Qatar Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_qatar_invoice</field>
+        <field name="report_file">orchid_radiant_house_v18.report_qatar_invoice</field>
+        <field name="paperformat_id" ref="orchid_radiant_house_v18.rhl_qatar_invoice_paper_format"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qatar_saleorder" model="ir.actions.report">
+        <field name="name">Qatar Sales Order</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_qatar_saleorder</field>
+        <field name="report_file">orchid_radiant_house_v18.report_qatar_saleorder</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qatar_purchaseorder" model="ir.actions.report">
+        <field name="name">Qatar Purchase Order</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_qatar_purchaseorder</field>
+        <field name="report_file">orchid_radiant_house_v18.report_qatar_purchaseorder</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qatar_delivery" model="ir.actions.report">
+        <field name="name">Qatar Delivery Note</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_radiant_house_v18.report_qatar_delivery</field>
+        <field name="report_file">orchid_radiant_house_v18.report_qatar_delivery</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

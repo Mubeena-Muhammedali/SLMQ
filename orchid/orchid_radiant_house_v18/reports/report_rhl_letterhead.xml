@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="rhl_report_letterhead">
+        <div style="width:100%; margin:-14mm 0 0 0; padding:0 0 6px 0;">
+            <img src="/orchid_radiant_house_v18/static/src/img/rhl_letterhead_header.png"
+                 alt="Radiant House Labels Trading WLL"
+                 style="width:100%; max-height:48mm; object-fit:contain;"/>
+        </div>
+    </template>
+
+    <template id="rhl_qatar_invoice_letterhead">
+        <div style="width:100%; height:42mm; margin:0; padding:0; overflow:hidden;">
+            <img src="/orchid_radiant_house_v18/static/src/img/rhl_letterhead_header.png"
+                 alt="Radiant House Labels Trading WLL"
+                 style="width:100%; max-height:48mm; object-fit:contain; margin-top:-5mm;"/>
+        </div>
+    </template>
+
+    <template id="rhl_qatar_invoice_page_background">
+        <img src="/orchid_radiant_house_v18/static/src/img/rhl_qatar_letterhead_full_new.jpeg"
+             alt="Radiant House Labels Trading WLL"
+             style="position:absolute; left:-7mm; top:0; width:278mm; height:395mm; z-index:0;"/>
+    </template>
+
+    <template id="rhl_qatar_invoice_footer_art">
+        <div style="position:absolute; left:-7mm; right:-7mm; bottom:-35mm; height:30mm; overflow:hidden;">
+            <div style="position:absolute; left:-8mm; bottom:8mm; width:80%; height:5mm; background:#9b9da0;"></div>
+            <div style="position:absolute; left:78%; bottom:8mm; width:18mm; height:6mm; background:#ffffff; transform:skewX(-42deg); -webkit-transform:skewX(-42deg);"></div>
+            <div style="position:absolute; right:-16mm; bottom:-22mm; width:48mm; height:48mm; border-radius:50%; background:#850038;"></div>
+        </div>
+    </template>
+</odoo>

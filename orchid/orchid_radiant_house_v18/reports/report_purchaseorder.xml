@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document_inherit_customer" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@class='page']" position="inside">
+            <br/>
+            <br/>
+            <t t-foreach="docs.sudo().company_id.od_header_image" t-as="images">
+                <t t-if="images.name == 'od_po_seal'">
+                    <div class="row">
+                        <div class="col-6">
+                        </div>
+                        <div class="col-5 col-offset-1" style="text-align:right;">
+                            <img t-if="images.img" t-att-src="image_data_uri(images.img)" alt="Logo" width="100%"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="rhl_letterhead" t-value="'Radiant House Labels Trading' in o.company_id.name"/>
+        </xpath>
+
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-call="web.basic_layout"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('invoice_main')]" position="before">
+            <style>
+                .rhl_invoice_label_fix,
+                .rhl_invoice_label_fix span,
+                .rhl_invoice_label_fix strong,
+                .rhl_invoice_label_fix th,
+                .rhl_invoice_label_fix td {
+                    color: #000000 !important;
+                }
+                .rhl_invoice_label_fix .o_total,
+                .rhl_invoice_label_fix .o_total span,
+                .rhl_invoice_label_fix .o_total strong,
+                .rhl_invoice_label_fix .o_total td {
+                    color: #ffffff !important;
+                }
+                .rhl_invoice_label_fix .rhl_bank_label {
+                    display: inline-block;
+                    min-width: 92px;
+                }
+            </style>
+        </xpath>
+        <xpath expr="//div[hasclass('invoice_main')]/div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="rhl_invoice_label_fix" separator=" "/>
+        </xpath>
+        <!-- <xpath expr="//div[@name='reference']/strong[1]" position="replace">
+            <strong>LPO No.</strong>
+        </xpath>
+        <xpath expr="//div[@name='reference']" position="before">
+            <div class="col" t-if="o.od_picking_name" name="od_picking_name">
+                <strong>Delivery Note</strong>
+                <div t-field="o.od_picking_name">INV/2023/00001</div>
+            </div>
+        </xpath> -->
+
+        <xpath expr="//div[hasclass('invoice_main')]/div[hasclass('page')]" position="inside">
+            <t t-set="rhl_bank" t-value="o.partner_bank_id or o.company_id.partner_id.bank_ids[:1]"/>
+            <div name="rhl_report_invoice_signatures" style="display:table; width:100%; margin-top:34px;">
+                <div style="display:table-cell; width:58%; vertical-align:top;">
+                    <div name="od_bank" style="font-size:12px; line-height:1.45; min-height:24px;">
+                        <strong>Bank Details:</strong><br/>
+                        <t t-if="rhl_bank">
+                            <t t-if="rhl_bank.acc_holder_name"><span class="rhl_bank_label"><b>Account Name:</b></span><span t-field="rhl_bank.acc_holder_name"/><br/></t>
+                            <t t-if="rhl_bank.acc_number"><span class="rhl_bank_label"><b>Account Number:</b></span><span t-field="rhl_bank.acc_number"/><br/></t>
+                            <t t-if="rhl_bank.od_iban"><span class="rhl_bank_label"><b>IBAN:</b></span><span t-field="rhl_bank.od_iban"/><br/></t>
+                            <t t-if="rhl_bank.bank_id"><span class="rhl_bank_label"><b>Bank Name:</b></span><span t-field="rhl_bank.bank_id.name"/><br/></t>
+                            <t t-if="rhl_bank.bank_id.bic"><span class="rhl_bank_label"><b>Swift Code:</b></span><span t-field="rhl_bank.bank_id.bic"/><br/></t>
+                            <t t-if="rhl_bank.bank_id.street">
+                                <span class="rhl_bank_label"><b>Address:</b></span>
+                                <span t-field="rhl_bank.bank_id.street"/>
+                                <t t-if="rhl_bank.bank_id.street2">, <span t-field="rhl_bank.bank_id.street2"/></t>
+                                <t t-if="rhl_bank.bank_id.state">, <span t-field="rhl_bank.bank_id.state"/></t>
+                                <t t-if="rhl_bank.bank_id.country">, <span t-field="rhl_bank.bank_id.country"/></t>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+                <div style="display:table-cell; width:42%; vertical-align:top;"></div>
+            </div>
+
+            <div name="rhl_signature_row" style="display:table; width:100%; margin-top:56px; page-break-inside:avoid;">
+                <div style="display:table-cell; width:58%; vertical-align:top;">
+                    <strong>
+                        <t t-if="o.move_type in ('in_invoice', 'in_refund')">Vendor's Signature</t>
+                        <t t-else="">Customer's Signature</t>
+                    </strong>
+                </div>
+                <div style="display:table-cell; width:42%; vertical-align:top; text-align:center; padding-left:16px;">
+                    <strong><span t-field="o.company_id"/></strong><br/>
+                    <strong>Authorized Signatory</strong>
+                </div>
+            </div>
+
+            <div name="od_declaration" style="margin-top:28px; page-break-inside:avoid;">
+                <strong>Declaration</strong><br/>
+                We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+            </div>
+        </xpath>
+        
+        <xpath expr="//div[@name='comment']" position="replace">
+            <div class="mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
+                <strong>Remarks:</strong><br/>
+                <span t-field="o.narration"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <t t-set="address"/>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']" position="replace">
+            <t t-set="information_block"></t>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="before">
+            <t t-set="address">
+                <div>
+                    <t t-if="o.partner_id">
+                        <strong><t t-esc="o.partner_id.name"/></strong><br/>
+                        
+                        <!-- Street and Street2 -->
+                        <t t-if="o.partner_id.street">
+                            <t t-esc="o.partner_id.street"/>
+                            <t t-if="o.partner_id.street2">, <t t-esc="o.partner_id.street2"/></t>
+                            <br/>
+                        </t>
+                        <t t-elif="o.partner_id.street2">
+                            <t t-esc="o.partner_id.street2"/><br/>
+                        </t>
+
+                        <!-- City, State, Zip -->
+                        <t t-if="o.partner_id.city">
+                            <t t-esc="o.partner_id.city"/>
+                            <t t-if="o.partner_id.state_id">, <t t-esc="o.partner_id.state_id.name"/></t>
+                            <t t-if="o.partner_id.zip">, <t t-esc="o.partner_id.zip"/></t>
+                            <br/>
+                        </t>
+                        <t t-elif="o.partner_id.state_id or o.partner_id.zip">
+                            <t t-if="o.partner_id.state_id"><t t-esc="o.partner_id.state_id.name"/></t>
+                            <t t-if="o.partner_id.zip">, <t t-esc="o.partner_id.zip"/></t>
+                            <br/>
+                        </t>
+
+                        <!-- Country -->
+                        <t t-if="o.partner_id.country_id">
+                            <t t-esc="o.partner_id.country_id.name"/><br/>
+                        </t>
+
+                        <!-- Phone / Mobile -->
+                        <t t-if="o.partner_id.phone">
+                            <t t-esc="o.partner_id.phone"/><br/>
+                        </t>
+                        <t t-if="o.partner_id.mobile">
+                            <t t-esc="o.partner_id.mobile"/><br/>
+                        </t>
+                    </t>
+                    <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
+                        TRN: <span t-field="o.partner_id.vat"/>
+                    </div>
+                </div>
+            </t>
+            <t t-set="information_block">
+                <h4>
+                    <strong><span t-if="not proforma"/>
+                    <span t-else="">PROFORMA</span>
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                        <t t-if="'Radiant House Labels Trading' in o.company_id.name">Invoice</t>
+                        <t t-else="">Tax Invoice</t>
+                    </span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note</span>
+                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
+                    <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
+                    <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
+                    <span t-if="o.name and o.name != '/'">&#160;</span>
+                    <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span><br/></strong>
+                </h4>
+                <t t-if="o.move_type in ('in_invoice', 'in_refund')">
+                    <t t-if="o.move_type == 'in_invoice'"><strong>Bill Date</strong></t>
+                    <t t-else=""><strong>Credit Note Date</strong></t>:&#160;<span t-field="o.invoice_date"/><br/>
+                    <strong>Vendor Reference</strong>:&#160;<span t-field="o.ref"/><br/>
+                    <strong>Source</strong>:&#160;<span t-field="o.invoice_origin"/><br/>
+                    <strong>TRN</strong>:&#160;<span t-field="o.company_id.vat"/><br/>
+                </t>
+                <t t-else="">
+                    <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                    <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                    <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
+                    <t t-else=""><strong>Date</strong></t>:&#160;<span t-field="o.invoice_date"/><br/>
+                    <strong>LPNO</strong>:&#160;<span t-field="o.ref"/><br/>
+                    <strong>Delivery No</strong>:&#160;<span t-field="o.od_picking_name"/><br/>
+                    <strong>Source</strong>:&#160;<span t-field="o.invoice_origin"/><br/>
+                    <strong>TRN</strong>:&#160;<span t-field="o.company_id.vat"/><br/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title"/>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="replace">
+            <div id="informations"/>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']" position="attributes">
+            <attribute name="class">o_has_total_table table o_main_table table-bordered mb-0</attribute>
+            <attribute name="style">width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563;</attribute>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th" position="attributes">
+            <attribute name="style">border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;</attribute>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody//td" position="attributes">
+            <attribute name="style">border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_description']" position="attributes">
+            <attribute name="style">width:25%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']" position="attributes">
+            <attribute name="style">width:12%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="attributes">
+            <attribute name="style">width:9%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']" position="before">
+            <th name="od_th_subtotal" class="text-end" style="width:13%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;">
+                <span>Amount<br/>(Excl. VAT)</span>
+            </th>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']" position="replace">
+            <th name="th_taxes" t-if="'Radiant House Labels Trading' not in o.company_id.name" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="width:6%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;">
+                <span>VAT%</span>
+            </th>
+        </xpath>
+        <xpath expr="//th[@name='tax_amount']" position="attributes">
+            <attribute name="class">text-end</attribute>
+            <attribute name="style">width:10%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_taxes']" position="replace">
+            <td name="td_taxes" t-if="'Radiant House Labels Trading' not in o.company_id.name" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}" style="border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;">
+                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='td_taxes']" position="before">
+            <td name="od_td_subtotal" class="text-end o_price_total" style="border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;">
+                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+            </td>
+        </xpath>
+        <xpath expr="//td[span[@id='line_tax_amount']]" position="attributes">
+            <attribute name="class">text-end</attribute>
+            <attribute name="style">border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;</attribute>
+        </xpath>
+        <!-- <xpath expr="//t[@t-set='layout_document_title']" position="inside">
+            <br/>
+            <strong style="font-size:15px;line-height:2px;">TRN:<span t-field="o.company_id.vat"/></strong>
+        </xpath> -->
+        <xpath expr="//th[@name='th_priceunit']/span[1]" position="replace">
+            <span>Rate</span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']" position="replace">
+            <th name="th_subtotal" class="text-end" style="width:13%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;">
+                <span>Amount<br/>(Incl. VAT)</span>
+            </th>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']/span[1]" position="replace">
+            <span class="text-nowrap" t-field="line.price_total">27.00</span>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="attributes">
+            <attribute name="style">border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;</attribute>
+        </xpath>
+        <xpath expr="//div[@id='right-elements']" position="attributes">
+            <attribute name="style">padding-top:14px;</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']" position="replace">
+            <p name="payment_communication">
+                Total amount in words: <br/>
+                <span t-field="o.amount_total_words"/>
+            </p>
+        </xpath>
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="replace">
+            <t t-if="'Radiant House Labels Trading' in o.company_id.name and o.tax_totals">
+                <t t-set="same_tax_base" t-value="o.tax_totals['same_tax_base']"/>
+                <t t-foreach="o.tax_totals['subtotals']" t-as="subtotal">
+                    <tr class="o_subtotal">
+                        <td style="border:1px solid #cfd4da; padding:8px;">
+                            <span>Subtotal</span>
+                        </td>
+                        <td class="text-end" style="border:1px solid #cfd4da; padding:8px;">
+                            <span t-att-class="oe_subtotal_footer_separator" t-out="subtotal['base_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}">27.00</span>
+                        </td>
+                    </tr>
+                    <t t-set="od_discount" t-value="0"/>
+                    <t t-set="od_discount" t-value="sum((l.price_unit * l.quantity) - l.price_subtotal for l in o.invoice_line_ids)"/>
+
+                    <tr class="o_subtotal">
+                        <td style="border:1px solid #cfd4da; padding:8px;">
+                            <span>Discount</span>
+                        </td>
+                        <td class="text-end" style="border:1px solid #cfd4da; padding:8px;">
+                            <span t-att-class="oe_subtotal_footer_separator" t-esc="od_discount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </td>
+                    </tr>
+                </t>
+
+                <tr t-if="'cash_rounding_base_amount_currency' in o.tax_totals">
+                    <td style="border:1px solid #cfd4da; padding:8px;">Rounding</td>
+                    <td class="text-end" style="border:1px solid #cfd4da; padding:8px;">
+                        <span t-out="o.tax_totals['cash_rounding_base_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}">0</span>
+                    </td>
+                </tr>
+                
+                <!--Total amount with all taxes-->
+                <tr class="o_total" style="background-color:#2f73ad; color:#ffffff;">
+                    <td style="border:1px solid #4b5563; padding:8px;"><strong>Total</strong></td>
+                    <td class="text-end" style="border:1px solid #4b5563; padding:8px;">
+                        <strong t-out="o.tax_totals['total_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}">31.05</strong>
+                    </td>
+                </tr>
+            </t>
+            <t t-elif="o.tax_totals">
+                <t t-call="account.document_tax_totals">
+                    <t t-set="tax_totals" t-value="o.tax_totals"/>
+                    <t t-set="currency" t-value="o.currency_id"/>
+                </t>
+            </t>
+        </xpath>
+
+        <!-- customer uom -->
+        <xpath expr="//th[@name='th_quantity']" position="before">
+            <th name="th_customer_quantity" t-if="o.move_type in ('out_invoice', 'out_refund', 'out_receipt')" class="text-end" style="width:12%; border:1px solid #4b5563; vertical-align:middle; padding:8px 8px; font-weight:700; text-transform:uppercase;"><span>Customer<br/>Order</span></th>
+        </xpath>
+        <xpath expr="//td[@name='td_quantity']" position="before">
+            <td name="td_customer_quantity" t-if="o.move_type in ('out_invoice', 'out_refund', 'out_receipt')" class="text-end text-nowrap" style="border:1px solid #cfd4da; vertical-align:top; padding:8px 8px;">
+                <span t-field="line.od_customer_order">3.00</span>
+                <span t-field="line.od_customer_uom_id" groups="uom.group_uom">units</span>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="report_rhl_download_invoice_document">
+        <t t-call="web.basic_layout">
+            <div class="page" style="font-family:Arial, Helvetica, sans-serif; color:#212529; font-size:14px; padding-top:22mm;">
+                <style>
+                    .rhl_download_invoice_table th {
+                        border: 1px solid #4b5563;
+                        padding: 8px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        vertical-align: middle;
+                    }
+                    .rhl_download_invoice_table td {
+                        border: 1px solid #cfd4da;
+                        padding: 8px;
+                        vertical-align: top;
+                    }
+                    .rhl_download_totals td {
+                        border: 1px solid #cfd4da;
+                        padding: 8px;
+                    }
+                    .rhl_download_totals .rhl_total_row td {
+                        border-color: #4b5563;
+                        background-color: #2f73ad;
+                        color: #ffffff;
+                        font-weight: 700;
+                    }
+                </style>
+
+                <div style="display:table; width:100%;">
+                    <div style="display:table-cell; width:55%; vertical-align:top;">
+                        <h3 style="margin:0 0 14px 0; font-size:20px;">
+                            <strong>
+                                <t t-if="o.move_type == 'out_refund'">Credit Note</t>
+                                <t t-elif="o.move_type == 'out_receipt'">Receipt</t>
+                                <t t-else="">Tax Invoice</t>
+                                <t t-if="o.name and o.name != '/'"> <span t-field="o.name"/></t>
+                            </strong>
+                        </h3>
+                        <strong>
+                            <t t-if="o.move_type == 'out_refund'">Credit Note Date:</t>
+                            <t t-else="">Invoice Date:</t>
+                        </strong><span t-field="o.invoice_date"/><br/>
+                        <strong>LPNO:</strong><span t-field="o.ref"/><br/>
+                        <strong>Delivery No:</strong><span t-field="o.od_picking_name"/><br/>
+                        <strong>Source:</strong><span t-field="o.invoice_origin"/><br/>
+                        <strong>TRN:</strong><span t-field="o.company_id.vat"/><br/>
+                    </div>
+                    <div style="display:table-cell; width:45%; vertical-align:top;">
+                        <t t-if="o.partner_id">
+                            <strong><span t-field="o.partner_id.name"/></strong><br/>
+                            <t t-if="o.partner_id.street">
+                                <span t-field="o.partner_id.street"/>
+                                <t t-if="o.partner_id.street2">, <span t-field="o.partner_id.street2"/></t><br/>
+                            </t>
+                            <t t-elif="o.partner_id.street2"><span t-field="o.partner_id.street2"/><br/></t>
+                            <t t-if="o.partner_id.city">
+                                <span t-field="o.partner_id.city"/>
+                                <t t-if="o.partner_id.state_id">, <span t-field="o.partner_id.state_id.name"/></t>
+                                <t t-if="o.partner_id.zip">, <span t-field="o.partner_id.zip"/></t><br/>
+                            </t>
+                            <t t-elif="o.partner_id.state_id or o.partner_id.zip">
+                                <t t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/></t>
+                                <t t-if="o.partner_id.zip">, <span t-field="o.partner_id.zip"/></t><br/>
+                            </t>
+                            <t t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/><br/></t>
+                            <t t-if="o.partner_id.phone"><span t-field="o.partner_id.phone"/><br/></t>
+                            <t t-if="o.partner_id.mobile"><span t-field="o.partner_id.mobile"/><br/></t>
+                            <t t-if="o.partner_id.vat">TRN: <span t-field="o.partner_id.vat"/></t>
+                        </t>
+                    </div>
+                </div>
+
+                <table class="rhl_download_invoice_table" style="width:100%; table-layout:fixed; border-collapse:collapse; border:1px solid #4b5563; margin-top:28px;">
+                    <thead>
+                        <tr>
+                            <th class="text-start" style="width:25%;">Description</th>
+                            <th class="text-end" style="width:13%;">Customer<br/>Order</th>
+                            <th class="text-end" style="width:12%;">Quantity</th>
+                            <th class="text-end" style="width:9%;">Rate</th>
+                            <th class="text-end" style="width:11%;">Amount<br/>(Excl. VAT)</th>
+                            <th class="text-end" style="width:6%;">VAT%</th>
+                            <th class="text-end" style="width:10%;">VAT<br/>Amount</th>
+                            <th class="text-end" style="width:14%;">Amount<br/>(Incl. VAT)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
+                            <td style="word-wrap:break-word;">
+                                <strong><span t-field="line.name"/></strong>
+                            </td>
+                            <td class="text-end">
+                                <span t-if="o.move_type in ('out_invoice', 'out_refund', 'out_receipt')" t-field="line.od_customer_order"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.quantity"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.price_subtotal"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-if="line.tax_ids" t-out="'%.1f' % line.tax_ids[0].amount"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-out="line.price_total - line.price_subtotal" t-options="{&quot;widget&quot;:&quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.price_total"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="display:table; width:100%; margin-top:0;">
+                    <div style="display:table-cell; width:58%; vertical-align:top; padding-top:14px;">
+                        <t t-if="o.invoice_payment_term_id">
+                            <strong>Payment terms: <span t-field="o.invoice_payment_term_id.name"/></strong>
+                        </t>
+                        <p style="margin:48px 0 0 0;">
+                            <strong>Total amount in words:</strong><br/>
+                            <strong><span t-field="o.amount_total_words"/></strong>
+                        </p>
+                        <t t-set="rhl_bank" t-value="o.partner_bank_id or o.company_id.partner_id.bank_ids[:1]"/>
+                        <div style="margin-top:34px; width:100%; line-height:1.45; page-break-inside:avoid;">
+                            <strong>Bank Details:</strong><br/>
+                            <t t-if="rhl_bank">
+                                <t t-if="rhl_bank.acc_holder_name"><span style="white-space:nowrap;"><strong>Account Name: </strong><span t-field="rhl_bank.acc_holder_name"/></span><br/></t>
+                                <t t-if="rhl_bank.acc_number"><strong>Account Number: </strong><span t-field="rhl_bank.acc_number"/><br/></t>
+                                <t t-if="rhl_bank.od_iban"><strong>IBAN: </strong><span t-field="rhl_bank.od_iban"/><br/></t>
+                                <t t-if="rhl_bank.bank_id"><strong>Bank Name: </strong><span t-field="rhl_bank.bank_id.name"/><br/></t>
+                                <t t-if="rhl_bank.bank_id.bic"><strong>Swift Code: </strong><span t-field="rhl_bank.bank_id.bic"/><br/></t>
+                                <strong>Branch: </strong>Sharjah Main Branch
+                            </t>
+                        </div>
+                    </div>
+                    <div style="display:table-cell; width:42%; vertical-align:top;">
+                        <t t-set="rhl_invoice_lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')"/>
+                        <t t-set="rhl_discount" t-value="sum((l.price_unit * l.quantity) - l.price_subtotal for l in rhl_invoice_lines)"/>
+                        <t t-set="rhl_tax_amount" t-value="sum(l.price_total - l.price_subtotal for l in rhl_invoice_lines)"/>
+                        <table class="rhl_download_totals" style="width:100%; border-collapse:collapse;">
+                            <tr>
+                                <td>Subtotal</td>
+                                <td class="text-end"><span t-field="o.amount_untaxed"/></td>
+                            </tr>
+                            <tr>
+                                <td>Discount</td>
+                                <td class="text-end"><span t-out="rhl_discount" t-options="{&quot;widget&quot;:&quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <t t-if="rhl_invoice_lines and rhl_invoice_lines[0].tax_ids">VAT <span t-out="'%.0f' % rhl_invoice_lines[0].tax_ids[0].amount"/>%</t>
+                                    <t t-else="">VAT</t>
+                                </td>
+                                <td class="text-end"><span t-out="rhl_tax_amount" t-options="{&quot;widget&quot;:&quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/></td>
+                            </tr>
+                            <tr class="rhl_total_row">
+                                <td>Total</td>
+                                <td class="text-end"><span t-field="o.amount_total"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="display:table; width:100%; margin-top:88px; page-break-inside:avoid;">
+                    <div style="display:table-cell; width:50%; vertical-align:top;">
+                        <strong>Customer's Signature</strong>
+                    </div>
+                    <div style="display:table-cell; width:50%; vertical-align:top; text-align:center;">
+                        <strong><span t-field="o.company_id"/></strong><br/>
+                        <strong>Authorized Signatory</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top:46px; page-break-inside:avoid;">
+                    <strong>Declaration</strong><br/>
+                    <strong>We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.</strong>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_invoice_download_route_inherit" inherit_id="account.report_invoice">
+        <xpath expr="//t[@t-call='account.report_invoice_document']" position="replace">
+            <t t-if="o.move_type in ('out_invoice', 'out_refund', 'out_receipt') and ('Radiant House Labels Industries' in o.company_id.name or 'Radiant House Labels Ind' in o.company_id.name)"
+               t-call="orchid_radiant_house_v18.report_rhl_download_invoice_document"
+               t-lang="lang"/>
+            <t t-elif="'Radiant House Labels Trading' in o.company_id.name"
+               t-call="orchid_radiant_house_v18.report_qatar_invoice_document"
+               t-lang="lang"/>
+            <t t-else=""
+               t-call="account.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

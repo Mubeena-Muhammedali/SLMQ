@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_customer" inherit_id="sale.report_saleorder_document">
+
+        <xpath expr="//t[@t-set='address']" position="inside">
+            <p t-if="doc.partner_id.email">
+                <span t-field="doc.partner_id.email"/>
+            </p>
+            <p t-if="doc.partner_id.phone">
+                <span t-field="doc.partner_id.phone"/>
+            </p>
+        </xpath>
+
+        <xpath expr="//div[@name='informations_reference']/strong[1]" position="replace">
+            <strong>LPO No.</strong>
+        </xpath>
+
+        <xpath expr="//div[@class='page']" position="inside">
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col-6">
+                    <strong>For <span t-field="doc.company_id"/></strong>
+                </div>
+                <div class="col-5 col-offset-1" style="text-align:right;">
+                    <strong>Customer's Signature</strong>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_discount']" position="attributes">
+            <attribute name="t-if">display_discount and not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+
+        <xpath expr="//td[@name='td_priceunit']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//td[@t-if='display_discount']" position="attributes">
+            <attribute name="t-if">display_discount and not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_taxes']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="attributes">
+            <attribute name="t-if">not line.is_downpayment and not doc.od_print_without_price</attribute>
+        </xpath>
+        
+
+        <!-- Optionally hide totals section -->
+        <xpath expr="//div[@name='total']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+
+        <xpath expr="//p[@t-if='not is_html_empty(doc.payment_term_id.note)']" position="attributes">
+            <attribute name="t-if">not doc.od_print_without_price</attribute>
+        </xpath>
+
+        <!-- customer uom -->
+        <xpath expr="//td[@name='td_quantity']/span[@t-field='line.product_uom']" position="attributes">
+            <attribute name="t-if">not line.od_customer_uom_id</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_quantity']/span[@t-field='line.product_uom']" position="after">
+            <span t-if="line.od_customer_uom_id" t-field="line.od_customer_uom_id">units</span>
+        </xpath>
+    </template>
+</odoo>
