@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+    	<record id="revenue_journal" model="account.journal">
+	        <field name="name">Revenue Journal</field>
+	        <field name="type">sale</field>
+	        <field name="code">RVJ</field>
+	    </record>
+	</data>
+</odoo>

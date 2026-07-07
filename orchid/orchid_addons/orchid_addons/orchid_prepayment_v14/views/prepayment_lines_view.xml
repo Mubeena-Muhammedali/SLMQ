@@ -1,0 +1,141 @@
+<odoo>
+  <data>
+
+    <!-- server action -->
+    <record model="ir.actions.server" id="update_prepayment_lines">
+        <field name="name">Update prepayment lines</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_orchid_prepayment_lines"/>
+        <field name="state">code</field>
+        <field name="code">
+      model.load_prepayment_line()
+        </field>
+        <field name="binding_model_id" ref="model_orchid_prepayment_lines"/>
+    </record>
+    <record model="ir.actions.server" id="action_orchid_generate_prepayment_board">
+        <field name="name">Generate Prepayment Board</field>
+        <field name="model_id" ref="model_orchid_prepayment_lines"/>
+        <field name="binding_model_id" ref="orchid_prepayment_v14.model_orchid_prepayment_lines"/>
+        <field name="binding_type">report</field>
+        <field name="code">
+        model.generate_prepayment_board()
+        </field>
+    </record>
+
+    <!-- account inherited view -->
+    <record model="ir.ui.view" id="view_prepaymnt_account_form">
+      <field name="name">account.account.form</field>
+      <field name="model">account.account</field>
+      <field name="inherit_id" ref="account.view_account_form"/>
+      <field name="arch" type="xml">
+        <field name="deprecated" position="after">
+          <field name="od_prepaid_account"/>
+        </field>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="orchid_prepayment_tree">
+      <field name="name">Prepayment Lines</field>
+      <field name="model">orchid.prepayment.lines</field>
+      <field name="arch" type="xml">
+        <tree create="false">
+          <field name="account_id" readonly="1"/>
+          <field name="move_id"/>
+          <field name="date"/>
+          <field name="partner_id"/>
+          <field name="debit"/>
+          <field name="credit"/>
+          <field name="date_start"/>
+          <field name="date_end"/>
+          <field name="expense_account_id"/>
+          <field name="cost_center"/>
+          <field name="linked_partner_id"/>
+          <field name="journal_id"/>
+          <field name="company_id"/>
+          <field name="analytic_account_id"/>          
+          <field name="remark"/> 
+          <field name="state" />
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="orchid_prepayment_form">
+      <field name="name">Prepayment Lines</field>
+      <field name="model">orchid.prepayment.lines</field>
+      <field name="arch" type="xml">
+        <form create="false">
+          <header>
+              <button name="generate_prepayment_board" string="Generate" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}" />
+              
+               <button name="button_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}" />             
+              
+              
+                 <button name="button_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'in', ('done','cancel'))]}" />
+              
+              
+              
+              <field name="state" widget="statusbar"/>
+          </header>
+          <sheet>
+            <group>
+              <group>
+                <field name="account_id" readonly="1"/>
+                <field name="move_id" attrs="{'readonly': [('state', 'in', ['draft','in_progress','done','cancel'])]}"/>
+                <field name="date" attrs="{'readonly': [('state', 'in', ['draft','in_progress','done','cancel'])]}"/>
+                <field name="partner_id" attrs="{'readonly': [('state', 'in', ['draft','in_progress','done','cancel'])]}"/>
+                <field name="debit" attrs="{'readonly': [('state', 'in', ['draft','in_progress','done','cancel'])]}"/>
+                <field name="credit" attrs="{'readonly': [('state', 'in', ['draft','in_progress','done','cancel'])]}"/>
+              </group>
+              <group>
+                <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="date_end" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="expense_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="cost_center" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="linked_partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="journal_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="company_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="analytic_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>          
+                <field name="remark" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+              </group>
+            </group>
+              <notebook>
+                  <page string="Entry Board">
+                    <field name="line_history_ids">
+                      <tree>
+                      <field name="date" readonly="1"/>
+                        <field name="account_id" invisible="1"/>
+                        <field name="debit_account_id" readonly="1"/>
+                        <field name="partner_id" attrs="{'readonly': [('state', 'in', ('closed','cancel'))]}"/>
+                        
+                        <field name="cost_center" attrs="{'readonly': [('state', 'in', ('closed','cancel'))]}"/>
+                        <field name="analytic_account_id" attrs="{'readonly': [('state', 'in', ('closed','cancel'))]}"/>                        
+                        
+                        <field name="amount" readonly="1" sum="Total"/>
+                        <field name="company_id" invisible="1" />
+                        
+                        <field name="journal_id" invisible="1"/>
+                        <field name="state" readonly="1"/>
+                        <field name="entry_id" readonly="1" force_save="1" optional="hide"/>
+                      </tree>
+                    </field>
+                </page>
+              </notebook>
+            </sheet>
+        </form>
+      </field>
+    </record>
+    
+
+    <!-- actions opening views on models -->
+    
+    <record model="ir.actions.act_window" id="action_orchid_prepayment">
+      <field name="name">Prepayments</field>
+      <field name="res_model">orchid.prepayment.lines</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="orchid_prepayment_tree"/>
+    </record>
+
+    <menuitem name="Prepayments" id="orchid_prepayment_lines" parent="account.menu_finance_entries" action="action_orchid_prepayment" sequence="53"/>
+
+  </data>
+</odoo>

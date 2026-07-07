@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="od_contract_revenue_report_tree_view" model="ir.ui.view">
+        <field name="name">od.contract.revenue.report</field>
+        <field name="model">od.contract.revenue.report</field>
+        <field name="arch" type="xml">
+            <tree string="Contract Revenue Report" edit="0" create="0">
+                <field name="name" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="user_id" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="company_currency" invisible="1"/>
+                <field name="expected_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                <field name="recurring_revenue" sum="Recurring Revenue" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                <field name="total_revenue" sum="Total Revenue" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="od_contract_revenue_report_action" model="ir.actions.act_window">
+        <field name="name">Contract Revenue Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.contract.revenue.report</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="od_contract_revenue_report_tree_view"/>
+    </record>
+</odoo>

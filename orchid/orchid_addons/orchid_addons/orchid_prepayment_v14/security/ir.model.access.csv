@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_orchid_prepayment_lines,orchid.prepayment.lines,model_orchid_prepayment_lines,,1,1,1,1
+access_prepayment_wizard,prepayment.wizard,model_prepayment_wizard,,1,1,1,1
+access_orchid_prepaid_report,orchid.prepaid.report,model_orchid_prepaid_report,,1,1,1,1
+access_orchid_prepayment_board_history,orchid.prepayment.board.history,model_orchid_prepayment_board_history,base.group_user,1,1,1,1
+access_od_prepayment_report_wiz,od_prepayment_report_wiz,model_od_prepayment_report_wiz,base.group_user,1,1,1,1

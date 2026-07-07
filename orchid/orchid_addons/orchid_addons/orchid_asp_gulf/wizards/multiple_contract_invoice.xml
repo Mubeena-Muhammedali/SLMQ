@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_contract_invoice_all_view_form" model="ir.ui.view">
+        <field name="name">od.contract.invoice.all.form</field>
+        <field name="model">od.contract.invoice.wiz.all</field>
+        <field name="arch" type="xml">
+            <form string="Create Invoices">
+                <group>
+                    <group>
+                        <field name="date" required="1"/>
+                        <field name="invoice_date" required="1"/>
+                        <button name="search_lines" type="object" class="oe_highlight" string="Search Invoices" />
+                    </group>
+                    <group>
+                        <field name="contract_id" options="{'no_create': True,'no_edit': True}"/>
+                        <field name="partner_id" options="{'no_create': True,'no_edit': True}" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Invoice Lines" name="invoice_line" attrs="{'invisible':[('invoice_line','=',[])]}">
+                        <field name="invoice_line" mode="tree">
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="wiz_id" readonly="True" invisible="1"  force_save="1" />
+                                        <field name="invoice_date" readonly="True"  force_save="1"/>
+                                        <field name="contract_id" readonly="True"  force_save="1"/>
+                                        <field name="contract_line_id" readonly="True"  force_save="1" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="amount_to_invoice" attrs="{'readonly':[('amount_to_invoice','!=',0)]}" sum="Total" force_save="1"/>
+                                        <field name="amount" readonly="True" force_save="1"/>
+                                        <field name="payment_line" invisible="1" force_save="1"/>
+                                    </group>
+                                </group>
+                            </form>
+                            <tree create="false" decoration-danger="amount_to_invoice==0">
+                                <field name="wiz_id" readonly="True" invisible="1"  force_save="1" />
+                                <field name="invoice_date" readonly="True"  force_save="1"/>
+                                <field name="customer_id" readonly="True"  force_save="1"/>
+                                <field name="contract_name" readonly="True"  force_save="1"/>
+                                <field name="contract_id" readonly="True"  force_save="1"/>
+                                <field name="contract_line_id" readonly="True"  force_save="1"/>
+                                <field name="amount_to_invoice" attrs="{'readonly':[('amount_to_invoice','!=',0)]}" sum="Total" force_save="1"/>
+                                <field name="tax_id" widget="many2many_tags" readonly="1" force_save="1"/>
+                                <field name="amount" readonly="True" force_save="1"/>
+                                <field name="payment_line" invisible="1" force_save="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+
+                <footer>
+                    <button name="create_invoice" string="Generate" type="object" class="btn-primary" attrs="{'invisible':[('invoice_line','=',[])]}" confirm="Are you sure that you want to invoice all the search results?"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_contract_invoice_all_action" model="ir.actions.act_window">
+        <field name="name">Create Invoices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.contract.invoice.wiz.all</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_contract_invoice_all_view_form"/>
+        <field name="target">new</field>
+    </record>
+    
+</odoo>

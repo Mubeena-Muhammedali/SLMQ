@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+
+
+        <record id="od_inherit_view_view_form" model="ir.ui.view">
+            <field name="name">ir.ui.view.form</field>
+            <field name="model">ir.ui.view</field>
+            <field name="inherit_id" ref="base.view_view_form"/>
+            <field name="arch" type="xml">
+                <field name="model" position="replace">
+                <field name="model"/>
+               
+                </field>
+
+<!--                <field name="model" position="after">-->
+<!--                <field name="module"/>-->
+<!--                </field>-->
+                <xpath expr="/form/sheet/group/group/field[@name='active']" position="after">
+                    <button name="add_button" type="object" string="Add Data"/>
+                </xpath>
+
+               
+              
+            </field>
+        </record>
+
+
+   </odoo>

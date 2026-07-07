@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_prepayment_report_wiz_view_form" model="ir.ui.view">
+        <field name="name">od.prepayment.report.wiz.form</field>
+        <field name="model">od.prepayment.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Prepayment Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="excel_file" filename="file_name"/>
+                        <field name ="file_name" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate Excel" name="generate_excel" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_prepayment_report_wiz_action" model="ir.actions.act_window">
+        <field name="name">Prepayment Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.prepayment.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_prepayment_report_wiz_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="od_prepayment_report_wiz_menu" name="Prepayment Report" parent="account.account_reports_management_menu" action="od_prepayment_report_wiz_action" sequence="7"/>
+</odoo>

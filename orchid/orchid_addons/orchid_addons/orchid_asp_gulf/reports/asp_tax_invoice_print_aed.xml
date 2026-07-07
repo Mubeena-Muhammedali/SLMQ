@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="asp_tax_invoice_print_aed">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <!-- <template id="web_internal_layout_inherit_invoice_print" inherit_id="web.internal_layout">
+                    <xpath expr="//div[@class='header']" position="replace">
+                        <div class="header">
+                            <div class="o_clean_header">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"/><br/>
+                                        <span style="font-size:12px;">Application Services Providers Gulf Company LLC</span>
+                                    </div>
+                                    <div class="col-5 offset-1">
+                                        <span style="padding-left:1cm;"><strong>
+                                            <t t-if="o.move_type=='out_invoice'"><span  style="font-size:40px;">TAX INVOICE</span></t>
+                                            <t t-if="o.move_type=='out_refund'"><span  style="font-size:34px;">TAX CREDIT NOTE</span></t>
+                                        </strong></span><br/>
+                                        <span style="font-size:14px;padding-left:2cm;">ASPGulf TRN: 100203142300003</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </xpath>
+                </template>
+                <t t-call="web.internal_layout"> -->
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <span><strong>
+                                    <t t-if="o.move_type=='out_invoice'"><span  style="font-size:30px;">TAX INVOICE</span></t>
+                                    <t t-if="o.move_type=='out_refund'"><span  style="font-size:25px;">TAX CREDIT NOTE</span></t>
+                                </strong></span><br/>
+                                <span style="font-size:14px">TRN:&#160;100203142300003</span>
+                            </div>
+                        </div><br/>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <!-- <div class="col-6"> -->
+                            <div class="col-7">
+                                <div>
+                                    <span><strong>Date</strong></span>
+                                    <span>: </span><span t-esc="o.invoice_date.strftime('%d-%b-%Y')"/>
+                                </div>
+                            </div>
+                            <!-- <div class="col-1"/> -->
+                            <div class="col-2"/>
+                            <!-- <div class="col-4 col-offset-1"> -->
+                            <div class="col-5 col-offset-1">
+                                <div>
+                                    <span style="text-align:right;"><strong>Invoice No</strong></span>
+                                    <span>: </span><span t-field="o.name"/>
+                                </div>
+                                <div>
+                                    <span style="text-align:right;"><strong>CC</strong></span>
+                                    <span style="padding-left:1.5cm;">: </span><span t-field="o.partner_id.ref"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- <div class="col-6"> -->
+                            <div class="col-7">
+                                <div>
+                                    <span><strong>To</strong></span><span style="padding-left:0.5cm;">: </span><span t-field="o.partner_id"/>
+                                    <span t-if="o.partner_id.street">
+                                        <br/><span style="padding-left:1.2cm;" t-field="o.partner_id.street"/>, 
+                                    </span>
+                                    <span t-if="o.partner_id.street2">
+                                       <br/><span style="padding-left:1.2cm;" t-field="o.partner_id.street2"/>
+                                    </span>
+                                    <span t-if="o.partner_id.state_id">
+                                        <br/><span style="padding-left:1.2cm;" t-field="o.partner_id.state_id.name"/>,
+                                    </span>
+                                    <span t-if="o.partner_id.country_id">
+                                         <span t-field="o.partner_id.country_id"/>
+                                    </span>
+                                </div>
+                                <span><strong>TRN</strong></span><span style="padding-left:0.2cm;">: <span t-field="o.partner_id.vat"/></span>
+                            </div>
+                            <!-- <div class="col-1"/> -->
+                            <div class="col-2"/>
+                            <!-- <div class="col-4 col-offset-1"> -->
+                            <div class="col-5 col-offset-1">
+                                <div>
+                                    <t t-if="o.move_type=='out_invoice'"><span style="text-align:right;"><strong>Ref No.</strong></span>
+                                    <span style="padding-left:0.7cm;">:&#160;</span><span t-field="o.ref"/></t>
+                                    <t t-else="">&#160;</t>
+                                </div>
+                                <div>
+                                    <span style="text-align:right;"><strong>Phone/Fax</strong></span>
+                                    <span>: </span><span t-field="o.partner_id.phone"/>
+                                </div>
+                                <div>
+                                    <span style="text-align:right;"><strong>SAM</strong></span>
+                                    <span style="padding-left:1.2cm;">: <span t-field="o.invoice_user_id"/></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <!-- <div class="col-6"> -->
+                            <div class="col-6">
+                                <div>
+                                    <span><strong>Attn</strong></span><span style="padding-left:0.2cm;">: <span t-field="o.od_contact_id.name"/></span>
+                                </div>
+                            </div>
+                            <!-- <div class="col-1"/> -->
+                            <div class="col-2"/>
+                            <!-- <div class="col-4 col-offset-1"> -->
+                            <div class="col-5 col-offset-1">
+                                <div>
+                                    <span style="text-align:right;"><strong>Mobile</strong></span>
+                                    <span style="padding-left:0.8cm;">: </span><span t-field="o.od_contact_id.mobile"/>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
+                            <table class="table table-sm" style="width:100%;border-top:1px solid black;border-right:1px solid black;">
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <th name="th_description" class="text-left" style="background-color:#DCDCDC;border-right:1px solid black;border-left:1px solid black;border-top:1px solid black;width:2%;padding-bottom:0.7cm;"><center>No</center></th>
+                                        <th name="th_description" class="text-left" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:51%;padding-bottom:0.7cm;">Description</th>
+                                        <th name="th_priceunit" class="text-right" style="background-color:#DCDCDC;;border-left:1px solid black;border-top:1px solid black;width:8%;"><center>Unit<br/>Price</center></th>
+                                        <th name="th_quantity" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:5%;padding-bottom:0.7cm;"><center>Qty</center></th>
+                                        <th name="th_quantity" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:5%;padding-bottom:0.7cm;"><center>Frq</center></th>
+                                        <th name="th_subtotal" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:8%;">
+                                            <span><center>Sub<br/>Total</center></span>
+                                        </th>
+                                        <th name="th_subtotal" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:5%;">
+                                            <span><center>VAT %</center></span>
+                                        </th>
+                                        <th name="th_subtotal" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:8%;">
+                                            <span><center>Tax Amount</center></span>
+                                        </th>
+                                        <th name="th_subtotal" class="text-right" style="background-color:#DCDCDC;border-left:1px solid black;border-top:1px solid black;width:8%;padding-bottom:0.7cm;">
+                                            <span><center>Total</center></span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="sl_no" t-value="0"/>
+                                    <t t-set="total_credit" t-value="0"/>
+                                    <t t-set="total_debit" t-value="0"/>
+                                    <t t-set="total_tax" t-value="0"/>
+                                    <t t-foreach="o.invoice_line_ids" t-as="l">
+                                        <tr t-att-class="'bg-200 font-weight-bold o_line_section' if l.display_type == 'line_section' else 'font-italic o_line_note' if l.display_type == 'line_note' else ''">
+                                            <t t-if="not l.display_type">
+                                                <t t-set="sl_no" t-value="sl_no+1"/>
+                                                <td name="td_name" style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <center><span t-esc="sl_no"/></center>
+                                                </td>
+                                                <td name="td_name" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <!-- <b><span t-field="l.product_id.name"/></b><br/> -->
+                                                    <!-- <t t-if="l.od_period_from and l.od_period_to"><b>Service Period:<span  t-esc="l.od_period_from.strftime('%d-%b-%Y')"/>&#160;To:&#160;<span t-esc="l.od_period_to.strftime('%d-%b-%Y')"/></b><br/></t> -->
+                                                    <t t-if="l.od_period_from and l.od_period_to">
+                                                        <t t-if="l.od_contract_line_id">
+                                                            <t t-set="mcl" t-value="l.od_contract_line_id"/>
+                                                            <t t-foreach="l.od_contract_line_id" t-as="mc">
+                                                                <t t-set="mcl" t-value="mc"/>
+                                                            </t>
+                                                            <!-- <t t-if="not l.od_contract_line_id.billing_cycle=='one_time'"> -->
+                                                            <t t-if="not mcl.billing_cycle=='one_time'">
+                                                                <b>Service Period:<span  t-esc="l.od_period_from.strftime('%d-%b-%Y')"/>&#160;To:&#160;<span t-esc="l.od_period_to.strftime('%d-%b-%Y')"/></b><br/>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <b>Service Period:<span  t-esc="l.od_period_from.strftime('%d-%b-%Y')"/>&#160;To:&#160;<span t-esc="l.od_period_to.strftime('%d-%b-%Y')"/></b><br/>
+                                                        </t>
+                                                    </t>
+                                                    <!-- <span t-field="l.name"/> -->
+                                                    <t t-if="isinstance(l.name, str)">
+                                                       <t t-set="string_to_output" t-value="l.name.split('\n')" />
+                                                       <t t-foreach="string_to_output" t-as="string_line">
+                                                          <span t-esc="string_line"/>
+                                                          <br />
+                                                       </t>
+                                                    </t>
+                                                </td>
+                                                <td name="td_priceunit" class="text-right" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit/l.quantity))"/></t>
+                                                    <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit/l.quantity)*(-1))"/></t>
+
+                                                </td>
+                                                <td name="td_quantity" class="text-right" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <center>
+                                                        <t t-if="o.move_type=='out_invoice'"><span t-esc="int(l.quantity)"/></t>
+                                                        <t t-if="o.move_type=='out_refund'"><span t-esc="int(l.quantity*(-1))"/></t>
+                                                    </center>
+                                                </td>
+                                                <td name="td_quantity" class="text-right" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <center>
+                                                        <t t-if="o.move_type=='out_invoice'"><span t-esc="int(l.od_frequency)"/></t>
+                                                        <t t-if="o.move_type=='out_refund'"><span t-esc="int(l.od_frequency*(-1))"/></t>
+                                                    </center>
+                                                </td>
+                                                
+                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit))"/></t>
+                                                    <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit*(-1)))"/></t>
+                                                </td>
+                                                <t t-set="total_credit" t-value="total_credit+l.credit"/>
+                                                <t t-set="total_debit" t-value="total_debit+l.debit"/>
+                                                <td t-attf-class="text-center {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <span t-esc="', '.join(map(lambda x: (str(int(x.amount))), l.tax_ids))" id="line_tax_ids"/>%
+                                                </td>
+                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-right:1px solid black;border-top:1px solid black;">
+                                                    <t t-set="line_tax" t-value="0"/>
+                                                    <t t-foreach="l.tax_ids" t-as="tax">
+                                                        <t t-set="line_tax" t-value="line_tax+tax.amount"/>
+                                                    </t>
+                                                    <t t-if="o.move_type=='out_invoice'"><t t-set="line_tax_amt" t-value="((line_tax*l.credit)/100)"/></t>
+                                                    <t t-if="o.move_type=='out_refund'"><t t-set="line_tax_amt" t-value="((line_tax*l.debit)/100)"/></t>
+                                                    <t t-set="total_tax" t-value="total_tax+line_tax_amt"/>
+                                                    <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((line_tax_amt))"/></t>
+                                                    <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((line_tax_amt*(-1)))"/></t>
+                                                </td>
+                                                <td name="td_subtotal" class="text-right o_price_total" style="border-bottom:1px solid black;border-top:1px solid black;">
+                                                    <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format((l.credit+line_tax_amt))"/></t>
+                                                    <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((l.debit+line_tax_amt)*(-1))"/></t>
+                                                </td>
+                                            </t>
+                                            <t t-if="l.display_type == 'line_section'">
+                                                <td name="td_section_line" colspan="99">
+                                                    <span t-field="l.name"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="l.display_type == 'line_note'">
+                                                <td name="td_note_line" colspan="99">
+                                                    <span t-field="l.name"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="5" style="border-bottom:1px solid black;border-left:1px solid black;background-color:#DCDCDC;text-align:right;"><b>Total&#160;(<span t-field="o.company_id.currency_id"/>)</b></td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;">
+                                            <b>
+                                                <!-- <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format(total_credit)"/></t> -->
+                                                <!-- <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format(total_debit*(-1))"/></t> -->
+                                                <span t-esc="'{0:,.2f}'.format(o.amount_untaxed_signed)"/>
+                                            </b>
+                                        </td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;"></td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;">
+                                            <b>
+                                                <!-- <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format(total_tax)"/></t> -->
+                                                <!-- <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format(total_tax*(-1))"/></t> -->
+                                                <span t-esc="'{0:,.2f}'.format(o.amount_tax_signed)"/>
+                                            </b>
+                                        </td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;">
+                                            <b>
+                                                <!-- <t t-if="o.move_type=='out_invoice'"><span t-esc="'{0:,.2f}'.format(total_tax+total_credit)"/></t> -->
+                                                <!-- <t t-if="o.move_type=='out_refund'"><span t-esc="'{0:,.2f}'.format((total_tax+total_debit)*(-1))"/></t> -->
+                                                <span t-esc="'{0:,.2f}'.format(o.amount_total_signed)"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="border-bottom:1px solid white;border-right:1px solid white;"><b>Total in words:</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="border-bottom:1px solid white;border-right:1px solid white;">
+                                            <!-- <t t-if="o.move_type=='out_invoice'"><span t-esc="o.company_id.currency_id.amount_to_text(total_tax+total_credit)"/>&#160;Only</t> -->
+                                            <!-- <t t-if="o.move_type=='out_refund'"><span t-esc="o.company_id.currency_id.amount_to_text(total_tax+total_debit)"/>&#160;Only</t> -->
+                                            <t t-if="o.move_type=='out_refund'"><span t-esc="o.company_id.currency_id.amount_to_text(o.amount_total_signed)"/>&#160;Only</t>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr  t-if="not (o.currency_id.id==131)">
+                                        <td colspan="8" style="border-bottom:1px solid white;border-right:1px solid white;"><b>Currency Rate:</b><span t-field="o.od_exchange_rate"/></td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td colspan="4" style="border-bottom:1px solid white;"><b>Total in words:</b></td>
+                                        <td colspan="3" style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;"><b>Total in(<span t-field="o.company_id.currency_id"/>)</b></td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;"><b><span t-esc="'{0:,.2f}'.format(total_credit)"/></b></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td colspan="4" style="border-bottom:1px solid white;"><span t-esc="o.company_id.currency_id.amount_to_text(total_tax+total_credit)"/>&#160;Only</td>
+                                        <td colspan="3" style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;"><b>Vat(5%)</b></td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;"><b><span t-esc="'{0:,.2f}'.format(total_tax)"/></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><t t-if="not (o.currency_id.id==131)"><b>Currency Rate:</b><span t-field="o.od_exchange_rate"/></t></td>
+                                        <td colspan="3" style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;background-color:#DCDCDC;"><b>Net Total(<span t-field="o.company_id.currency_id"/>)</b></td>
+                                        <td style="border-left:1px solid black;border-right:1px solid black;border-bottom:1px solid black;text-align:right;"><b><span t-esc="'{0:,.2f}'.format(total_tax+total_credit)"/></b></td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" t-if="o.ref and o.move_type=='out_refund'">
+                            <div class="col-12">
+                                <div>
+                                    <span style="text-align:right;"><strong>Remarks</strong></span>
+                                    <span>:&#160;</span><br/><span t-field="o.ref"/><br/>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-if="o.ref and o.move_type=='out_refund'"><br/></t>
+                        <div class="row" style="page-break-inside:avoid;">
+                            <div class="col-6">
+                                <div>
+                                    <span><strong>Bank Details:</strong></span><br/>
+                                    <!-- <span>ASP Gulf<br/>
+                                    A/C No.: 01049-68164-97<br/>
+                                    Mashreq Bank DIC Branch, Dubai<br/>
+                                    Swift Code: BOMLAEAD<br/>
+                                    IBAN: AE460330000010496816497</span> -->
+                                    <span t-field="o.partner_bank_id.acc_holder_name"/><br/>
+                                    A/C No.: <span t-field="o.partner_bank_id.acc_number"/><br/>
+                                    <span t-field="o.partner_bank_id.bank_id.name"/> <span t-field="o.partner_bank_id.bank_id.od_bank_branch"/><br/>
+                                    Swift Code: <span t-field="o.partner_bank_id.bank_id.bic"/><br/>
+                                    IBAN: <span t-field="o.partner_bank_id.bank_id.od_bank_iban"/>
+                                </div><br/>
+                                <div t-if="o.invoice_payment_term_id">
+                                    <span><strong>Terms &amp; Conditions: </strong></span> <span t-field="o.invoice_payment_term_id"/>
+                                </div>
+                            </div>
+                        </div>
+                        <span style="font-size:10px;">Note: System generated invoice, no signature or stamp required.</span>
+                    </div>
+                    <!-- <div class="footer">
+                        <div class="row">
+                            <div class="col-6"/>
+                            <div class="col-5 offset-1 text-right"><span>Page:</span><span class="page"/> of <span class="topage"/></div>
+                        </div>
+                        <div class="row">
+                            <t t-foreach="o.company_id.header_image" t-as="images">
+                                <t t-if="images.name == 'tax_invoice_footer'">
+                                    <img style="padding-left:1cm;" t-if="images.img" t-att-src="'data:image/png;base64,%s' % to_text(images.img)"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>    -->             
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+            

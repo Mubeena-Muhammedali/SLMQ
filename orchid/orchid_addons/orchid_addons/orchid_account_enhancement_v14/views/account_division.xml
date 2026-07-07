@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="orchid_accont_division_tree_view">
+            <field name="name">orchid.account.division.tree</field>
+            <field name="model">orchid.account.division</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+			    <tree string="tree_string">
+					<field name="name" />
+					<field name="code" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orchid_accont_division_form_view">
+            <field name="name">orchid.account.division.form</field>
+            <field name="model">orchid.account.division</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="form_string">
+					<sheet>
+						<group>
+							<field name="code" placeholder="Code" />
+                            <field name="name" placeholder="Name" />
+						</group>
+					</sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_orchid_accont_division_tree_view">
+            <field name="name">Account Division</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">orchid.account.division</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="orchid_accont_division_tree_view"/>
+        </record>
+
+		<menuitem id="orchid_accont_division_menu"  name="Division" parent="account.account_account_menu" action="action_orchid_accont_division_tree_view" sequence="10"/>
+    
+    </data>
+</odoo>

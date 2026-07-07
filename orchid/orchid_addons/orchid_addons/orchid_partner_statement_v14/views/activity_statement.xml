@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 ForgeFlow, S.L. (https://www.forgeflow.com)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template id="orchid_partner_statement_v14.activity_statement_document">
+       <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context({'lang': lang})"/>
+            <div class="page">
+                <div class="oe_structure"/>
+                <t t-if="d['currencies']">
+                    <t t-foreach="d['currencies'].items()" t-as="currency">
+                        <t t-set="display_currency" t-value="Currencies[currency[0]]"/>
+                        <t t-set="currency" t-value="currency[1]"/>
+                        <t t-set="partner_id" t-value="get_inv_addr(o)"/>
+                        <p>
+                            <center><h5><b>STATEMENT OF ACCOUNTS</b></h5><b>Between <span t-esc="d['start']"/> and <span t-esc="d['end']"/></b></center><br/>
+                            <!-- <div id="informations" class="row mt32 mb32">
+                                <div class="col-5 bm-2">
+                                    <strong>Name:</strong>
+                                    <p t-esc="partner_id.name" class="m-0"/>
+                                </div>
+                                <div t-if="partner_id.vat" class="col-3 bm-2">
+                                    <strong>TRN:</strong>
+                                    <p t-esc="partner_id.vat" class="m-0"/>
+                                </div>
+                                <div t-if="partner_id.user_id" class="col-3 bm-2">
+                                    <strong>Sales Person:</strong>
+                                    <p t-esc="partner_id.user_id.name" class="m-0"/>
+                                </div>
+                                <div t-if="display_currency" class="col-2 bm-2">
+                                    <strong>Currency:</strong>
+                                    <right><p t-esc="display_currency.name" class="m-0"/></right>
+                                </div>
+                            </div> -->
+                             <table class="table table-sm" width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-right:1px solid white;width:10%;"><b>Customer</b></td>
+                                        <td style="border-right:1px solid white;width:60%;">:&#160;<b><span t-esc="partner_id.name"/></b></td>
+                                        <!-- <td style="border-right:1px solid white;width:10%;"/> -->
+                                        <td style="border-right:1px solid white;width:10%;"><b>TRN</b></td>
+                                        <td style="width:20%;">:&#160;<b><span t-esc="partner_id.vat"/></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-right:1px solid white;width:10%;"><b>Salesperson</b></td>
+                                        <td style="border-right:1px solid white;width:60%;">:&#160;<b><span t-esc="partner_id.user_id.name"/></b></td>
+                                        <!-- <td style="border-right:1px solid white;width:10%;"/> -->
+                                        <td style="border-right:1px solid white;width:10%;"><b>Currency</b></td>
+                                        <td style="width:20%;" t-if="display_currency">:&#160;<b><span t-esc="display_currency.name"/></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p><br/>
+                        <!-- <p>
+                            <span t-if="account_type == 'payable'">Supplier </span>Statement between <span t-esc="d['start']"/> and <span t-esc="d['end']"/> in <span t-esc="display_currency.name"/>
+                        </p> -->
+                        <table class="table table-sm table-statement" width="100%">
+                            <!-- <colgroup>
+                               <col width="8%"/>
+                               <col width="8%"/>
+                               <col width="20%"/>
+                               <col width="12%"/>
+                               <col width="12%"/>
+                               <col width="10%"/>
+                               <col width="10%"/>
+                               <col width="12%"/>
+                               <col width="15%"/>
+                               <col width="12%"/>
+                               <col width="12%"/>
+                               <col width="12%"/>
+                            </colgroup> -->
+                            <thead style="border-bottom:1px solid white;">
+                                <tr style="border-bottom:1px solid black;">
+                                    <th style="font-size:13px;border-right:1px solid white;">Date</th>
+                                    <th style="font-size:13px;border-right:1px solid white;">Due Date</th>
+                                    <th style="font-size:13px;border-right:1px solid white;">LPO/Doc Ref.</th>
+                                    <th style="font-size:13px;border-right:1px solid white;">Inv. No</th>
+                                    <th style="font-size:13px;border-right:1px solid white;">Terms</th>
+                                    <th style="font-size:13px;border-right:1px solid white;" class="amount">Debit</th>
+                                    <th style="font-size:13px;border-right:1px solid white;" class="amount">Credit</th>
+                                    <th style="font-size:13px;border-right:1px solid white;" class="amount">Bal</th>
+                                    <th style="font-size:13px;border-right:1px solid white;" class="amount">Cum.Bal</th>
+                                    <!-- <th style="font-size:13px;border-right:1px solid white;">Chq</th>
+                                    <th style="font-size:13px;border-right:1px solid white;"> </th>
+                                    <th style="font-size:13px;"> </th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="d['start']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                            Balance Forward
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" class="amount" width="8%">
+                                        <span t-esc="currency['balance_forward']"/>
+                                    </td>
+                                    <td class="amount" width="8%">
+                                        <span t-esc="currency['balance_forward']"/>
+                                    </td>
+                                    <!-- <td style="border-right:1px solid white;" width="8%"/>
+                                    <td style="border-right:1px solid white;" width="8%"/>
+                                    <td/> -->
+                                </tr>
+                                <tr style="font-size:13px;" t-foreach="currency['lines']" t-as="line" t-att-class="'statement-blocked' if line['blocked'] else ''">
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="line['date']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="line['date_maturity']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="line['lpo']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="line['move_id']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <span t-esc="line['payment_terms']"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" class="amount" width="8%">
+                                        <span t-esc="'{0:,.2f}'.format(float((line['debit'])))"/>
+                                    </td>
+                                    <td style="border-right:1px solid white;" class="amount" width="8%">
+                                    
+                                        <span t-esc="'{0:,.2f}'.format(float((line['credit'])))"/>
+                                    </td>
+                                     <td style="border-right:1px solid white;" class="amount" width="8%">
+                                        <span t-esc="'{0:,.2f}'.format(float((line['amount'])))"/>
+                                    </td>
+                                    <td class="amount" width="8%">
+                                        <span t-esc="'{0:,.2f}'.format(float((line['balance'])))"/>
+                                    </td>
+                                    <!-- <td style="border-right:1px solid white;" width="8%">
+                                        <t t-if="not (len(line['chq'])==0)">
+                                            <t t-set="chq_no" t-value="line['chq'][0]['chq_no']"></t>
+                                            <span t-esc="line['chq'][0]['chq_no']"/>
+                                        </t>
+                                    </td>
+                                    <td style="border-right:1px solid white;" width="8%">
+                                        <t t-if="not (len(line['chq'])==0)">
+                                            <span t-esc="line['chq'][0]['date']"/>
+                                        </t>
+                                    </td>
+                                    <td width="8%" class="amount">
+                                        <span t-esc="'{0:,.2f}'.format(float((line['chq'][0]['amount'])))"/>
+                                    </td>
+                                    <t t-if="len(line['chq']) &gt; 1">
+                                        <tr style="font-size:13px;" t-foreach="range(1,len(line['chq']))" t-as="cheque">
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%"/>
+                                            <td style="border-right:1px solid white;" width="8%">
+                                                <span t-esc="line['chq'][cheque]['chq_no']"/>
+                                            </td>
+                                            <td style="border-right:1px solid white;" width="8%">
+                                                <span t-esc="line['chq'][cheque]['date']"/>
+                                            </td>
+                                            <td width="8%" class="amount">
+                                                <span t-esc="'{0:,.2f}'.format(float((line['chq'][cheque]['amount'])))"/>
+                                            </td>
+                                        </tr>
+                                    </t>   -->
+                                     
+                                     
+                                </tr>
+                                <tr>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <!-- <td style="border-right:1px solid white;border-top:1px solid black;"/> -->
+                                    <td style="border-right:1px solid white;border-top:1px solid black;" colspan="3"><b>Total Outstanding</b></td>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;" class="amount">
+                                        <b><span t-esc="'{0:,.2f}'.format(float((currency['amount_due'])))"/></b>
+                                    </td>
+                                    <td style="border-top:1px solid black;">
+                                    </td>
+                                    <!-- <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <td style="border-right:1px solid white;border-top:1px solid black;"/>
+                                    <td style="border-top:1px solid black;"/> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/><br/>
+                        <t t-call="orchid_partner_statement_v14.aging_buckets" t-if="currency['buckets']"/>
+                    </t>
+                </t>
+                <p t-if="d.get('no_entries')">
+                    <strong>The partner doesn't have due entries.</strong>
+                </p>
+            </div>
+        </t>
+    </template>
+    <template id="activity_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="d" t-value="data.get(o.id)" />
+                <t
+                    t-call="orchid_partner_statement_v14.activity_statement_document"
+                    t-lang="o.lang"
+                />
+            </t>
+        </t>
+    </template>
+    <report
+        id="action_print_activity_statement"
+        model="res.partner"
+        report_type="qweb-pdf"
+        menu="False"
+        string="Activity Statement"
+        name="orchid_partner_statement_v14.activity_statement"
+        file="orchid_partner_statement_v14.activity_statement"
+    />
+</odoo>

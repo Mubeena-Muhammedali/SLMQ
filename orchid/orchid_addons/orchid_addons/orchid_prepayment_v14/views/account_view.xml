@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <record model="ir.ui.view" id="view_move_form_inher_prepayment">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <button name="open_reconcile_view" position="after">
+                <button name="open_prepayment_view" class="oe_stat_button" icon="fa-bars" type="object" string="Prepayment Lines" attrs="{'invisible':['|',('od_is_prepayment','!=',True),('state','!=','posted')]}">
+                </button>
+            </button>
+           <field name="payment_reference" position="after">
+                <field name="od_is_prepayment" invisible="0"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+

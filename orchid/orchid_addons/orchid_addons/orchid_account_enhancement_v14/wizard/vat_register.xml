@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="orchid_tax_register_form" model="ir.ui.view">
+            <field name="name">VAT Register</field>
+            <field name="model">orchid.tax.register</field>
+            <field name="arch" type="xml">
+                <form string="VAT Register">
+                    <group>
+                        <group>
+                            <field name="from_date" required="1"/>
+                            <field name="to_date" required="1"/>
+                            <field name="register_type" required="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="excel_file" filename="file_name"/>
+                            <field name ="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generate Excel" name="generate_excel" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_orchid_tax_register" model="ir.actions.act_window">
+            <field name="name">VAT Register</field>
+            <field name="res_model">orchid.tax.register</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_orchid_tax_register" id="menu_tax_register"
+            name="VAT Register" parent="orchid_account_enhancement_v14.account_reports_audit" sequence="3" />
+
+    </data>
+</odoo>

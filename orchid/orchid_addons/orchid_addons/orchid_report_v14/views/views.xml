@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="orchid_report_v14.list">
+      <field name="name">orchid_report_v14 list</field>
+      <field name="model">orchid_report_v14.orchid_report_v14</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="orchid_report_v14.action_window">
+      <field name="name">orchid_report_v14 window</field>
+      <field name="res_model">orchid_report_v14.orchid_report_v14</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="orchid_report_v14.action_server">
+      <field name="name">orchid_report_v14 server</field>
+      <field name="model_id" ref="model_orchid_report_v14_orchid_report_v14"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="orchid_report_v14" id="orchid_report_v14.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="orchid_report_v14.menu_1" parent="orchid_report_v14.menu_root"/>
+    <menuitem name="Menu 2" id="orchid_report_v14.menu_2" parent="orchid_report_v14.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="orchid_report_v14.menu_1_list" parent="orchid_report_v14.menu_1"
+              action="orchid_report_v14.action_window"/>
+    <menuitem name="Server to list" id="orchid_report_v14" parent="orchid_report_v14.menu_2"
+              action="orchid_report_v14.action_server"/>
+-->
+  </data>
+</odoo>

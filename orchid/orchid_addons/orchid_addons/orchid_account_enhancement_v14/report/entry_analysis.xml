@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<odoo>
+		<data>
+			<record id="view_orchid_entry_analysis_pivot" model="ir.ui.view">
+				<field name="name">orchid.entry.analysis.pivot</field>
+				<field name="model">orchid.account.entry.analysis</field>
+				<field name="arch" type="xml">
+					<pivot string="Entry Analysis">
+						<field name = "journal_id" type ="row"/>
+						<field name="debit" type="measure"/>
+						<field name="credit" type="measure"/>
+						<field name="balance" type="measure"/>
+					</pivot>
+				</field>
+			</record>
+
+			<record id="view_orchid_entry_analysis_graph" model="ir.ui.view">
+				<field name="name">orchid.entry.analysis.graph</field>
+				<field name="model">orchid.account.entry.analysis</field>
+				<field name="arch" type="xml">
+					<graph string="Entry Analysis">
+						<field name = "journal_id" type ="row"/>
+						<field name="balance" type="measure"/>
+					</graph>
+				</field>
+			</record>
+			
+			
+			<record id="view_orchid_entry_analysis_tree" model="ir.ui.view">
+				<field name="name">orchid.entry.analysis.tree</field>
+				<field name="model">orchid.account.entry.analysis</field>
+				<field name="arch" type="xml">
+					<tree string="Entry Analysis">
+						<field name="date"/>
+						<field name="account_id"/>
+						<field name="name"/>
+						<field name="ref"/>
+						<field name="payment_id"/>
+						<field name="partner_id"/>
+						<field name="journal_id"/>
+						<!-- <field name="invoice_id"/>  -->
+						<field name="cost_center_id"/> 
+						<field name="analytic_account_id"/>        
+						<field name="product_id"/>
+						<field name="debit" sum="Total"/>                    
+						<field name="credit" sum="Total"/>
+					</tree>
+				</field>
+			</record>
+
+		 
+			
+
+			<record id="view_orchid_entry_report_search" model="ir.ui.view">
+				<field name="name">orchid.entry.report.search</field>
+				<field name="model">orchid.account.entry.analysis</field>
+				<field name="arch" type="xml">
+					<search string="Entry Analysis">
+						<field name="journal_id"/>
+						<field name="account_id"/>
+						<field name="partner_id"/>
+						<field name="cost_center_id"/>
+						<field name="date"/>
+						<field name="move_id"/>
+						<field name="name"/>
+						
+						<filter string="Financial Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+
+						<filter name="date" string="Today" domain="[('date', '&gt;=', datetime.date.today().strftime('%Y-%m-%d')),('date', '&lt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+
+						<group expand="1" string="Group By">
+							<filter string="Account" name="account_id" context="{'group_by':'account_id'}"/>
+							<filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
+							<filter string="Journal" name='journal_id' context="{'group_by':'journal_id'}"/>
+							<filter string="Product" name='product_id' context="{'group_by':'product_id'}"/>
+							<filter string="Product Category" name='categ_id' context="{'group_by':'categ_id'}"/>
+							<filter string="Partner" name='partner_id' context="{'group_by':'partner_id'}"/>
+							<filter string="Company" name='company_id' context="{'group_by':'company_id'}"/>
+							<filter string="Currency" name='currency_id' context="{'group_by':'currency_id'}"/>
+							<filter string="Date" name='dategroup' context="{'group_by':'date'}"/>
+						</group>
+					</search>
+				</field>
+			</record>
+
+			<record id="menu_action_orchid_entry_analysis" model="ir.actions.act_window">
+				<field name="name">Entry Analysis</field>
+				<field name="res_model">orchid.account.entry.analysis</field>
+				<!-- <field name="view_type">form</field> -->
+				<field name="view_mode">pivot,graph,tree</field> 
+				<field name="context">{"search_default_year":1}</field>      
+			</record>
+
+			<menuitem 
+			id="action_orchid_entry_analysis"
+			name="Entry Analysis" 
+			action="menu_action_orchid_entry_analysis" 
+			parent="account.account_reports_management_menu" />
+
+			<!-- <act_window
+				id="act_orchid_invoice_partner_relation"
+				name="Monthly Turnover"
+				groups="account.group_account_manager"
+				context="{'search_default_partner_id':[active_id], 'search_default_month':1,'search_default_user':1,'group_by_no_leaf':1,'group_by':[]}"
+				res_model="orchid.account.entry.analysis"
+				src_model="res.partner"
+				view_mode="graph"/> -->
+
+		</data>
+	</odoo>

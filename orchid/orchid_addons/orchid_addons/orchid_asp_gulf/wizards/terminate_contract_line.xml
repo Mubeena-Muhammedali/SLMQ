@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_terminate_contract_line_view_form" model="ir.ui.view">
+        <field name="name">od.terminate.contract.line.form</field>
+        <field name="model">od.terminate.contract.line</field>
+        <field name="arch" type="xml">
+            <form string="Terminate Contract Line">
+                <group>
+                    <field name="contract_line_id" readonly="1"/>
+                    <field name="termination_date" required="1"/>
+                    <field name="termination_reason" required="1"/>
+                </group>
+                <footer>
+                    <button name="button_terminate" string="Terminate" confirm="Are you sure you want to terminate this contract line? " type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_terminate_contract_line_action" model="ir.actions.act_window">
+        <field name="name">Terminate Contract Line"</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.terminate.contract.line</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_terminate_contract_line_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

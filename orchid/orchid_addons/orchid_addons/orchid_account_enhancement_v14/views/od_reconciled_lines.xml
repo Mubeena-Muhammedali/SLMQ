@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="account_payment_form_od_reconciled_line_inherit" model="ir.ui.view">
+        <field name="name">account.payment.od.reconciled.line.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+        	<div class="oe_button_box" position="inside">
+                <button name="button_od_open_reconciled_line" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': [('reconciled_invoices_count','=', 0),('reconciled_bills_count','=', 0)]}" string="Reconciled Entries">
+                    <!-- <field name="reconciled_invoices_count"/> -->
+                    <!-- <span attrs="{'invisible': [('reconciled_invoices_count','&gt;', 1)]}">Invoice</span> -->
+                    <!-- <span attrs="{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}">Invoices</span> -->
+                </button>
+            </div>
+        </field>
+    </record>
+    <record id="od_reconciled_line_list_view" model="ir.ui.view">
+        <field name="name">od.account.reconciled.line.list</field>
+        <field name="model">od.account.reconciled.line</field>
+        <field name="arch" type="xml">
+            <tree string="Reconciled Lines" create="false">
+                <field name="date" optional="show" readonly="1"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="move_id" optional="show"/>
+                <field name="account_id" optional="show" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
+                <field name="partner_id" optional="show" readonly="1"/>
+                <field name="ref" optional="hide"/>
+                <field name="name"/>
+                <field name="date_maturity" optional="hide"/>
+                <field name="amount_residual" sum="Total Residual" readonly="1"/>
+                <field name="amount_residual_currency" sum="Total Residual FC" readonly="1"/>
+                <field name="debit" sum="Total Debit" readonly="1"/>
+                <field name="credit" sum="Total Credit" readonly="1"/>
+                <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
+                <field name="amount_currency" readonly="1" groups="base.group_multi_currency" sum="Allocation Amount in FC"/>
+                <field name="currency_id" readonly="1" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_od_reconciled_line_list_view">
+        <field name="name">Reconciled Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.account.reconciled.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="od_reconciled_line_list_view"/>
+    </record>
+</odoo>

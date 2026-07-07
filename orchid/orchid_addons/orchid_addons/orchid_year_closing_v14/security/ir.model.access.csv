@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_orchid_period_closing_analysis,orchid.period.closing.analysis,model_orchid_period_closing_analysis,account.group_account_user,1,1,1,0
+
+access_od_period_closing_wizard,od.period.closing.wizard,model_od_period_closing_wizard,account.group_account_user,1,1,1,0
+
+access_od_period_closing_line_wizard,od.period.closing.line.wizard,model_od_period_closing_line_wizard,account.group_account_user,1,1,1,1

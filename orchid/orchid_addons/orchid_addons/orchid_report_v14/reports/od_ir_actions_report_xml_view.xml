@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="od_inherit_act_report_xml_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.form</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="inherit_id" ref="base.act_report_xml_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group/group/field[@name='report_rml']" position="after">
+                    <field name="avilable_in_ddl"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

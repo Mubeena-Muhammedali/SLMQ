@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_cost_booking_tree" model="ir.ui.view">
+        <field name="name">od.cost.booking.tree</field>
+        <field name="model">od.cost.booking</field>
+        <field name="arch" type="xml">
+            <tree string="Cost Booking">
+                <field name="name" optional="hide"/>
+                <field name="date" optional="show"/>
+                <field name="state" optional="show"/>
+            </tree>
+        </field>
+    </record>
+    <record id="od_cost_booking_form" model="ir.ui.view">
+        <field name="name">od.cost.booking.form</field>
+        <field name="model">od.cost.booking</field>
+        <field name="arch" type="xml">
+            <form string="Cost Booking">
+                <header>
+                    <button name="generate_lines" string="Generate Cost Sheet" type="object" class="oe_highlight" states="draft"/>
+                    <button name="button_confirm" string="Confirm" type="object" class="oe_highlight" states="draft" confirm="Are you sure that you want to confirm the record and generate entries?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_start" readonly="1" force_save="1"/>
+                            <field name="date" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="total_cost" readonly="1" force_save="1"/>
+                            <field name="move_id" readonly="1" force_save="1" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cost Booking Line" name="cost_booking_line" attrs="{'invisible':[('costing_line_ids','=',[])]}">
+                            <field name="costing_line_ids" mode="tree"  readonly="1" force_save="1">
+                                <tree create="false" editable="false">
+                                    <field name="cost_booking_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="company_currency_id" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="partner_id"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="account_id"/>
+                                    <field name="amount"/>
+                                    <field name="debit" sum="total" optional="hide"/>
+                                    <field name="credit" sum="total" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_cost_booking_action" model="ir.actions.act_window">
+        <field name="name">Cost Booking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.cost.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="od_cost_booking_tree"/>
+        <!-- <field name="target">new</field> -->
+    </record>
+    
+</odoo>

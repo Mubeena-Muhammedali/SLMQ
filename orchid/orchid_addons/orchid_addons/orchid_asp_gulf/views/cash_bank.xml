@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+    <record model="ir.ui.view" id="view_move_form_inher_cash_bank">
+        <field name="name">account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <field name="od_check_date"/>
+                <field name="od_check_to"/>
+                <field name="od_acc_payee" invisible="1" force_save="1"/>
+            </field>
+        </field>
+    </record>
+	<record model="ir.ui.view" id="view_move_form_inher_cash_bank">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="od_reveiew" attrs="{'invisible': [('od_is_bank_voucher','!=',True)],'readonly': [('state','!=','draft')]}"/>
+                <field name="od_check_date"/>
+                <field name="od_check_to"/>
+                <field name="od_acc_payee" invisible="1" force_save="1"/>
+                <!-- <field name="od_is_bank_voucher" invisible="1" force_save="1"/> -->
+            </field>
+           <!--  <field name="state" position="attributes">
+                <attribute name="attrs">{'invisible':[('od_is_bank_voucher','=',True)]}</attribute>
+            </field>
+            <field name="state" position="after">
+                <field name="state" widget="statusbar" statusbar_visible="draft,submit,posted" attrs="{'invisible':[('od_is_bank_voucher','=',False)]}"/>
+            </field> -->
+            <xpath expr="//form/header/button[1]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ('draft','submit')), ('auto_post', '=', True), ('move_type', '!=', 'entry')]}</attribute>
+            </xpath>
+            <button name="action_post" position="after">
+                <button name="od_button_submit" string="Submit" class="oe_highlight" type="object" groups="account.group_account_invoice" attrs="{'invisible': ['|','|',('state', '!=', ('draft')), ('od_is_bank_voucher','!=',True),('od_reveiew','!=',True)]}"/>
+            </button>
+        </field>
+    </record>
+</odoo>
+

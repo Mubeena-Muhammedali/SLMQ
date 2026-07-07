@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_asp_contract_payment_tree_view">
+            <field name="name">od.contract.payment.tree</field>
+            <field name="model">od.contract.payment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Payments" default_order="id desc">
+                    <field name="name"  string="Service" optional="hide"/>
+                    <field name="contract_id"/>
+                    <field name="contract_name"/>
+                    <field name="partner_id"/>
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="billing_cycle" />
+                    <field name="total_amount" />
+                    <field name="states"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="od_asp_contract_payment_form_view">
+            <field name="name">od.contract.payment.form</field>
+            <field name="model">od.contract.payment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Payments">
+                    <header>
+                        <field name="states" widget="statusbar" force_save="1"/>
+                        <button name="%(orchid_asp_gulf.od_merge_revenue_line_wiz_action)d" type="action" class="oe_highlight" string="Merge Revenue Lines" attrs="{'invisible':[('states','!=','active')]}"/>
+                    </header>
+                    <sheet>
+                        <!-- <div class="oe_title">
+                            <h1><field name="name" placeholder="name" readonly="True"/></h1>
+                        </div> -->
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="contract_id" readonly="True"/>
+                                <field name="contract_name" readonly="True"/>
+                                <field name="contract_line_id" readonly="True"/>
+                                <field name="fluctuating_contract" invisible="0"/>
+                            </group> 
+                            <group>
+                                <field name="start_date" readonly="True"/>
+                                <field name="end_date" readonly="True"/> 
+                                <field name="billing_cycle" readonly="True"/>
+                                <field name="per_month" readonly="True"/>
+                                <field name="total_amount" readonly="True"/>
+                            </group>
+                        </group>
+                        <group></group>
+                        <notebook>
+                            <page string="Payments" name="payment_line">
+                                <field name="payment_line" mode="tree">
+                                    <tree create="false">
+                                        <field name="period_from" readonly="True"/>
+                                        <field name="period_to" readonly="True"/>
+                                        <field name="amount" readonly="True" sum="Total" force_save="1"/>
+                                        <field name="invoiced" readonly="0" force_save="1"/>
+                                        <field name="invoice_line_id" invisible="1" readonly="True" force_save="1"/>
+                                        <field name="invoice_status" invisible="1" readonly="True" force_save="1"/>
+                                        <field name="service_id" invisible="1"/>
+                                        <field name="monthly_line_ids" widget="many2many_tags" optional="hide" force_save="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Revenue" name="monthly_line">
+                                <field name="monthly_line_ids" mode="tree">
+                                    <tree create="false" default_order="period_from">
+                                        <field name="period_from" readonly="True"/>
+                                        <field name="period_to" readonly="True"/>
+                                        <field name="amount" readonly="True" sum="Total"/>
+                                        <field name="invoiced" readonly="0" force_save="1"/>
+                                        <field name="due" readonly="1" force_save="1" optional="hide"/>
+                                        <field name="amt_difference" readonly="1" force_save="1" optional="hide"/>
+                                        <field name="move_id" readonly="1" force_save="1" optional="hide"/>
+                                        <field name="invoice_line_id" readonly="True" force_save="1" optional="hide"/>
+                                        <field name="reverse_line_id" readonly="True" force_save="1" optional="hide"/>
+                                        <field name="invoice_date" readonly="True" force_save="1" optional="hide"/>
+                                        <field name="reverse_date" readonly="True" force_save="1" optional="hide"/>
+                                        <!-- <field name="invoice_status" invisible="1" readonly="True" force_save="1"/> -->
+                                        <field name="service_id" invisible="1"/>
+                                        <field name="recognition_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Costing" name="direct_costing_line">
+                                <field name="costing_line_ids" readonly="1">
+                                    <tree create="false" default_order="period_from">
+                                        <field name="period_from"/>
+                                        <field name="period_to"/>
+                                        <field name="amount" sum="Total"/>
+                                        <field name="invoiced" force_save="1"/>
+                                        <field name="product_id" force_save="1" optional="hide"/>
+                                        <field name="move_id" force_save="1" optional="hide"/>
+                                        <field name="service_id" invisible="1"/>
+                                        <field name="service_status" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- filter -->
+        <record model="ir.ui.view" id="od_asp_contract_payment_filter_view">
+            <field name="name">od.contract.payment.filter</field>
+            <field name="model">od.contract.payment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract Payment">
+                    <!-- <field name="name" string="Name" filter_domain="['|', '|', ('name', 'ilike', self), ('partner_id', 'child_of', self)]"/> -->
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="contract_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Contract" name="contract" domain="[]" context="{'group_by': 'contract_id'}"/>
+                        <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter name="billingcycle" string="Billing Cycle" domain="[]" context="{'group_by': 'billing_cycle'}"/>
+                        <filter name="states" string="State" domain="[]" context="{'group_by': 'states'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+            
+
+        <record model="ir.actions.act_window" id="action_od_asp_contract_payment_view">
+            <field name="name">Payments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.contract.payment</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_asp_contract_payment_tree_view"/>
+            <field name="search_view_id" ref="od_asp_contract_payment_filter_view"/>
+        </record>
+       <!--  <record model="ir.actions.act_window" id="action_od_asp_contract_form_view">
+            <field name="name">Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.asp.contract</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="od_asp_contract_form_view"/>
+        </record> -->
+
+        
+    </data>
+</odoo>

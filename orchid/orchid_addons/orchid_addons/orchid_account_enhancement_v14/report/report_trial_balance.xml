@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_trial_balance">
+        <t t-call="web.html_container">
+            <t t-set="data_report_margin_top" t-value="12"/>
+            <t t-set="data_report_header_spacing" t-value="9"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <center><h2>Trial Balance</h2></center>
+
+                    <div class="row mt32">
+                        <div class="col-4">
+                            <strong>Display Account:</strong>
+                            <p>
+                                <span t-if="data['display_account'] == 'all'">All accounts</span>
+                                <span t-if="data['display_account'] == 'movement'">With movements</span>
+                                <span t-if="data['display_account'] == 'not_zero'">With balance not equal to zero</span>
+                            </p>
+                        </div>
+                        <div class="col-4">
+                            <p>
+                                <t t-if="data['date_from']"><strong>Date from :</strong> <span t-esc="data['date_from']"/><br/></t>
+                                <t t-if="data['date_to']"><strong>Date to :</strong> <span t-esc="data['date_to']"/></t>
+                            </p>
+                        </div>
+                        <div class="col-4">
+                            <strong>Target Moves:</strong>
+                            <p>
+                                <span t-if="data['target_move'] == 'all'">All Entries</span>
+                                <span t-if="data['target_move'] == 'posted'">All Posted Entries</span>
+                            </p>
+                        </div>
+                        <div class="col-4">
+                            <strong>Currency:</strong>
+                            <p>
+                                <span t-esc="env.company.currency_id"/>
+                                <!-- <span t-if="data['target_move'] == 'posted'">All Posted Entries</span> -->
+                            </p>
+                        </div>
+                    </div>
+
+                    <t t-if="not (data['detail']) and not (data['groupby'])">
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Account</th>
+                                    <th class="text-right">Debit</th>
+                                    <th class="text-right">Credit</th>
+                                    <th class="text-right">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="Accounts" t-as="account">
+                                    <td>
+                                        <span t-att-style="style" t-esc="account['code']"/>
+                                    </td>
+                                    <td>
+                                        <span style="color: white;" t-esc="'..'"/>
+                                        <span t-att-style="style" t-esc="account['name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                         <span t-att-style="style" t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="not (data['detail']) and (data['groupby'])">
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Account</th>
+                                    <th class="text-right">Debit</th>
+                                    <th class="text-right">Credit</th>
+                                    <th class="text-right">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr t-foreach="Accounts" t-as="account">
+                                    <t  t-if="account['d_type']=='account' ">
+                                        <td>
+                                            <span t-att-style="style" t-esc="account['code']"/>
+                                        </td>
+                                        <td>
+                                            <span style="color: white;" t-esc="'..'"/>
+                                            <span t-att-style="style" t-esc="account['name']"/>
+                                        </td>
+                                        <td class="text-right">
+                                             <span t-att-style="style" t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                        </td>
+                                    </t>
+                                    <t  t-else="">
+                                        <td colspan="2">
+                                            <b><span t-att-style="style" t-esc="account['name']"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/></b>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="(data['detail']) and (data['groupby'])">
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr style="border-top:solid white 1px;">
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  style="background-color:#D4D3D0;">
+                                    <td colspan="2"/>
+                                    <td colspan="3"><center><b>Opening</b></center></td>
+                                    <td colspan="3"><center><b>Current</b></center></td>
+                                    <td colspan="3"><center><b>Closing</b></center></td>
+                                </tr>
+                                <tr>
+                                    <td>Code</td>
+                                    <td>Account</td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                </tr>
+                                <!-- <t t-set="" -->
+                                <tr t-foreach="Accounts" t-as="account">
+                                    <t  t-if="account['d_type']=='account' ">
+                                        <td>
+                                            <span t-att-style="style" t-esc="account['code']"/>
+                                        </td>
+                                        <td>
+                                            <span style="color: white;" t-esc="'..'"/>
+                                            <span t-att-style="style" t-esc="account['name']"/>
+                                        </td>
+                                        <td class="text-right">
+                                             <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_debit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_credit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_balance']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                             <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_debit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_credit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_balance']))"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                             <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_debit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_credit']))"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_balance']))"/>
+                                        </td>
+                                    </t>
+                                    <t  t-else="">
+                                        
+                                        <td colspan="2">
+                                            <span style="color: white;" t-esc="'..'"/>
+                                            <b><span t-att-style="style" t-esc="account['name']"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_debit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_credit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_balance']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_debit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_credit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_balance']))"/></b>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_debit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_credit']))"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_balance']))"/></b>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-if="(data['detail']) and not (data['groupby'])">
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr style="border-top:solid white 1px;">
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;"></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                    <th style="border-top:solid white 1px;" ></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  style="background-color:#D4D3D0;">
+                                    <td colspan="2"/>
+                                    <td colspan="3"><center><b>Opening</b></center></td>
+                                    <td colspan="3"><center><b>Current</b></center></td>
+                                    <td colspan="3"><center><b>Closing</b></center></td>
+                                </tr>
+                                <tr>
+                                    <td>Code</td>
+                                    <td>Account</td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                    <td class="text-right"><b>Debit</b></td>
+                                    <td class="text-right"><b>Credit</b></td>
+                                    <td class="text-right"><b>Balance</b></td>
+                                </tr>
+                                <!-- <t t-set="" -->
+                                <tr t-foreach="Accounts" t-as="account">
+                                    <td>
+                                        <span t-att-style="style" t-esc="account['code']"/>
+                                    </td>
+                                    <td>
+                                        <span style="color: white;" t-esc="'..'"/>
+                                        <span t-att-style="style" t-esc="account['name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                         <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_debit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_credit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['open_balance']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                         <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_debit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_credit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['current_balance']))"/>
+                                    </td>
+
+                                    <td class="text-right">
+                                         <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_debit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_credit']))"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-att-style="style" t-esc="'{0:,.2f}'.format(float(account['close_balance']))"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

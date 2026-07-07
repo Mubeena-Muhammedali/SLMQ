@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+        <data>
+            <record id="view_od_po_costing_view_pivot" model="ir.ui.view">
+                <field name="name">od.po.costing.view.pivot</field>
+                <field name="model">od.po.costing.view</field>
+                <field name="arch" type="xml">
+                    <pivot string="Purchase Costing Analysis">
+                        <field name = "period_to" type ="row"/>
+                        <field name="amount" type="measure"/>
+                    </pivot>
+                </field>
+            </record>
+
+            <record id="view_od_po_costing_view_search" model="ir.ui.view">
+                <field name="name">orchid.entry.report.search</field>
+                <field name="model">od.po.costing.view</field>
+                <field name="arch" type="xml">
+                    <search string="Purchase Costing Analysis">
+                        <field name="product_id"/>
+                        <field name="period_from"/>
+                        <field name="period_to"/>
+                        
+                        <filter string="Current Year" name="year" domain="[('period_from','&lt;=', time.strftime('%%Y-12-31')),('period_to','&gt;=',time.strftime('%%Y-01-01'))]"/>
+
+                        <group expand="1" string="Group By">
+                            <filter string="Product" name='product_id' context="{'group_by':'product_id'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+            <record id="menu_action_od_po_costing_view" model="ir.actions.act_window">
+                <field name="name">Purchase Costing Analysis</field>
+                <field name="res_model">od.po.costing.view</field>
+                <field name="view_mode">pivot,graph,tree</field> 
+                <field name="context">{"search_default_year":1}</field>      
+            </record>
+            
+        </data>
+    </odoo>

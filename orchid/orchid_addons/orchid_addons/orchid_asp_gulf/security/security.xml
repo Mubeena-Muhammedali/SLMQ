@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="0">
+	    <record id="od_group_fluctuating_contract" model="res.groups">
+	        <field name="name">Fluctuating contract</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
+
+	    <!-- provision groups -->
+	    <record id="od_group_provision_gm" model="res.groups">
+	        <field name="name">GM</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
+	    <record id="od_group_provision_dco" model="res.groups">
+	        <field name="name">DCO Action</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
+	    <record id="od_group_provision_operation" model="res.groups">
+	        <field name="name">Operation</field>
+	        <field name="category_id" ref="base.module_category_hidden"/>
+	    </record>
+	</data>
+</odoo>

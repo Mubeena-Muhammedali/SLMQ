@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_report_balance_view" model="ir.ui.view">
+        <field name="name">Trial Balance</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <data>
+            <field name="journal_ids" position="replace"/>
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="display_account" widget="radio"/>
+                    <newline/>
+                </xpath>
+                <field name="date_from" position="replace">  
+                    <field name="date_from"/>
+                </field>
+                <field name="date_to" position="replace">  
+                    <field name="date_to"/>
+                </field> 
+                <field name="date_to" position="after">
+                    <field name="detail"/>
+                    <field name="groupby"/>
+                    <!-- <field name="od_initial_bal"/> -->
+                </field>
+                <button name = "check_report" position="after">
+                    <button name="od_generate_excel_report" type="object" string="Excel" class="oe_highlight"/>
+                    <field name="excel_file" filename="file_name"/> 
+                    <field name="file_name" invisible="1"/>
+                </button>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_account_balance_menu" model="ir.actions.act_window">
+        <field name="name">Trial Balance</field>
+        <field name="res_model">account.balance.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_balance_view"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_account" />
+    </record>
+
+    <menuitem id="menu_Balance_report"
+              name="Trial Balance"
+              sequence="7"
+              action="action_account_balance_menu"
+              parent="orchid_account_enhancement_v14.account_reports_audit"/>
+
+</odoo>

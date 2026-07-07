@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_asp_contract_tree_view">
+            <field name="name">od.asp.contract.tree</field>
+            <field name="model">od.asp.contract</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Contracts" default_order="id desc">
+                    <field name="name" string="Contract"/>
+                    <field name="contract_code"/>
+                    <field name="partner_id"/>
+                    <field name="date_from" />
+                    <field name="date_to" />
+                    <field name="state" />
+                    <field name="new_business" />
+                    <!-- <field name="id" invisible="1"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="od_asp_contract_form_view">
+            <field name="name">od.asp.contract.form</field>
+            <field name="model">od.asp.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contracts">
+                    <header>
+                        <button name="button_confirm" type="object" class="oe_highlight" string="Confirm" states="0_draft"/>
+                        <button name="%(orchid_asp_gulf.od_contract_advance_invoice_action)d" type="action" class="oe_highlight" string="Create Advance Invoice" states="active"/>
+                        <button name="button_terminate" type="object"  string="Terminate" states="active"/>
+                        <button name="%(orchid_asp_gulf.od_contract_renew_action)d" type="action" class="oe_highlight" string="Renew" attrs="{'invisible':['|',('renewed','=',True),('state','!=','inactive')]}"/>
+                        <button name="%(orchid_asp_gulf.od_contract_renew_action)d" id="contract_to_renew" type="action" class="oe_highlight" string="Renew" attrs="{'invisible':[('contracts_to_renew','=',False)]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" string="Invoices" attrs="{'invisible': [('invoice_ids', '=', [])]}">
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="name" readonly="True"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" required="True"/>
+                                <field name="contact_id"/>
+                                <field name="email"/>
+                                <field name="currency_id"  required="True"/>
+                                <field name="od_exchange_rate" digits="[12,12]"/>
+                                <field name="payment_term_id"/>
+                                <field name="client_order_ref"/>
+                                <field name="fluctuation"/>
+                            </group> 
+                            <group> 
+                                <field name="sam_id" />
+                                <field name="contract_code" />
+                                <field name="analytic_account_id" />
+                                <label for="date_to" string="Start Date"/>
+                                <div class="d-flex">
+                                    <field name="date_from" force_save="1" placeholder="Start Date" required="True"/>
+                                    <span class="o_form_label mx-3 oe_read_only" force_save="1"> to </span>
+                                    <field name="date_to" force_save="1" placeholder="End Date" required="True"/>
+                                </div>
+                                <field name="contract_period" readonly="1" force_save="1"/>
+                                <field name="sale_order_ids" force_save="1" widget="many2many_tags" invisible="1"/>
+                                <field name="invoice_ids" force_save="1" widget="many2many_tags" invisible="1"/>
+                                <field name="renewed" readonly="1" force_save="1" invisible="1"/>
+                                <field name="new_business"/>
+                                <field name="contracts_to_renew"/>
+                            </group>
+                        </group>
+                        <group></group>
+                        <notebook>
+                            <page string="Service Lines" name="contract_lines" invisible="0">
+                                <field name="contract_line_ids" context="{'default_billing_from':date_from,'default_billing_to':date_to}" mode="tree">
+                                    <tree editable="top" decoration-it="state=='0_draft'" decoration-muted="state in ['inactive','terminate']">
+                                        <button name="%(orchid_asp_gulf.od_terminate_contract_line_action)d" type="action"  string="Terminate" states="active"/>
+                                        <button name="action_activate" type="object" class="oe_highlight" string="Activate" attrs="{'invisible':['|','|',('effective_date','=',False),('parent.state','in',['0_draft','inactive']),('state','!=','0_draft')]}"/>
+                                        <field name="effective_date" attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="billing_from"  attrs="{'readonly':[('state','!=','0_draft')],'required':[('effective_date','!=',False)]}"/>
+                                        <field name="billing_to"  attrs="{'readonly':[('state','!=','0_draft')],'required':[('effective_date','!=',False)]}"/>
+                                        <field name="billing_cycle" force_save="1" required="1"  attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="acculde" force_save="1"   attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="next_invoice_date" required="1"  attrs="{'readonly':[('invoice_line_ids','!=',[])]}"/>
+                                        <field name="state" required="1" readonly="1"/>
+                                        <field name="termination_date" readonly="1" optional="hide"/>
+                                        <field name="termination_reason" required="1" readonly="1" optional="hide"/>
+                                        <field name="product_id" required="1" force_save="1" readonly="1"/>
+                                        <field name="name" readonly="1" force_save="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="total_direct_cost" widget="monetary" attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="product_uom_qty" sum="Quantity" readonly="1" force_save="1"/>
+                                        <field name="product_uom"  readonly="1" force_save="1" optional="hide"/>
+                                        <field name="price_unit" readonly="1" force_save="1"/>
+                                        <field name="frequency" readonly="1" force_save="1" optional="hide"/>
+                                        <field name="tax_id" widget="many2many_tags" readonly="1" force_save="1"/>
+                                        <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"  readonly="1" force_save="1"/>
+                                        <field name="price_subtotal" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="price_tax" invisible="1"  readonly="1" force_save="1"/>
+                                        <field name="price_total" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="order_id" invisible="1"/>
+                                        <field name="order_line_id" force_save="1" invisible="1"/>
+                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="payment_id" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="line_regular" force_save="1" invisible="1"/>
+                                        <field name="fluctuating_contract" invisible="1"/>
+                                        
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Service Lines" name="contract_lines" invisible="1">
+                                <field name="contract_line_active_ids" context="{'default_billing_from':date_from,'default_billing_to':date_to}" mode="tree">
+                                    <tree editable="top" decoration-it="state=='0_draft'" decoration-muted="state in ['inactive','terminate']">
+                                        <button name="%(orchid_asp_gulf.od_terminate_contract_line_action)d" type="action"  string="Terminate" states="active"/>
+                                        <button name="action_activate" type="object" class="oe_highlight" string="Activate" attrs="{'invisible':['|','|',('effective_date','=',False),('parent.state','in',['0_draft','inactive']),('state','!=','0_draft')]}"/>
+                                        <field name="effective_date" attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="billing_from"  attrs="{'readonly':[('state','!=','0_draft')],'required':[('effective_date','!=',False)]}"/>
+                                        <field name="billing_to"  attrs="{'readonly':[('state','!=','0_draft')],'required':[('effective_date','!=',False)]}"/>
+                                        <field name="billing_cycle" force_save="1" required="1"  attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="acculde" force_save="1"   attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="next_invoice_date" required="1"  attrs="{'readonly':[('invoice_line_ids','!=',[])]}"/>
+                                        <field name="state" required="1" readonly="1"/>
+                                        <field name="termination_date" readonly="1" optional="hide"/>
+                                        <field name="termination_reason" required="1" readonly="1" optional="hide"/>
+                                        <field name="product_id" required="1" force_save="1" readonly="1"/>
+                                        <field name="name" readonly="1" force_save="1"/>
+                                        <field name="company_currency_id" invisible="1"/>
+                                        <field name="total_direct_cost" widget="monetary" attrs="{'readonly':[('state','!=','0_draft')]}"/>
+                                        <field name="product_uom_qty" sum="Quantity" readonly="1" force_save="1"/>
+                                        <field name="product_uom"  readonly="1" force_save="1" optional="hide"/>
+                                        <field name="price_unit" readonly="1" force_save="1"/>
+                                        <field name="frequency" readonly="1" force_save="1" optional="hide"/>
+                                        <field name="tax_id" widget="many2many_tags" readonly="1" force_save="1"/>
+                                        <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"  readonly="1" force_save="1"/>
+                                        <field name="price_subtotal" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="price_tax" invisible="1"  readonly="1" force_save="1"/>
+                                        <field name="price_total" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="order_id" invisible="1"/>
+                                        <field name="order_line_id" force_save="1" invisible="1"/>
+                                        <field name="invoice_line_ids" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="payment_id" force_save="1" widget="many2many_tags" invisible="1"/>
+                                        <field name="line_regular" force_save="1" invisible="1"/>
+                                        <field name="fluctuating_contract" invisible="1"/>
+                                        
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <field name="note"  placeholder="Notes" nolabel="1"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- filter -->
+        <record model="ir.ui.view" id="od_asp_contract_filter_view">
+            <field name="name">od.asp.contract.filter</field>
+            <field name="model">od.asp.contract</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract Payment">
+                     <field name="name" string="Contract" filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="contract_code"/>
+                    <field name="contact_id"/>
+                    <field name="sam_id"/>
+                    <field name="contract_line_ids" string="Product" filter_domain="[('contract_line_ids.product_id', 'ilike', self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="customer" string="Customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter name="contactid" string="Contact Person" domain="[]" context="{'group_by': 'contact_id'}"/>
+                        <filter name="samid" string="SAM" domain="[]" context="{'group_by': 'sam_id'}"/>
+                        <filter name="state" string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- kanban view -->
+        <record id="od_asp_contract_kanban_view" model="ir.ui.view">
+            <field name="name">od.asp.contract.kanban.view</field>
+            <field name="model">od.asp.contract</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban" default_order="state asc" default_group_by="state" sample="1">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <!-- <field name="contract_type"/> -->
+                    <!-- <field name="contract_option"/> -->
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="id"/>
+                    <field name="state"/>
+                    <field name="color"/>
+                    <progressbar field="state" colors='{"active": "success", "0_draft": "danger", "inactive":"warning"}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click o_res_partner_kanban">                       
+                                <div>
+                                    <span class="btn  fa fa-list-alt ">&#160;</span><strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span class="btn  fa fa-user">&#160;</span><field name="partner_id"/>
+                                    <span class="o_kanban_record_subtitle"></span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="btn  fa fa-clock-o ">&#160;</span><field name="date_from" />
+                                        <div class="o_kanban_inline_block">
+                                            <field name="date_to" options="{'color_field': 'color'}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_od_asp_contract_view">
+            <field name="name">Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.asp.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_asp_contract_tree_view"/>
+            <field name="search_view_id" ref="od_asp_contract_filter_view"/>
+        </record>
+
+        <!-- contract to renew action -->
+        <record model="ir.actions.act_window" id="action_od_asp_contract_to_renew_view">
+            <field name="name">Contracts to renew</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.asp.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_asp_contract_tree_view"/>
+            <field name="domain">[('contracts_to_renew','=',True)]</field>
+            <field name="context">{'create':False}</field>
+            <field name="search_view_id" ref="od_asp_contract_filter_view"/>
+        </record>
+
+       
+    </data>
+</odoo>

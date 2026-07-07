@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_asp_provision_tree_view">
+            <field name="name">od.asp.provision.form.tree</field>
+            <field name="model">od.asp.provision.form</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Provision Form">
+                    <field name="name" />
+                    <field name="partner_id"/>
+                    <field name="date" />
+                    <field name="finance_check"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="od_asp_provision_form_view">
+            <field name="name">od.asp.provision.form.form</field>
+            <field name="model">od.asp.provision.form</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               
+                <form string="Provision Form">
+                    <field name="old_revision_ids" invisible="1"/>
+                    <field name="revised" invisible="1"/>
+                    <header>
+                        <button name="button_gmreview" type="object" class="oe_highlight" string="Send for GM Review" states="draft"/>
+                        <button name="button_dcoaction" type="object" class="oe_highlight" string="Approve" attrs="{'invisible':['|',('type_of_provision_id', '!=', 'azzurance'),('state', '!=', 'gm_review')]}" groups="orchid_asp_gulf.od_group_provision_gm"/>
+                        <button name="button_operation" type="object" class="oe_highlight" string="Operations" attrs="{'invisible':['|',('type_of_provision_id', '!=', 'azzurance'),('state', '!=', 'dco_action')]}" groups="orchid_asp_gulf.od_group_provision_dco"/>
+                        <button name="button_completed" type="object" class="oe_highlight" string="Complete" attrs="{'invisible':['|',('type_of_provision_id', '!=', 'azzurance'),('state', '!=', 'operation')]}" groups="orchid_asp_gulf.od_group_provision_operation"/>
+                        <button name="button_completed" type="object" class="oe_highlight" string="Approve" attrs="{'invisible':['|',('type_of_provision_id', '=', 'azzurance'),('state', '!=', 'gm_review')]}"/>
+                        <button name="button_revision" type="object" class="oe_highlight" string="Revise" attrs="{'invisible':['|',('state', '!=', 'completed'),('finance_check','!=',True)]}" groups="orchid_asp_gulf.od_group_provision_gm, account.group_account_manager"/>
+                        <field name="state" widget="statusbar" attrs="{'invisible':[('type_of_provision_id','!=','azzurance')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,gm_review,completed" attrs="{'invisible':[('type_of_provision_id','=','azzurance')]}"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_revision" type="object" class="oe_stat_button" icon="fa-pencil-square-o" string="Revision History" attrs="{'invisible': [('old_revision_ids', '=', [])]}">
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" required="True" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="tech_contact_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="email" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="phone" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            </group> 
+                            <group> 
+                                <field name="date" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="date_handover" attrs="{'readonly':[('state', 'in', ('completed','cancel'))]}"/>
+                                <field name="sam_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group> 
+                                <!-- <field name="type_of_service_id" /> -->
+                                <field name="type_of_provision_id" required="1" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                <field name="gm_comments" attrs="{'invisible':[('state', '=', 'draft')],'readonly':[('state', '!=', 'gm_review')],'required':[('state', '=', 'gm_review')]}"/>
+                                <field name="finance_check" attrs="{'invisible':[('state', '!=', 'completed')]}" groups="orchid_asp_gulf.od_group_provision_gm, account.group_account_manager"/>
+                                <field name="finance_check_remark" attrs="{'invisible':[('finance_check', '=', False)],'required':[('finance_check','=',True)]}" groups="orchid_asp_gulf.od_group_provision_gm, account.group_account_manager"/>
+
+                            </group>
+                            <group> 
+                                <field name="total" attrs="{'invisible':[('type_of_provision_id', '!=', 'azzurance')]}"/>
+                                <field name="total_ram" attrs="{'invisible':[('type_of_provision_id', '!=', 'azzurance')]}"/>
+                                <field name="total_disk" attrs="{'invisible':[('type_of_provision_id', '!=', 'azzurance')]}"/>
+                                <field name="no_of_public_ip" attrs="{'invisible':[('type_of_provision_id', '!=', 'azzurance')],'readonly':[('state', '=', 'completed')]}"/>
+                            </group>
+                        </group>
+                        <!-- <group></group> -->
+                        <notebook>
+                            <page string="VM Lines" name="vm_lines" attrs="{'invisible':[('type_of_provision_id', '!=', 'azzurance')],'readonly':[('state', '!=', 'draft')]
+                                }"> 
+                                <field name="vm_ids" mode="tree" attrs="{'readonly':[('state', '!=', 'draft')]}">
+                                    <tree editable="bottom">
+                                        <field name="provision_id" invisible="1"/>
+                                        <field name="vcpu"/>
+                                        <field name="vram"/>
+                                        <field name="disk_id"/>
+                                        <field name="disk_qty"/>
+                                        <field name="ha"/>
+                                        <field name="os_id"/>
+                                        <field name="license_1"/>
+                                        <field name="license_2"/>
+                                        <field name="license_3" />
+                                        <field name="license_4"/>
+                                        <field name="license_5"/>
+                                        <field name="license_6"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        <!-- </notebook> -->
+                        <!-- <notebook> -->
+                            <page string="DCO Actions" name="doc_operations" attrs="{'invisible':['|',('type_of_provision_id', '!=', 'azzurance'),('state', 'in', ['draft','gm_review'])]}"> 
+                                <group>
+                                    <group>
+                                        <field name="provisioned_by_id" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                        <field name="assurance_cluster_id" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="public_ip_details" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                        <field name="backup_details" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                        <field name="firewall_details" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                    </group>  
+                                    <group> 
+                                        <field name="provision_status" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                        <field name="handover_to_ops" attrs="{'readonly':[('state', '!=', 'dco_action')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            
+                            
+                        <!-- </notebook> -->
+                        <!-- <notebook> -->
+                            <page string="Operations" name="operations" attrs="{'invisible':['|',('type_of_provision_id', '!=', 'azzurance'),('state', 'in', ['draft','gm_review','dco_action'])]}"> 
+                                <group>
+                                    <group>
+                                        <field name="tam_id" attrs="{'readonly':[('state', '!=', 'operation')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="application_installation" attrs="{'readonly':[('state', '!=', 'operation')]}"/>
+                                        <field name="license_check" attrs="{'readonly':[('state', '!=', 'operation')]}"/>
+                                        <field name="test_server" attrs="{'readonly':[('state', '!=', 'operation')]}"/>
+                                        <field name="handover_to_client" attrs="{'readonly':[('state', '!=', 'operation')]}"/>
+                                    </group>  
+                                </group>
+                            </page>
+                        <!-- </notebook> -->
+                        <!-- <notebook> -->
+                            <page string="MHS" name="mhs" 
+                                attrs="{'invisible':[('type_of_provision_id', '!=', 'mhs')]}"> 
+                                <field name="mhs_ids" mode="tree" attrs="{'readonly':[('state', '!=', 'draft')]}">
+                                    <tree editable="bottom">
+                                        <field name="provision_id" invisible="1"/>
+                                        <field name="total_no_of_u_space"/>
+                                        <field name="total_no_of_devices"/>
+                                        <field name="total_power"/>
+                                        <field name="no_of_servers"/>
+                                        <field name="no_of_storage"/>
+                                        <field name="no_of_firewalls"/>
+                                        <field name="dedicated_access_port"/>
+                                        <field name="dedicated_backup_console"/>
+                                        <field name="backup_storage"/>
+                                        <field name="total_public_ip"/>
+                                        <field name="license_1"/>
+                                        <field name="license_2"/>
+                                   </tree>
+                                </field>
+                            </page>
+                        <!-- </notebook> -->
+                        <!-- <notebook> -->
+                            <page string="CLS" name="cls" 
+                                attrs="{'invisible':[('type_of_provision_id', '!=', 'cls')]}">
+                                <field name="cls_ids" mode="tree" attrs="{'readonly':[('state', '!=', 'draft')]}">
+                                    <tree editable="bottom">
+                                        <field name="provision_id" invisible="1"/>
+                                        <field name="total_no_of_u_space"/>
+                                        <field name="total_no_of_devices"/>
+                                        <field name="total_power"/>
+                                        <field name="no_of_servers"/>
+                                        <field name="no_of_storage"/>
+                                        <field name="no_of_firewalls"/>
+                                        <field name="dedicated_access_port"/>
+                                        <field name="total_public_ip"/>
+                                   </tree>
+                                </field>
+                            </page> 
+
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_od_asp_provision_view">
+            <field name="name">Provision Form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.asp.provision.form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_asp_provision_tree_view"/>
+            <field name="domain">[('revised','!=',True)]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_od_asp_provision_revision_view">
+            <field name="name">Provision Form Revised</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.asp.provision.form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_asp_provision_tree_view"/>
+            <field name="domain">[('revised','=',True)]</field>
+        </record>
+
+        <record id="od_asp_provisionform_sequence" model="ir.sequence">
+            <field name="name">Provision Form Sequence</field>
+            <field name="code">od.asp.provision.form</field>
+            <field name="prefix">Provision/%(year)s/</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">3</field>
+        </record>
+       
+    </data>
+</odoo>

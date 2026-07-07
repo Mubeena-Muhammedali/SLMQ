@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="financial_report_wiz_modified_yr_closing_inheirt" model="ir.ui.view">
+            <field name="name">financial.report.extended.wiz</field>
+            <field name="model">financial.report</field>
+            <field name="inherit_id" ref="orchid_account_enhancement_v14.financial_report_wiz_modified"/>
+            <field name="arch" type="xml">
+                <field name="debit_credit" position="after">
+                    <field name = "od_with_closing"/>
+                </field>
+            </field>
+        </record>
+        <record id="account_report_balance_view_yr_closing_inheirt" model="ir.ui.view">
+            <field name="name">account.balance.report.extended.wiz</field>
+            <field name="model">account.balance.report</field>
+            <field name="inherit_id" ref="orchid_account_enhancement_v14.account_report_balance_view"/>
+            <field name="arch" type="xml">
+                <field name="date_to" position="after">
+                    <field name = "od_with_closing"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

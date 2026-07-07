@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="odview_account_payment_tree" model="ir.ui.view">
+            <field name="name">account.payment.tree</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <tree edit="false" create="false">
+                    <field name="date" optional="show"/>
+                    <field name="name" string="Doc No" optional="show"/>
+                    <!-- <field name="journal_id"/> -->
+                    <!-- <field name="payment_method_id"/> -->
+                    <field name="cheque_reference" string="Cheque No" optional="show"/>
+                    <field name="effective_date" string="Cheque Date" optional="show"/>
+                    <field name="ref" string="Reference" optional="show"/>
+                    <field name="partner_id" string="Partner" optional="show"/>
+                    <field name="amount" sum="Amount" optional="show"/>
+                    <field name="state" optional="show"/>
+                    <field name="od_released" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="currency_id"  optional="hide"/>
+                    <field name="partner_type" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="odaction_account_payments" model="ir.actions.act_window">
+            <field name="name">PDC Report</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="domain">[('payment_method_code', '=', 'pdc')]</field>
+            <field name="view_id" ref="odview_account_payment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="odaction_account_payments" id="menu_odaction_account_payments" parent="orchid_account_enhancement_v14.account_reports_generic_statements" sequence="3" />
+
+        <!-- Action relaese_pdc for multi -->
+        <record id="action_od_account_pdc_payments" model="ir.actions.server">
+            <field name="name">Release PDCs</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_view_types">list</field>
+            <field name="code">
+for record in records:
+    if not record.od_released:
+        record.release()
+            </field>
+        </record>
+    </data>
+</odoo>

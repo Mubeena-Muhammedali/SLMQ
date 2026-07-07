@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- *************Period Closing Wizard View************* -->
+    <record id="od_period_closing_wizard_form" model="ir.ui.view">
+        <field name="name">od.period.closing.wizard.form</field>
+        <field name="model">od.period.closing.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Period Closing ">
+                <group>
+                    <group>
+                        <field name="date" />
+                    </group>
+                    <group>
+                        <field name="account_id"/>
+                        <field name="journal_id"/>
+                        <field name="check_line_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <notebook attrs="{'invisible':[('check_line_id','=',False)]}">
+                        <page string="Entries">
+                            <field name="line_id" >
+                                <tree>
+                                    <field name="account_code"/>
+                                    <field name="account_id"/>
+                                    <field name="balance" sum="Balance"/>
+                                </tree>  
+                            </field>
+                        </page>
+                    </notebook>
+                </group>
+
+                <footer>
+                    <button string="Show Balance" name="show_balance" type="object" class="btn-primary"/>
+                    <button string="Generate Entries" name="generate_entries" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od_period_closing_wizard" model="ir.actions.act_window">
+        <field name="name">Period Closing</field>
+        <field name="res_model">od.period.closing.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_period_closing_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+	<!-- *************Period Closing Report View************* -->
+	<record id="od_period_closing_report_tree" model="ir.ui.view">
+		<field name="name">Period Closing Report</field>
+		<field name="model">orchid.period.closing.analysis</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="account_code"/>
+				<field name="account_id"/>
+                <field name="balance" sum="Balance"/>
+				<field name="company_id"/>
+			</tree>
+		</field>
+	</record>        
+
+	<record id="action_od_period_closing_report" model="ir.actions.act_window">
+		<field name="name">Period Closing Report</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">orchid.period.closing.analysis</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+</odoo>

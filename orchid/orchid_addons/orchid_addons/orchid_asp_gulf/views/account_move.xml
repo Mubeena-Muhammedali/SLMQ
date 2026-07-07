@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+	<record model="ir.ui.view" id="view_move_form_inher">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="od_exchange_rate" attrs="{'readonly':[('state','!=','draft')],'invisible':[('move_type','not in',('out_invoice','out_refund'))]}" digits="[12,12]"/>
+            </field>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="after">
+                <field name="od_frequency" invisible="0"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='sequence']" position="after">
+                <field name="od_period_from"/>
+                <field name="od_period_to"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='price_unit']" position="after">
+                <field name="od_frequency" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='sequence']" position="after">
+                <field name="od_period_from"  invisible="1"/>
+                <field name="od_period_to" invisible="1"/>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="move_type" readonly="1" force_save="1" groups="base.group_no_one"/>
+                <field name="od_contact_id" attrs="{'invisible':[('move_type','=','entry')],'required':[('move_type','in',('out_invoice','out_refund'))]}" options="{'no_create': True, 'no_create_edit':True}"/>
+                <!-- <field name="od_sam_id" attrs="{'invisible':[('move_type','=','entry')]}" options="{'no_create': True, 'no_create_edit':True}"/> -->
+                <!-- <field name="od_cc" attrs="{'invisible':[('move_type','=','entry')]}"/> -->
+                <field name="od_contract_id" readonly="1" force_save="1" attrs="{'invisible':[('move_type','not in',('out_invoice','out_refund'))]}" options="{'no_create': True, 'no_create_edit':True}"/>
+                <field name="od_contract_name" attrs="{'invisible':[('move_type','not in',('out_invoice','out_refund'))]}" options="{'no_create': True, 'no_create_edit':True}"/>
+            </field>
+        </field>
+    </record>
+    <!-- <record model="ir.ui.view" id="view_invoice_tree_inher">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="payment_state" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record> -->
+</odoo>

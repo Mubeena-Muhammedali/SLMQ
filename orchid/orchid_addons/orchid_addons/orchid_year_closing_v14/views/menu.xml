@@ -1,0 +1,12 @@
+<!-- <?xml version="1.0" encoding="utf-8"?> -->
+<odoo>
+    <data>
+    
+        <menuitem
+            id="menu_od_period_closing_wizard"
+            name="Period Closing"
+            parent="account.account_account_menu"
+            sequence="2"
+            action="action_od_period_closing_wizard" />
+    </data>
+</odoo>

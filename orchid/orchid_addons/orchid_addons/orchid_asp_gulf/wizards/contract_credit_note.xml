@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_contract_credit_note_all_view_form" model="ir.ui.view">
+        <field name="name">od.contract.credit.note.wiz.all.form</field>
+        <field name="model">od.contract.credit.note.wiz.all</field>
+        <field name="arch" type="xml">
+            <form string="Create Invoices">
+                <group>
+                    <group>
+                        <field name="date" required="1"/>
+                        <field name="invoice_date"/>
+                        <button name="search_lines" type="object" class="oe_highlight" string="Search Invoices" />
+                    </group>
+                    <group>
+                        <field name="partner_id" options="{'no_create': True,'no_edit': True}" required="1"/>
+                        <field name="contract_id" options="{'no_create': True,'no_edit': True}" attrs="{'readonly':[('partner_id','=',False)]}" required="1" domain="[('partner_id','=',partner_id)]"/>
+                        <field name="contract_name" force_save="1" readonly="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Invoice Lines" name="invoice_line" attrs="{'invisible':[('invoice_line','=',[])]}">
+                        <field name="invoice_line" mode="tree">
+                            <!-- <form>
+                                <group>
+                                    <group>
+                                        <field name="wiz_id" readonly="True" invisible="1"  force_save="1" />
+                                        <field name="invoice_date" readonly="True"  force_save="1"/>
+                                        <field name="invoice_id" readonly="True"  force_save="1"/>
+                                        <field name="amount" readonly="True"  force_save="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="amount_to_invoice" attrs="{'readonly':[('amount_to_invoice','!=',0)]}" sum="Total" force_save="1"/>
+                                        <field name="amount" readonly="True" force_save="1"/>
+                                        <field name="payment_line" invisible="1" force_save="1"/>
+                                    </group>
+                                </group>
+                            </form> -->
+                            <tree create="false" editable="bottom">
+                                <field name="wiz_id" readonly="True" invisible="1"  force_save="1" />
+                                <field name="invoice_date" readonly="True"  force_save="1"/>
+                                <field name="invoice_id" readonly="True"  force_save="1"/>
+                                <field name="currency_id" readonly="True"  force_save="1"/>
+                                <field name="amount" readonly="True"  force_save="1"/>
+                                <field name="refund_method"/>
+                                <field name="refund_amount" context="{'default_refund_amount':amount}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+
+                <footer>
+                    <button name="create_credit_note" string="Generate Credit Note" type="object" class="btn-primary" attrs="{'invisible':[('invoice_line','=',[])]}" confirm="Are you sure that you want to create credit note for all the search results?"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_contract_credit_note_all_action" model="ir.actions.act_window">
+        <field name="name">Create Credit Notes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.contract.credit.note.wiz.all</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_contract_credit_note_all_view_form"/>
+        <field name="target">new</field>
+    </record>
+    
+</odoo>

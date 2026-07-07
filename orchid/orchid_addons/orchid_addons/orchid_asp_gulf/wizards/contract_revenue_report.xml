@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="od_contract_revenue_report_wiz_view_form" model="ir.ui.view">
+        <field name="name">od.contract.revenue.report.form</field>
+        <field name="model">od.contract.revenue.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Contract Revenue Report">
+                <group>
+                    <group>
+                        <field name="year" required="1"/>
+                        <field name="date_start" readonly="1" force_save="1" invisible="1"/>
+                        <field name="date_end" readonly="1" force_save="1" invisible="1"/>
+                    </group>
+                    <group></group>
+                </group>
+                <footer>
+                    <button name="action_view_report" string="View Report" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="od_contract_revenue_report_wiz_action" model="ir.actions.act_window">
+        <field name="name">Contract Revenue Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">od.contract.revenue.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="od_contract_revenue_report_wiz_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

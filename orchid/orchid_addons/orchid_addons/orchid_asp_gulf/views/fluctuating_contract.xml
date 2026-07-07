@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="od_fluctuating_contract_tree_view">
+            <field name="name">od.fluctuating.contract.tree</field>
+            <field name="model">od.fluctuating.contract</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Fluctuating Services" default_order="id desc">
+                    <field name="name"/>
+                    <field name="contract_name"/>
+                    <!-- <field name="contract_id" /> -->
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="od_fluctuating_contract_form_view">
+            <field name="name">od.fluctuating.contract.form</field>
+            <field name="model">od.fluctuating.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Fluctuating Services">
+                    <header>
+                        <button name="button_validate" string="Validate" states='draft' class="oe_highlight" type="object"/>
+                        <button name="button_reset" string="Reset to Draft" states="validate"  type="object"/>
+                        <button name="button_approve" string="Approve" states="validate" class="oe_highlight" type="object" confirm="Are you sure that you want to approve the record?"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <!-- <div class="oe_title">
+                            <h1><field name="name" placeholder="name" readonly="True"/></h1>
+                        </div> -->
+                        <group>
+                            <group>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="contract_name" readonly="1"/>
+                                <!-- <field name="contract_line_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="product_id"/>
+                                <field name="old_desc"/>
+                                <field name="new_desc"/>
+                                <field name="inv_desc"/> -->
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <!-- <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="current_qty" readonly="1"/>
+                                <field name="frequency" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="new_qty" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="revised_qty"/>
+                                <field name="termination_date" attrs="{'readonly':[('state','!=','draft')],'invisible':[('revised_qty','>=',0)],'required':[('revised_qty','&lt;',0)]}"/>
+                                <field name="termination_reason" attrs="{'readonly':[('state','!=','draft')],'invisible':[('revised_qty','>=',0)],'required':[('revised_qty','&lt;',0)]}"/> -->
+                            </group>
+                        </group>
+                        <field name="remarks" placeholder="Remarks...."/>
+                        <notebook>
+                            <page string="Service Lines" name="fluctuating_line_ids">
+                                <field name="fluctuating_line_ids" mode="tree" attrs="{'readonly':[('state','!=','draft')]}">
+                                    <tree editable="top">
+                                        <field name="contract_line_id"/>
+                                        <field name="product_id" optional="hide"/>
+                                        <field name="old_desc"/>
+                                        <field name="new_desc"/>
+                                        <!-- <field name="inv_desc"/> -->
+                                        <field name="start_date"/>
+                                        <field name="current_qty" readonly="1"/>
+                                        <field name="frequency"/>
+                                        <field name="new_qty"/>
+                                        <field name="revised_qty"/>
+                                        <field name="termination_date" attrs="{'invisible':[('revised_qty','>=',0)],'required':[('revised_qty','&lt;',0)]}"/>
+                                        <field name="termination_reason" attrs="{'invisible':[('revised_qty','>=',0)],'required':[('revised_qty','&lt;',0)]}"/>
+
+
+                                 <!--        <field name="product_id" required="1" force_save="1" readonly="1"/>
+                                        <field name="price_unit"/>
+                                        <field name="frequency"/>
+                                        <field name="tax_id" widget="many2many_tags"/>
+                                        <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
+                                        <field name="price_subtotal" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="price_tax"  readonly="1" force_save="1"/>
+                                        <field name="price_total" widget="monetary"  readonly="1" force_save="1"/>
+                                        <field name="currency_id" invisible="1"/> -->
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="form_id" invisible="1"/>
+                                        <field name="contract_id" invisible="1"/>
+                                        <field name="new_contract_line_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="od_fluctuating_contract_filter_view">
+            <field name="name">od.fluctuating.contract.filter</field>
+            <field name="model">od.fluctuating.contract</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract">
+                    <field name="name"/>
+                    <!-- <field name="contract_id"/> -->
+                    <!-- <field name="product_id"/> -->
+                    <!-- <field name="fluctuating_line_ids" string="Product" filter_domain="[('fluctuating_line_ids.product_id', 'ilike', self)]"/> -->
+                    <group expand="0" string="Group By">
+                        <filter name="contractid" string="Contract" domain="[]" context="{'group_by': 'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_od_fluctuating_contract_view">
+            <field name="name">Fluctuating Services</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">od.fluctuating.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="od_fluctuating_contract_tree_view"/>
+            <field name="search_view_id" ref="od_fluctuating_contract_filter_view"/>
+        </record>
+
+       
+    </data>
+</odoo>
+

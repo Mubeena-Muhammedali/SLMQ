@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+        <record id="od_view_account_invoice_report_pivot" model="ir.ui.view">
+            <field name="name">account.invoice.report.pivot</field>
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_pivot"/>
+            <field name="arch" type="xml">
+                <field name="product_categ_id" position="replace">
+                </field>
+                <field name="price_subtotal" position="before">
+                    <field name="quantity" type="measure"/>
+                </field>
+                <field name="price_subtotal" position="after">
+                    <field name="tax_amount" type="measure"/>
+                    <field name="net_amount" type="measure"/>
+                    <field name="paid_amount" type="measure"/>
+                    <field name="residual" type="measure"/>
+                    <field name="cost" type="measure"/>
+                    <field name="profit" type="measure"/>
+                </field>
+            </field>
+        </record>
+        <!-- filter -->
+        <record id="od_view_account_invoice_report_search" model="ir.ui.view">
+            <field name="name">account.invoice.report.search</field>
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+            <field name="arch" type="xml">
+                <filter name="my_invoice" position="after">
+                    <filter string="Financial Year" name="current_year" domain="['|', ('invoice_date', '=', False), '&amp;',('invoice_date','&lt;=', time.strftime('%%Y-12-31')),('invoice_date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal invoices with period in current year"/>
+                    <separator/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</odoo>
