@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_membership_manager,membership manager,model_membership_membership,group_membership_manager,1,1,1,1
-access_membership_user,membership user,model_membership_membership,group_membership_user,1,1,1,0
