@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od_hr_attendance_timeoff_import_wizard_form" model="ir.ui.view">
+        <field name="name">od.hr.attendance.timeoff.import.wizard.form</field>
+        <field name="model">od.hr.attendance.timeoff.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Attendance / Time Off">
+                <group>
+                    <div colspan="2" class="text-muted mb-2">
+                        1. Download the template below.<br/>
+                        2. Fill in the Employee Name and Month on row 1, then one line per day
+                        starting row 3: put a value in "Hours" for a worked day (overtime is
+                        calculated automatically), or in "Time Off Type" for a day off.<br/>
+                        3. Upload the completed file and click "Upload &amp; Process".
+                    </div>
+                    <button name="action_download_template" type="object"
+                            string="Download Template" class="btn-secondary"
+                            icon="fa-download"/>
+                </group>
+                <group>
+                    <field name="import_filename" invisible="1"/>
+                    <field name="import_file" filename="import_filename" string="Timesheet File"/>
+                </group>
+                <group invisible="not error_log">
+                    <field name="error_log" readonly="1" nolabel="1" colspan="2"/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Upload &amp; Process"
+                            class="btn-primary" icon="fa-upload"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od_hr_attendance_timeoff_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Attendance / Time Off</field>
+        <field name="res_model">od.hr.attendance.timeoff.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <menuitem id="menu_od_hr_attendance_timeoff_import"
+              name="Import Attendance / Time Off"
+              parent="hr_attendance.menu_hr_attendance_overview"
+              action="action_od_hr_attendance_timeoff_import_wizard"
+              sequence="10"/>
+
+</odoo>
