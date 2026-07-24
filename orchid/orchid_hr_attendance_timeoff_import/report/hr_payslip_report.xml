@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_od_payslip" model="report.paperformat">
+        <field name="name">Orchid Payslip</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <record id="action_report_od_payslip" model="ir.actions.report">
+        <field name="name">PaySlip</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_hr_attendance_timeoff_import.report_od_payslip_document</field>
+        <field name="report_file">orchid_hr_attendance_timeoff_import.report_od_payslip_document</field>
+        <field name="print_report_name">'Pay Slip - %s' % (object.employee_id.name)</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="orchid_hr_attendance_timeoff_import.paperformat_od_payslip"/>
+    </record>
+
+    <template id="report_od_payslip_document">
+        <t t-foreach="docs" t-as="o">
+            <main style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #000; line-height: 1.25; padding: 0; margin: 0;">
+                <div class="page" style="padding: 0; margin: 0;">
+
+                <table style="width:100%; border-collapse:collapse; margin:0 0 100px 0;">
+                    <tr>
+                        <td style="width:18%; vertical-align:middle;">
+                            <img t-if="o.company_id.logo"
+                                 t-att-src="image_data_uri(o.company_id.logo)"
+                                 style="max-height:90px; max-width:90px;"/>
+                        </td>
+                        <td style="width:64%; text-align:center; vertical-align:middle;">
+                            <div style="font-weight:bold; font-size:22px;" t-esc="o.company_id.name"/>
+                            <div style="font-weight:bold; font-size:20px; margin-top:2px;">
+                                Pay Slip for the month of
+                                <t t-esc="o.date_from and o.date_from.strftime('%B-%Y') or ''"/>
+                            </div>
+                        </td>
+                        <td style="width:18%;"/>
+                    </tr>
+                </table>
+
+                <table style="width:100%; border-collapse:collapse; margin:0 0 20px 0; font-size:15px;">
+                    <tr>
+                        <td style="width:14%; font-weight:bold; padding:2px 0;">Emp. Code</td>
+                        <td style="width:36%; padding:2px 0;" t-esc="o.employee_id.barcode or ''"/>
+                        <td style="width:14%; font-weight:bold; padding:2px 0;">Nationality</td>
+                        <td style="width:36%; padding:2px 0;" t-esc="o.employee_id.country_id.name or ''"/>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold; padding:2px 0;">Name</td>
+                        <td colspan="3" style="padding:2px 0;" t-esc="o.employee_id.name"/>
+                    </tr>
+                </table>
+
+                <table style="width:100%; border-collapse:collapse; margin:0 0 8px 0; font-size:13px;">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="text-align:left; font-size:13px; font-weight:bold; padding:3px 0;">Earnings</th>
+                            <th colspan="2" style="text-align:left; font-size:13px; font-weight:bold; padding:3px 0;">Deductions</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:left; padding:3px 0;">Description</th>
+                            <th style="text-align:right; width:6%; padding:3px 0;"/>
+                            <th style="text-align:right; width:16%; padding:3px 0;">Amount</th>
+                            <th style="text-align:right; width:6%; padding:3px 0;"/>
+                            <th style="text-align:left; padding:3px 0;">Description</th>
+                            <th style="text-align:right; width:16%; padding:3px 0;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o._od_line_pairs()" t-as="pair">
+                            <td style="padding:3px 0;" t-esc="pair[0].name if pair[0] else ''"/>
+                            <td style="text-align:right; padding:3px 0;"
+                                t-esc="o._od_worked_days_value() if pair[0] and pair[0].category_id.code == 'BASIC' else ''"/>
+                            <td style="text-align:right; padding:3px 0;"
+                                t-esc="o._od_fmt(pair[0].total) if pair[0] else ''"/>
+                            <td style="text-align:right; padding:3px 0;"/>
+                            <td style="padding:3px 0;" t-esc="pair[1].name if pair[1] else ''"/>
+                            <td style="text-align:right; padding:3px 0;"
+                                t-esc="o._od_fmt(abs(pair[1].total)) if pair[1] else ''"/>
+                        </tr>
+                        <tr style="font-weight:bold;">
+                            <td colspan="2" style="padding:3px 0;">Total:</td>
+                            <td style="text-align:right; padding:3px 0;" t-esc="o._od_fmt(o._od_total_earnings())"/>
+                            <td style="padding:3px 0;"/>
+                            <td style="padding:3px 0;">Total Deductions:</td>
+                            <td style="text-align:right; padding:3px 0;" t-esc="o._od_fmt(o._od_total_deductions())"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table style="width:100%; margin:10px 0 0 0; font-size:15px;">
+                    <tr>
+                        <td style="width:16%; padding:3px 0; font-weight:bold;">Net Payable:</td>
+                        <td style="width:18%; padding:3px 0; text-decoration:underline; font-weight:bold;" t-esc="o._od_fmt(o.net_wage)"/>
+                        <td style="padding:3px 0;" t-esc="o._od_amount_in_words()"/>
+                    </tr>
+                </table>
+
+                <table style="width:100%; margin:40px 0 0 0; font-size:15px;">
+                    <tr>
+                        <td style="width:50%; padding:3px 0; font-weight:bold;">Prepared by</td>
+                        <td style="width:50%; padding:3px 0; font-weight:bold;">Received by</td>
+                    </tr>
+                </table>
+
+                </div>
+            </main>
+        </t>
+    </template>
+
+</odoo>
