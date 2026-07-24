@@ -9,10 +9,18 @@
                 <group>
                     <div colspan="2" class="text-muted mb-2">
                         1. Download the template below.<br/>
-                        2. Fill in the Employee Name and Month on row 1, then one line per day
-                        starting row 3: put a value in "Hours" for a worked day (overtime is
-                        calculated automatically), or in "Time Off Type" for a day off.<br/>
-                        3. Upload the completed file and click "Upload &amp; Process".
+                        2. Fill in one row per employee per day, starting row 2: Employee Name,
+                        Date, Hours worked, Time Off Type and/or Time off (hours - e.g. 8 = a
+                        full day off). Any number of employees and dates can go in the same
+                        file.<br/>
+                        3. If both Hours and Time Off are filled for a day, they're reconciled
+                        against the employee's standard daily hours (e.g. 5 hours worked + a
+                        Sick-off out of an 8-hour day becomes 5 hours Attendance and 3 hours
+                        Time Off). If only Time Off Type is filled, any remaining hours up to
+                        the standard day are logged as Attendance automatically.<br/>
+                        4. Upload the completed file and click "Upload &amp; Process".<br/>
+                        <b>Date format:</b> use DD/MM/YYYY (e.g. 23/07/2026). YYYY-MM-DD and
+                        MM/DD/YYYY are also accepted, as are real Excel date cells.
                     </div>
                     <button name="action_download_template" type="object"
                             string="Download Template" class="btn-secondary"

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import io
+from datetime import date
 
 from odoo import http
 from odoo.http import request
@@ -23,28 +24,23 @@ class OdAttendanceTimeoffImportController(http.Controller):
 
         workbook = openpyxl.Workbook()
         sheet = workbook.active
-        sheet.title = 'Timesheet'
+        sheet.title = 'Attendance & Time Off'
 
-        bold = Font(bold=True)
+        header_font = Font(bold=True)
 
-        # Row 1: employee + month
-        sheet['A1'] = 'Employee Name'
-        sheet['B1'] = 'John Doe'
-        sheet['C1'] = 'Month'
-        sheet['D1'] = '2025-09'
-        sheet['A1'].font = bold
-        sheet['C1'].font = bold
-
-        # Row 2: headers
-        headers = ['Date', 'Hours', 'Time Off Type']
+        # Row 1: column headers - one table, any number of employees/dates below
+        headers = ['Employee Name', 'Date', 'Hours', 'Time Off Type', 'Time off']
         for col, title in enumerate(headers, start=1):
-            cell = sheet.cell(row=2, column=col, value=title)
-            cell.font = bold
+            cell = sheet.cell(row=1, column=col, value=title)
+            cell.font = header_font
 
-        sheet.column_dimensions['A'].width = 16
-        sheet.column_dimensions['B'].width = 12
-        sheet.column_dimensions['C'].width = 22
-        sheet.column_dimensions['D'].width = 14
+        
+
+        sheet.column_dimensions['A'].width = 18
+        sheet.column_dimensions['B'].width = 14
+        sheet.column_dimensions['C'].width = 10
+        sheet.column_dimensions['D'].width = 18
+        sheet.column_dimensions['E'].width = 12
 
         buffer = io.BytesIO()
         workbook.save(buffer)
