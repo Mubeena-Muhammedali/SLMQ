@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add a tab/section to the quant form view -->
+    <record id="od_view_stock_quant_form_inherit" model="ir.ui.view">
+        <field name="name">od.stock.quant.form</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_form_editable"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <field name="od_in_date_line_ids" nolabel="1">
+                    <list create="0" delete="0">
+                        <field name="in_date"/>
+                        <field name="quantity"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_backfill_in_date_breakdown" model="ir.actions.server">
+        <field name="name">Rebuild In-Date Breakdown (All Quants)</field>
+        <field name="model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_model_id" ref="stock.model_stock_quant"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code"> 
+if records: 
+    action = records.action_backfill_in_date_breakdown() 
+else: 
+    action = model.action_backfill_in_date_breakdown() </field>
+    </record>
+
+    <!-- Pivot view: this is what actually lets you slice quantity by date.
+         stock.quant itself can't do this - Odoo merges same product/location/
+         lot into one row with a single in_date, so a native stock.quant pivot
+         can never split "6 on hand" into "3 today / 3 yesterday". This model
+         holds that split, so the pivot lives here instead. -->
+    <record id="od_view_stock_quant_in_date_pivot" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.pivot</field>
+        <field name="model">od.stock.quant.in.date</field>
+        <field name="arch" type="xml">
+            <pivot string="Quantity by In-Date">
+                <field name="in_date" type="col"/>
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="od_view_stock_quant_in_date_list" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.list</field>
+        <field name="model">od.stock.quant.in.date</field>
+        <field name="arch" type="xml">
+            <list string="Quantity by In-Date" create="0" delete="0">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="in_date"/>
+                <field name="quantity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="od_view_stock_quant_in_date_search" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.search</field>
+        <field name="model">od.stock.quant.in.date</field>
+        <field name="arch" type="xml">
+            <search string="Quantity by In-Date">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="in_date"/>
+                <filter string="Today" name="today"
+                        domain="[('in_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Yesterday" name="yesterday"
+                        domain="[('in_date', '=', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 7 Days" name="last_7_days"
+                        domain="[('in_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Internal Locations" name="internal_loc"
+                        domain="[('location_id.usage', '=', 'internal')]"/>
+                <separator/>
+                <filter string="Product" name="group_product" context="{'group_by': 'product_id'}"/>
+                <filter string="Location" name="group_location" context="{'group_by': 'location_id'}"/>
+                <filter string="In Date" name="group_in_date" context="{'group_by': 'in_date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_quant_in_date" model="ir.actions.act_window">
+        <field name="name">Quantity by In-Date</field>
+        <field name="res_model">od.stock.quant.in.date</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="od_view_stock_quant_in_date_search"/>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_group_product': 1, 'search_default_group_location': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No in-date breakdown lines yet.
+            </p>
+            <p>
+                This shows how much of each product's on-hand quantity came
+                in on each date - use "Rebuild In-Date Breakdown" on the
+                Quants list if this looks out of date.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_quant_in_date"
+              name="Quantity by In-Date"
+              action="action_stock_quant_in_date"
+              parent="stock.menu_warehouse_report"
+              sequence="100"/>
+
+    <!-- ================================================================
+         OPTION 2: SQL VIEW w/ FIFO WINDOW FUNCTION
+         Computed on the fly from stock.move.line, no stored breakdown
+         table, no per-move write cost. Trade-off: recalculated fully on
+         every read, and only splits by product + location (not lot/
+         package/owner). Kept side-by-side with Option 1 above so you can
+         compare and remove whichever you don't want to keep.
+         ================================================================ -->
+
+    <record id="od_view_stock_quant_in_date_sql_pivot" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.sql.pivot</field>
+        <field name="model">od.stock.quant.in.date.sql</field>
+        <field name="arch" type="xml">
+            <pivot string="Quantity by In-Date (SQL/FIFO)">
+                <field name="product_id" type="row"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="od_view_stock_quant_in_date_sql_list" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.sql.list</field>
+        <field name="model">od.stock.quant.in.date.sql</field>
+        <field name="arch" type="xml">
+            <list string="Quantity by In-Date (SQL/FIFO)" create="0" edit="0" delete="0">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="in_date"/>
+                <field name="quantity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="od_view_stock_quant_in_date_sql_search" model="ir.ui.view">
+        <field name="name">od.stock.quant.in.date.sql.search</field>
+        <field name="model">od.stock.quant.in.date.sql</field>
+        <field name="arch" type="xml">
+            <search string="Quantity by In-Date (SQL/FIFO)">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="in_date"/>
+                <filter string="Today" name="today"
+                        domain="[('in_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Yesterday" name="yesterday"
+                        domain="[('in_date', '=', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 7 Days" name="last_7_days"
+                        domain="[('in_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="In Stock" name="has_qty" domain="[('quantity', '>', 0)]"/>
+                <separator/>
+                <filter string="Product" name="group_product" context="{'group_by': 'product_id'}"/>
+                <filter string="Location" name="group_location" context="{'group_by': 'location_id'}"/>
+                <filter string="In Date" name="group_in_date" context="{'group_by': 'in_date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_quant_in_date_sql" model="ir.actions.act_window">
+        <field name="name">Quantity by In-Date (SQL/FIFO)</field>
+        <field name="res_model">od.stock.quant.in.date.sql</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="od_view_stock_quant_in_date_sql_search"/>
+        <field name="context">{'search_default_has_qty': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet.
+            </p>
+            <p>
+                Same idea as "Quantity by In-Date", but computed live from
+                stock.move.line with a FIFO window function instead of a
+                stored, incrementally-updated table. Only splits by product
+                and location (no lot/package/owner detail).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_quant_in_date_sql"
+              name="Quantity by In-Date (SQL/FIFO)"
+              action="action_stock_quant_in_date_sql"
+              parent="stock.menu_warehouse_report"
+              sequence="101"/>
+
+</odoo>
+

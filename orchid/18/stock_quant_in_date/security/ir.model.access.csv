@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_quant_in_date_manager,stock.quant.in.date.manager,model_od_stock_quant_in_date,stock.group_stock_manager,1,1,1,1
+access_stock_quant_in_date_user,stock.quant.in.date.user,model_od_stock_quant_in_date,stock.group_stock_user,1,0,0,0
+access_stock_quant_in_date_sql_manager,stock.quant.in.date.sql.manager,model_od_stock_quant_in_date_sql,stock.group_stock_manager,1,0,0,0
+access_stock_quant_in_date_sql_user,stock.quant.in.date.sql.user,model_od_stock_quant_in_date_sql,stock.group_stock_user,1,0,0,0
