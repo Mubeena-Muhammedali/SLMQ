@@ -42,6 +42,18 @@ class OdVendorRegistration(models.Model):
         string='Contact Person',
         tracking=True,
     )
+    # ------------------------------------------------------------------
+    # Banking - plain char fields on the registration; mapped onto a
+    # res.partner.bank record (linked via partner_id.bank_ids) on approval.
+    # ------------------------------------------------------------------
+    iban = fields.Char(
+        string='IBAN',
+        tracking=True,
+    )
+    bank_name = fields.Char(
+        string='Bank Name',
+        tracking=True,
+    )
     category = fields.Selection([
         ('ksa_based_vendor', 'KSA-based Vendor'),
         ('onsite_work_vendor', 'On-site Work Vendor'),
@@ -160,7 +172,21 @@ class OdVendorRegistration(models.Model):
                 'od_vendor_code': vendor_id,
                 'supplier_rank': 1,
             }
-            partner = self.env['res.partner'].create(partner_vals)
+            partner = self.env['res.partner'].sudo().create(partner_vals)
+
+            if rec.iban or rec.bank_name:
+                bank = False
+                if rec.bank_name:
+                    bank = self.env['res.bank'].sudo().search(
+                        [('name', '=', rec.bank_name)], limit=1)
+                    if not bank:
+                        bank = self.env['res.bank'].sudo().create({'name': rec.bank_name})
+                self.env['res.partner.bank'].sudo().create({
+                    'acc_number': rec.iban,
+                    'partner_id': partner.id,
+                    'bank_id': bank.id if bank else False,
+                })
+
             rec.write({
                 'state': 'approve',
                 'partner_id': partner.id,
@@ -213,9 +239,6 @@ class OdVendorRegistration(models.Model):
 
     def action_open_partner(self):
         self.ensure_one()
-
-        if not self.partner_id:
-            raise UserError(_('No vendor partner has been created yet.'))
 
         return {
             'type': 'ir.actions.act_window',

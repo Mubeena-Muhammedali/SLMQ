@@ -79,6 +79,14 @@
                         </group>
                     </group>
 
+                    <group string="Banking">
+                        <group>
+                            <field name="iban" required="1" readonly="state != 'register'"/>
+                            <field name="bank_name" required="1" readonly="state != 'register'"/>
+                        </group>
+                    </group>
+
+
                     <group string="Status" invisible="1">
                         <field name="partner_id" readonly="1"/>
                         <field name="submitted_date" readonly="1" force_save="1"/>

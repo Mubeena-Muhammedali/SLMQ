@@ -39,6 +39,8 @@ class OdVendorRegistrationController(http.Controller):
             'vat_number': post.get('vat_number'),
             'cr_number': post.get('cr_number'),
             'contact_person': post.get('contact_person'),
+            'iban': post.get('iban'),
+            'bank_name': post.get('bank_name'),
             'category': post.get('category') or False,
         }
 
@@ -63,13 +65,13 @@ class OdVendorRegistrationController(http.Controller):
         ['/vendor/register/create'],
         type='http', auth='public', methods=['POST'], csrf=True)
     def od_vendor_registration_create(self, **post):
-        if not post.get('name'):
+        if not post.get('name') or not post.get('iban') or not post.get('bank_name'):
             return request.render('od_vendor_registration.od_vendor_registration_form_template', {
                 'registration': False,
                 'countries': request.env['res.country'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'readonly': False,
-                'error': 'Vendor Name is required.',
+                'error': 'Vendor Name, IBAN and Bank Name are required.',
                 'is_new': True,
             })
 
@@ -113,13 +115,13 @@ class OdVendorRegistrationController(http.Controller):
             # Locked: silently show the (now read-only) form.
             return request.redirect('/vendor/register/%s/%s' % (reg_id, token))
 
-        if not post.get('name'):
+        if not post.get('name') or not post.get('iban') or not post.get('bank_name'):
             return request.render('od_vendor_registration.od_vendor_registration_form_template', {
                 'registration': registration,
                 'countries': request.env['res.country'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'readonly': False,
-                'error': 'Vendor Name is required.',
+                'error': 'Vendor Name, IBAN and Bank Name are required.',
                 'is_new': False,
             })
 

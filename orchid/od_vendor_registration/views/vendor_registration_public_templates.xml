@@ -251,6 +251,26 @@
                 </div>
 
                 <hr/>
+                <h3>Banking</h3>
+                <div class="ovr-row">
+                    <div class="ovr-col-6">
+                        <label>IBAN *</label>
+                        <input type="text" name="iban"
+                            t-att-value="reg and reg.iban"
+                            t-att-disabled="'disabled' if readonly else None"
+                            required="required"/>
+                    </div>
+
+                    <div class="ovr-col-6">
+                        <label>Bank Name *</label>
+                        <input type="text" name="bank_name"
+                            t-att-value="reg and reg.bank_name"
+                            t-att-disabled="'disabled' if readonly else None"
+                            required="required"/>
+                    </div>
+                </div>
+
+                <hr/>
 
                 <t t-if="not readonly">
                     <button type="submit" class="ovr-btn">Submit Registration</button>
