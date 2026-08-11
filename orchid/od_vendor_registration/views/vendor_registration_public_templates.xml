@@ -178,7 +178,7 @@
                     <div class="ovr-col-4">
                         <label>State *</label>
                         <select name="state_id"
-                                t-att-disabled="'disabled' if readonly else None">
+                                t-att-disabled="'disabled' if readonly else None" required="required">
                             <option value="">Select...</option>
                             <t t-foreach="states" t-as="s">
                                 <option t-att-value="s.id"
@@ -198,7 +198,7 @@
                     <div class="ovr-col-4">
                         <label>Country *</label>
                         <select name="country_id"
-                                t-att-disabled="'disabled' if readonly else None">
+                                t-att-disabled="'disabled' if readonly else None" required="required">
                             <option value="">Select...</option>
                             <t t-foreach="countries" t-as="c">
                                 <option t-att-value="c.id"
