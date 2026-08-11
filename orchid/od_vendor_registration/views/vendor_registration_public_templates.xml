@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Self-contained page shell: no dependency on the 'website' module.
+         Every public template below t-calls this and passes its body as
+         the '0' content slot. -->
+    <template id="od_vendor_registration_layout">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Vendor Registration</title>
+                <style>
+                    body {
+                        font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                        background: #f5f6f8;
+                        color: #2b2b2b;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .ovr-container {
+                        max-width: 720px;
+                        margin: 40px auto;
+                        background: #ffffff;
+                        padding: 32px;
+                        border-radius: 8px;
+                        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+                    }
+                    h2 { margin-top: 0; }
+                    .ovr-muted { color: #6b6b6b; }
+                    .ovr-alert {
+                        padding: 12px 16px;
+                        border-radius: 6px;
+                        margin-bottom: 16px;
+                    }
+                    .ovr-alert-danger { background: #fdecea; color: #a12622; border: 1px solid #f5c6cb; }
+                    .ovr-alert-warning { background: #fff8e1; color: #7a5b00; border: 1px solid #ffe08a; }
+                    .ovr-alert-success { background: #e6f4ea; color: #1e6b34; border: 1px solid #b7dfc2; }
+                    .ovr-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+                    .ovr-col-6 { flex: 1 1 45%; min-width: 220px; }
+                    .ovr-col-4 { flex: 1 1 28%; min-width: 160px; }
+                    .ovr-col-12 { flex: 1 1 100%; }
+                    label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; }
+                    input[type=text], input[type=email], input[type=file], select, textarea {
+                        width: 100%;
+                        padding: 8px 10px;
+                        border: 1px solid #d3d6db;
+                        border-radius: 6px;
+                        font-size: 0.95rem;
+                        box-sizing: border-box;
+                    }
+                    input:disabled, select:disabled, textarea:disabled { background: #f0f0f0; color: #888; }
+                    .ovr-btn {
+                        display: inline-block;
+                        background: #714B67;
+                        color: #fff;
+                        border: none;
+                        padding: 10px 22px;
+                        border-radius: 6px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        margin-top: 8px;
+                    }
+                    .ovr-btn:hover { background: #5d3d54; }
+                    hr { border: none; border-top: 1px solid #eaeaea; margin: 20px 0; }
+                </style>
+            </head>
+            <body>
+                <div class="ovr-container">
+                    <t t-out="0"/>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="od_vendor_registration_not_found" name="Vendor Registration Not Found">
+        <t t-call="od_vendor_registration.od_vendor_registration_layout">
+            <div class="ovr-alert ovr-alert-danger">
+                This registration link is invalid or has expired. Please
+                contact the company that shared this link with you.
+            </div>
+        </t>
+    </template>
+
+    <template id="od_vendor_registration_thankyou_template" name="Vendor Registration Thank You">
+        <t t-call="od_vendor_registration.od_vendor_registration_layout">
+            <div class="ovr-alert ovr-alert-success">
+                <h3>Thank you!</h3>
+                <p>
+                    Registration for
+                    <strong><t t-esc="registration.name"/></strong>
+                    has been submitted successfully. We will
+                    contact you once it has been processed.
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <!--
+        Works in two modes, decided by the controller:
+          * is_new = True  -> blank form, POSTs to /vendor/register/create
+                              (self-service: anyone can start a registration)
+          * is_new = False -> registration record is passed in, POSTs to
+                              /vendor/register/<id>/<token>/submit
+                              (editing a record shared via a private link)
+    -->
+    <template id="od_vendor_registration_form_template" name="Vendor Registration Form">
+        <t t-call="od_vendor_registration.od_vendor_registration_layout">
+            <t t-set="reg" t-value="registration or False"/>
+
+            <h2>Vendor Registration</h2>
+            <p class="ovr-muted">Please fill in your company details below.</p>
+
+            <t t-if="error">
+                <div class="ovr-alert ovr-alert-danger" t-esc="error"/>
+            </t>
+
+            <t t-if="readonly and reg">
+                <div class="ovr-alert ovr-alert-warning">
+                    This registration is currently
+                    <strong t-esc="reg.state"/>
+                    and can no longer be edited.
+                </div>
+            </t>
+
+            <form t-att-action="'/vendor/register/create' if is_new else '/vendor/register/%s/%s/submit' % (reg.id, reg.access_token)"
+                  method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="ovr-row">
+                    <div class="ovr-col-6">
+                        <label>Vendor Name *</label>
+                        <input type="text" name="name"
+                               t-att-value="reg and reg.name"
+                               t-att-disabled="'disabled' if readonly else None"
+                               required="required"/>
+                    </div>
+                    <div class="ovr-col-6">
+                        <label>Phone *</label>
+                        <input type="text" name="phone"
+                               t-att-value="reg and reg.phone"
+                               t-att-disabled="'disabled' if readonly else None"
+                               required="required"/>
+                    </div>
+                    <div class="ovr-col-6">
+                        <label>Email *</label>
+                        <input type="email" name="email"
+                               t-att-value="reg and reg.email"
+                               t-att-disabled="'disabled' if readonly else None"
+                               required="required"/>
+                    </div>
+                </div>
+
+                <hr/>
+                <h3>Address</h3>
+                <div class="ovr-row">
+                    <div class="ovr-col-6">
+                        <label>Street</label>
+                        <input type="text" name="street"
+                            t-att-value="reg and reg.street"
+                            t-att-disabled="'disabled' if readonly else None"/>
+                    </div>
+
+                    <div class="ovr-col-6">
+                        <label>Street 2</label>
+                        <input type="text" name="street2"
+                            t-att-value="reg and reg.street2"
+                            t-att-disabled="'disabled' if readonly else None"/>
+                    </div>
+
+                    <div class="ovr-col-4">
+                        <label>City</label>
+                        <input type="text" name="city"
+                            t-att-value="reg and reg.city"
+                            t-att-disabled="'disabled' if readonly else None"/>
+                    </div>
+
+                    <div class="ovr-col-4">
+                        <label>State *</label>
+                        <select name="state_id"
+                                t-att-disabled="'disabled' if readonly else None">
+                            <option value="">Select...</option>
+                            <t t-foreach="states" t-as="s">
+                                <option t-att-value="s.id"
+                                        t-att-selected="'selected' if reg and reg.state_id.id == s.id else None"
+                                        t-esc="s.name"/>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="ovr-col-4">
+                        <label>Zip</label>
+                        <input type="text" name="zip"
+                            t-att-value="reg and reg.zip"
+                            t-att-disabled="'disabled' if readonly else None"/>
+                    </div>
+
+                    <div class="ovr-col-4">
+                        <label>Country *</label>
+                        <select name="country_id"
+                                t-att-disabled="'disabled' if readonly else None">
+                            <option value="">Select...</option>
+                            <t t-foreach="countries" t-as="c">
+                                <option t-att-value="c.id"
+                                        t-att-selected="'selected' if reg and reg.country_id.id == c.id else None"
+                                        t-esc="c.name"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+                <h3>Company Details</h3>
+                <div class="ovr-row">
+                    <div class="ovr-col-6">
+                        <label>VAT Number *</label>
+                        <input type="text" name="vat_number"
+                            t-att-value="reg and reg.vat_number"
+                            t-att-disabled="'disabled' if readonly else None"
+                            required="required"/>
+                    </div>
+
+                    <div class="ovr-col-6">
+                        <label>CR Number *</label>
+                        <input type="text" name="cr_number"
+                            t-att-value="reg and reg.cr_number"
+                            t-att-disabled="'disabled' if readonly else None"
+                            required="required"/>
+                    </div>
+
+                    <div class="ovr-col-6">
+                        <label>Contact Person</label>
+                        <input type="text" name="contact_person"
+                            t-att-value="reg and reg.contact_person"
+                            t-att-disabled="'disabled' if readonly else None"/>
+                    </div>
+
+                    <div class="ovr-col-6">
+                        <label>Category</label>
+                        <select name="category"
+                                t-att-disabled="'disabled' if readonly else None">
+                            <option value="">Select...</option>
+                            <option value="ksa_based_vendor"
+                                    t-att-selected="'selected' if reg and reg.category == 'ksa_based_vendor' else None">KSA-based Vendor</option>
+                            <option value="onsite_work_vendor"
+                                    t-att-selected="'selected' if reg and reg.category == 'onsite_work_vendor' else None">On-site Work Vendor</option>
+                            <option value="technical_engineering_vendor"
+                                    t-att-selected="'selected' if reg and reg.category == 'technical_engineering_vendor' else None">Technical/Engineering Vendor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <t t-if="not readonly">
+                    <button type="submit" class="ovr-btn">Submit Registration</button>
+                </t>
+            </form>
+        </t>
+    </template>
+
+</odoo>

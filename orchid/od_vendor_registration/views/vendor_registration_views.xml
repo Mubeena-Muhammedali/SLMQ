@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_od_vendor_registration_form" model="ir.ui.view">
+        <field name="name">od.vendor.registration.form</field>
+        <field name="model">od.vendor.registration</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Registration">
+                <header>
+                    <button name="action_review" type="object"
+                            string="Review" class="oe_highlight"
+                            invisible="state != 'register'"/>
+                    <button name="action_approve" type="object"
+                            string="Approve" class="oe_highlight"
+                            invisible="state != 'review'"/>
+                    <button name="action_reset_to_register" type="object"
+                            string="Reopen for Vendor"
+                            invisible="state in ('register','approve')"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel"
+                            invisible="state != 'review'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="register,review,approve"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_partner"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-building"
+                                invisible="not partner_id">
+                            <field name="partner_id"
+                                widget="statinfo"
+                                string="Vendor"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Vendor Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Acme Supplies Pvt Ltd" readonly="state != 'register'"/>
+                        </h1>
+                    </div>
+
+                    <div class="alert alert-info" role="alert"
+                         invisible="not registration_url">
+                        <strong>Share this link with the vendor:</strong>
+                        <field name="registration_url" widget="CopyClipboardChar" readonly="1"/>
+                        <div class="text-muted">
+                            The vendor can only edit their data while the record
+                            is in the <b>Register</b> state. Once submitted, it
+                            moves to <b>Review</b> and is locked for them.
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <span class="o_form_label o_td_label o_address_type" name="address_name">
+                                <span>Address</span>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" placeholder="State" class="o_address_state" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" required="1"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <div name="partner_address_country" class="d-flex justify-content-between">
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" required="1"/>
+                                </div>
+                            </div>
+                            <field name="vat_number" required="1" readonly="state != 'register'"/>
+                            <field name="cr_number" required="1" readonly="state != 'register'"/>
+                        </group>
+                        <group>
+                            <field name="phone" required="1" readonly="state != 'register'"/>
+                            <field name="email" widget="email" required="1" readonly="state != 'register'"/>
+                            <field name="contact_person" readonly="state != 'register'"/>
+                            <field name="category" readonly="state != 'register'"/>
+                        </group>
+                    </group>
+
+                    <group string="Status" invisible="1">
+                        <field name="partner_id" readonly="1"/>
+                        <field name="submitted_date" readonly="1" force_save="1"/>
+                        <field name="reviewed_date" readonly="1" force_save="1"/>
+                        <field name="approved_date" readonly="1" force_save="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_od_vendor_registration_list" model="ir.ui.view">
+        <field name="name">od.vendor.registration.list</field>
+        <field name="model">od.vendor.registration</field>
+        <field name="arch" type="xml">
+            <list string="Vendor Registrations" js_class="od_vendor_registration_list">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="country_id"/>
+                <field name="contact_person"/>
+                <field name="category"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'register'"
+                       decoration-warning="state == 'review'"
+                       decoration-success="state == 'approve'"/>
+                <field name="partner_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_od_vendor_registration_search" model="ir.ui.view">
+        <field name="name">od.vendor.registration.search</field>
+        <field name="model">od.vendor.registration</field>
+        <field name="arch" type="xml">
+            <search string="Vendor Registrations">
+                <field name="name"/>
+                <field name="contact_person"/>
+                <filter string="Register" name="filter_register" domain="[('state','=','register')]"/>
+                <filter string="Review" name="filter_review" domain="[('state','=','review')]"/>
+                <filter string="Approved" name="filter_approve" domain="[('state','=','approve')]"/>
+                <filter string="Cancelled" name="filter_cancel" domain="[('state','=','cancel')]"/>
+                <group>
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_od_vendor_registration" model="ir.actions.act_window">
+        <field name="name">Vendor Registrations</field>
+        <field name="res_model">od.vendor.registration</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_register': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_action">
+                Create a vendor registration and share its link
+            </p>
+            <p>
+                Click New to create a registration record, then copy the
+                Registration URL from the form and share it with the vendor.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_od_vendor_registration_root"
+              name="Vendor Registration"
+              sequence="60"/>
+    <menuitem id="menu_od_vendor_registration"
+              name="Registrations"
+              parent="menu_od_vendor_registration_root"
+              action="action_od_vendor_registration"
+              sequence="10"/>
+
+</odoo>

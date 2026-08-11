@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="od_view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">od.res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="od_cr_number"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="od_category"/>
+            </xpath>
+            <xpath expr="//group/group/div" position="after">
+                <field name="od_vendor_code" invisible="not od_vendor_code"/>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>
