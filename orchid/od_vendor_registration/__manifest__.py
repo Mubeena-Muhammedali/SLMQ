@@ -41,9 +41,11 @@ Key points
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'contacts'],
     'data': [
-        'data/sequence.xml',    
+        'data/sequence.xml',
         'security/ir.model.access.csv',
+        'data/vendor_document_type_data.xml',
         'wizard/vendor_registration_link_wizard_views.xml',
+        'views/vendor_document_type_views.xml',
         'views/vendor_registration_views.xml',
         'views/vendor_registration_public_templates.xml',
         'views/res_partner_view.xml',

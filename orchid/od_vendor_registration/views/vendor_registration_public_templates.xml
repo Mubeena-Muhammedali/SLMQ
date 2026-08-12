@@ -63,6 +63,27 @@
                     }
                     .ovr-btn:hover { background: #5d3d54; }
                     hr { border: none; border-top: 1px solid #eaeaea; margin: 20px 0; }
+                    .ovr-doc-group { margin-bottom: 20px; }
+                    .ovr-doc-group h4 { margin: 0 0 4px 0; font-size: 1rem; }
+                    .ovr-doc-group .ovr-muted { margin: 0 0 12px 0; font-size: 0.85rem; }
+                    .ovr-doc-row {
+                        display: flex; flex-wrap: wrap; align-items: flex-end;
+                        gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+                    }
+                    .ovr-doc-info { flex: 1 1 260px; min-width: 220px; }
+                    .ovr-doc-info label { margin-bottom: 2px; }
+                    .ovr-doc-file { flex: 1 1 220px; min-width: 200px; }
+                    .ovr-doc-expiry { flex: 0 1 160px; min-width: 150px; }
+                    .ovr-tag {
+                        display: inline-block; font-size: 0.72rem; font-weight: 600;
+                        padding: 2px 8px; border-radius: 10px; margin-left: 6px;
+                        vertical-align: middle; text-transform: uppercase;
+                    }
+                    .ovr-tag-mandatory { background: #fdecea; color: #a12622; }
+                    .ovr-tag-recommended { background: #e6f4ea; color: #1e6b34; }
+                    .ovr-tag-conditional { background: #fff8e1; color: #7a5b00; }
+                    .ovr-tag-expiry { background: #e8eefc; color: #2c4ea3; }
+                    .ovr-uploaded { font-size: 0.8rem; color: #1e6b34; margin-top: 2px; }
                 </style>
             </head>
             <body>
@@ -271,11 +292,97 @@
                 </div>
 
                 <hr/>
+                <h3>Documents</h3>
+
+                <t t-set="applies_labels" t-value="{
+                    'all': 'All Vendors',
+                    'ksa_based_vendor': 'KSA-based Vendors',
+                    'onsite_work_vendor': 'On-site Work Vendors',
+                    'technical_engineering_vendor': 'Technical/Engineering Vendors',
+                }"/>
+                <t t-set="level_labels" t-value="{
+                    'mandatory': 'Mandatory',
+                    'recommended': 'Recommended',
+                    'conditional': 'Conditional',
+                }"/>
+
+                <t t-foreach="['all', 'ksa_based_vendor', 'onsite_work_vendor', 'technical_engineering_vendor']" t-as="bucket">
+                    <t t-set="bucket_types" t-value="doc_types.filtered(lambda dt: dt.applies_to == bucket)"/>
+                    <t t-if="bucket_types">
+                        <div class="ovr-doc-group" t-att-data-applies-to="bucket">
+
+                            <t t-foreach="bucket_types" t-as="dt">
+                                <t t-set="existing_doc" t-value="docs_by_type.get(dt.id)"/>
+                                <t t-set="doc_uploaded" t-value="bool(existing_doc and existing_doc.attachment_filename)"/>
+                                <t t-set="expiry_already_set" t-value="bool(existing_doc and existing_doc.expiry_date)"/>
+                                <t t-set="file_needed" t-value="dt.level == 'mandatory' and not doc_uploaded"/>
+                                <t t-set="expiry_needed" t-value="dt.level == 'mandatory' and dt.has_expiry and not expiry_already_set"/>
+                                <div class="ovr-doc-row">
+                                    <div class="ovr-doc-info">
+                                        <label>
+                                            <t t-esc="dt.name"/>
+                                            <span t-att-class="'ovr-tag ovr-tag-' + dt.level" t-esc="level_labels[dt.level]"/>
+                                            <span t-if="dt.has_expiry" class="ovr-tag ovr-tag-expiry">Expiry Tracked</span>
+                                        </label>
+                                        <div t-if="doc_uploaded" class="ovr-uploaded">
+                                            Uploaded: <t t-esc="existing_doc.attachment_filename"/>
+                                            (re-upload below to replace - not required again)
+                                        </div>
+                                    </div>
+                                    <div class="ovr-doc-file">
+                                        <input type="file"
+                                               t-att-name="'doc_%s' % dt.id"
+                                               t-att-disabled="'disabled' if readonly else None"
+                                               t-att-data-required-if-visible="'1' if file_needed else None"
+                                               t-att-required="'required' if (file_needed and bucket == 'all') else None"/>
+                                    </div>
+                                    <div class="ovr-doc-expiry" t-if="dt.has_expiry">
+                                        <label>Expiry Date</label>
+                                        <input type="date"
+                                               t-att-name="'doc_%s_expiry' % dt.id"
+                                               t-att-value="existing_doc.expiry_date if existing_doc else None"
+                                               t-att-disabled="'disabled' if readonly else None"
+                                               t-att-data-required-if-visible="'1' if expiry_needed else None"
+                                               t-att-required="'required' if (expiry_needed and bucket == 'all') else None"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+
+                <hr/>
 
                 <t t-if="not readonly">
                     <button type="submit" class="ovr-btn">Submit Registration</button>
                 </t>
             </form>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var catSelect = document.querySelector('select[name="category"]');
+                    var groups = document.querySelectorAll('[data-applies-to]');
+                    function syncDocGroups() {
+                        var val = catSelect ? catSelect.value : '';
+                        groups.forEach(function (group) {
+                            var applies = group.getAttribute('data-applies-to');
+                            var show = (applies === 'all') || (applies === val);
+                            group.style.display = show ? '' : 'none';
+                            group.querySelectorAll('[data-required-if-visible]').forEach(function (el) {
+                                if (show) {
+                                    el.setAttribute('required', 'required');
+                                } else {
+                                    el.removeAttribute('required');
+                                }
+                            });
+                        });
+                    }
+                    if (catSelect) {
+                        catSelect.addEventListener('change', syncDocGroups);
+                    }
+                    syncDocGroups();
+                });
+            </script>
         </t>
     </template>
 

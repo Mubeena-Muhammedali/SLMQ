@@ -90,8 +90,25 @@ class OdVendorRegistration(models.Model):
         'res.company', string='Company', default=lambda self: self.env.company)
 
     # ------------------------------------------------------------------
+    # Required Documents Checklist
+    # ------------------------------------------------------------------
+    document_ids = fields.One2many(
+        'od.vendor.document', 'registration_id', string='Documents')
+    document_count = fields.Integer(compute='_compute_document_stats')
+    missing_mandatory_count = fields.Integer(
+        compute='_compute_document_stats',
+        help='Mandatory documents (for this vendor Category) not yet uploaded.')
+
+    # ------------------------------------------------------------------
     # Compute
     # ------------------------------------------------------------------
+    @api.depends('document_ids.state', 'document_ids.level')
+    def _compute_document_stats(self):
+        for rec in self:
+            rec.document_count = len(rec.document_ids)
+            rec.missing_mandatory_count = len(rec.document_ids.filtered(
+                lambda d: d.level == 'mandatory' and d.state == 'missing'))
+
     @api.depends('access_token')
     def _compute_registration_url(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -105,7 +122,40 @@ class OdVendorRegistration(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records.write({'submitted_date': fields.Datetime.now()})
+        records._sync_document_lines()
         return records
+
+    @api.onchange('category')
+    def _onchange_category_sync_documents(self):
+        self._sync_document_lines()
+
+    # ------------------------------------------------------------------
+    # Required Documents Checklist - sync from the od.vendor.document.type
+    # master list. "All Vendors" documents are always added; category
+    # specific ones (KSA-based / On-site / Technical-Engineering) are
+    # added once that Category is selected. Existing lines (and any file
+    # already uploaded against them) are never removed automatically.
+    # ------------------------------------------------------------------
+    def _sync_document_lines(self):
+        DocType = self.env['od.vendor.document.type'].sudo()
+        Document = self.env['od.vendor.document'].sudo()
+        for rec in self:
+            domain = [('applies_to', '=', 'all')]
+            if rec.category:
+                domain = ['|'] + domain + [('applies_to', '=', rec.category)]
+            applicable = DocType.search(domain)
+            existing_type_ids = set(rec.document_ids.document_type_id.ids)
+            to_add = applicable.filtered(lambda dt: dt.id not in existing_type_ids)
+            for doc_type in to_add:
+                if rec.id:
+                    Document.create({
+                        'registration_id': rec.id,
+                        'document_type_id': doc_type.id,
+                    })
+                else:
+                    # record not saved yet (e.g. onchange on a new form):
+                    # stage the line so it is created together with the parent
+                    rec.document_ids = [(0, 0, {'document_type_id': doc_type.id})]
 
     # ------------------------------------------------------------------
     # CRUD guard - only 'register' state is editable by non-internal users
@@ -122,7 +172,10 @@ class OdVendorRegistration(models.Model):
                     raise UserError(_(
                         'This registration is no longer editable. It is '
                         'currently under review or has already been approved.'))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'category' in vals:
+            self._sync_document_lines()
+        return result
 
     # ------------------------------------------------------------------
     # Workflow actions
@@ -140,6 +193,21 @@ class OdVendorRegistration(models.Model):
         for rec in self:
             if rec.state != 'register':
                 raise UserError(_('Only registrations in the "Registered" state can be reviewed.'))
+
+            missing_docs = rec.document_ids.filtered(
+                lambda d: d.level == 'mandatory' and d.state == 'missing')
+            if missing_docs:
+                raise UserError(_(
+                    'The following mandatory documents are still missing:\n- %s'
+                ) % '\n- '.join(missing_docs.mapped('document_type_id.name')))
+
+            incomplete_expiry = rec.document_ids.filtered('is_expiry_incomplete')
+            if incomplete_expiry:
+                raise UserError(_(
+                    'Please provide an Expiry Date for the following uploaded '
+                    'documents:\n- %s'
+                ) % '\n- '.join(incomplete_expiry.mapped('document_type_id.name')))
+                
             rec.write({
                 'state': 'review',
                 'reviewed_date': fields.Datetime.now(),
@@ -152,6 +220,7 @@ class OdVendorRegistration(models.Model):
                 raise UserError(_('Only registrations under Review can be approved.'))
             if not rec.name:
                 raise UserError(_('Vendor Name is required before approval.'))
+
 
             vendor_id = self.env['ir.sequence'].next_by_code('od.vendor.code')
 

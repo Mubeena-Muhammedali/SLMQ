@@ -86,13 +86,46 @@
                         </group>
                     </group>
 
-
                     <group string="Status" invisible="1">
                         <field name="partner_id" readonly="1"/>
                         <field name="submitted_date" readonly="1" force_save="1"/>
                         <field name="reviewed_date" readonly="1" force_save="1"/>
                         <field name="approved_date" readonly="1" force_save="1"/>
                     </group>
+
+                    <notebook>
+                        <page string="Documents" name="documents">
+                            <div class="alert alert-warning" role="alert"
+                                 invisible="missing_mandatory_count == 0">
+                                <field name="missing_mandatory_count" readonly="1" nolabel="1"/>
+                                mandatory document(s) still missing for this vendor's Category.
+                            </div>
+                            <field name="document_ids" nolabel="1"
+                                   options="{'no_open': True}">
+                                <list editable="bottom" create="0" delete="0"
+                                      decoration-danger="is_missing_mandatory"
+                                      decoration-warning="is_expiry_incomplete">
+                                    <field name="document_type_id" readonly="1" force_save="1"/>
+                                    <field name="level" widget="badge"
+                                           decoration-danger="level == 'mandatory'"
+                                           decoration-warning="level == 'conditional'"
+                                           decoration-success="level == 'recommended'"/>
+                                    <field name="applies_to"/>
+                                    <field name="has_expiry" column_invisible="1"/>
+                                    <field name="attachment" widget="binary" filename="attachment_filename"/>
+                                    <field name="attachment_filename" column_invisible="1"/>
+                                    <field name="expiry_date"
+                                           invisible="not has_expiry"
+                                           required="has_expiry and attachment"/>
+                                    <field name="state" widget="badge"
+                                           decoration-danger="state == 'missing'"
+                                           decoration-success="state == 'uploaded'"/>
+                                    <field name="is_missing_mandatory" column_invisible="1"/>
+                                    <field name="is_expiry_incomplete" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>

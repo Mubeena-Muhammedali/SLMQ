@@ -56,6 +56,46 @@ models are prefixed `od.`).
    * Locks the registration (state = `approve`); the public link becomes
      permanently read-only.
 
+## Required Documents Checklist
+
+Adds the document checklist from Section 6 (Commercial Registration, VAT
+Certificate, IBAN Certificate, National Address, ZATCA, GOSI, Chamber of
+Commerce, Code of Conduct, Signatory ID, Company Profile, Insurance,
+Nitaqat, ISO, Local Content) as configurable master data.
+
+| Model | Purpose |
+|---|---|
+| `od.vendor.document.type` | Master checklist (Document, Level, Expiry?, Applies To) - **Vendor Registration → Document Types** |
+| `od.vendor.document` | One line per applicable document type per registration (`document_ids` on `od.vendor.registration`) |
+
+* **Level**: `Mandatory` blocks Approve when missing; `Recommended` /
+  `Conditional` are shown but don't block.
+* **Expiry?**: when set, an Expiry Date is required once a file is
+  uploaded for that document.
+* **Applies To**: `All Vendors` always applies; `KSA-based`, `On-site
+  Work`, and `Technical/Engineering` only apply once that Category is
+  selected on the registration.
+
+The checklist is synced automatically (on create and whenever Category
+changes) and can be refreshed manually with the **Documents** smart
+button on the form. `action_approve()` blocks approval until every
+applicable Mandatory document is uploaded and, for expiry-tracked
+documents, an Expiry Date is filled in.
+
+**Form view** (internal): a *Documents* notebook tab shows an editable
+one2many list (Document / Level / Applies To / File / Expiry Date /
+Status), with a banner when Mandatory documents are missing.
+
+**Public form**: documents are grouped into "All Vendors" (always shown)
+and one section per Category. Small inline JavaScript shows/hides the
+Category-specific sections and toggles the `required` attribute on their
+file/date inputs as the vendor picks a Category - no framework
+dependency, consistent with the rest of this module's public pages.
+This is enforced again server-side in the controller as a safety net.
+
+Partner master (`res.partner`) is intentionally left untouched by this
+checklist - documents live only on the registration record.
+
 ## Security
 
 * Backend model access: any internal user (`base.group_user`) can create,

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="od_doc_type_cr" model="od.vendor.document.type">
+        <field name="sequence">10</field>
+        <field name="name">Commercial Registration (CR) - Trade License</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_vat" model="od.vendor.document.type">
+        <field name="sequence">20</field>
+        <field name="name">VAT Certificate (Saudi) / VAT Registration Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_bank" model="od.vendor.document.type">
+        <field name="sequence">30</field>
+        <field name="name">Bank Details / IBAN Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">0</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_national_address" model="od.vendor.document.type">
+        <field name="sequence">40</field>
+        <field name="name">National Address Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">0</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+    <record id="od_doc_type_zatca" model="od.vendor.document.type">
+        <field name="sequence">50</field>
+        <field name="name">ZATCA Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+    <record id="od_doc_type_gosi" model="od.vendor.document.type">
+        <field name="sequence">60</field>
+        <field name="name">GOSI Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+    <record id="od_doc_type_chamber" model="od.vendor.document.type">
+        <field name="sequence">70</field>
+        <field name="name">Chamber of Commerce Certificate</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+    <record id="od_doc_type_coc" model="od.vendor.document.type">
+        <field name="sequence">80</field>
+        <field name="name">Supplier Code of Conduct (Signed)</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">0</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_signatory_id" model="od.vendor.document.type">
+        <field name="sequence">90</field>
+        <field name="name">Authorized Signatory ID / Iqama / Passport</field>
+        <field name="level">mandatory</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_profile" model="od.vendor.document.type">
+        <field name="sequence">100</field>
+        <field name="name">Company Profile / Brochure</field>
+        <field name="level">recommended</field>
+        <field name="has_expiry">0</field>
+        <field name="applies_to">all</field>
+    </record>
+
+    <record id="od_doc_type_insurance" model="od.vendor.document.type">
+        <field name="sequence">110</field>
+        <field name="name">Insurance Certificate (CGL)</field>
+        <field name="level">conditional</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">onsite_work_vendor</field>
+    </record>
+
+    <record id="od_doc_type_nitaqat" model="od.vendor.document.type">
+        <field name="sequence">120</field>
+        <field name="name">Saudization (Nitaqat) Certificate</field>
+        <field name="level">conditional</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+    <record id="od_doc_type_iso" model="od.vendor.document.type">
+        <field name="sequence">130</field>
+        <field name="name">ISO / Quality Certifications</field>
+        <field name="level">conditional</field>
+        <field name="has_expiry">1</field>
+        <field name="applies_to">technical_engineering_vendor</field>
+    </record>
+
+    <record id="od_doc_type_local_content" model="od.vendor.document.type">
+        <field name="sequence">140</field>
+        <field name="name">Local Content Certificate</field>
+        <field name="level">conditional</field>
+        <field name="has_expiry">0</field>
+        <field name="applies_to">ksa_based_vendor</field>
+    </record>
+
+</odoo>
