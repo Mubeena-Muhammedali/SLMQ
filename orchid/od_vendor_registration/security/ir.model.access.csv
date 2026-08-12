@@ -3,3 +3,4 @@ access_od_vendor_registration_user,od.vendor.registration.user,model_od_vendor_r
 access_od_vendor_registration_link_wizard_user,od.vendor.registration.link.wizard.user,model_od_vendor_registration_link_wizard,base.group_user,1,1,1,1
 access_od_vendor_document_type_user,od.vendor.document.type.user,model_od_vendor_document_type,base.group_user,1,1,1,1
 access_od_vendor_document_user,od.vendor.document.user,model_od_vendor_document,base.group_user,1,1,1,1
+access_od_vendor_registration_reason_wizard_user,od.vendor.registration.reason.wizard.user,model_od_vendor_registration_reason_wizard,base.group_user,1,1,1,1

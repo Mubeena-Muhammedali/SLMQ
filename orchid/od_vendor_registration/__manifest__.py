@@ -45,6 +45,7 @@ Key points
         'security/ir.model.access.csv',
         'data/vendor_document_type_data.xml',
         'wizard/vendor_registration_link_wizard_views.xml',
+        'wizard/vendor_registration_reason_wizard_views.xml',
         'views/vendor_document_type_views.xml',
         'views/vendor_registration_views.xml',
         'views/vendor_registration_public_templates.xml',

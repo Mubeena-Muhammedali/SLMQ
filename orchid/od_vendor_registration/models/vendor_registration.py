@@ -67,7 +67,7 @@ class OdVendorRegistration(models.Model):
         ('register', 'Registered'),
         ('review', 'Reviewed'),
         ('approve', 'Approved'),
-        ('cancel', 'Cancelled')
+        ('reject', 'Rejected')
     ], string='Status', default='register', tracking=True, copy=False)
 
     access_token = fields.Char(
@@ -85,6 +85,9 @@ class OdVendorRegistration(models.Model):
     submitted_date = fields.Datetime(string='Submitted On', readonly=True, copy=False)
     reviewed_date = fields.Datetime(string='Reviewed On', readonly=True, copy=False)
     approved_date = fields.Datetime(string='Approved On', readonly=True, copy=False)
+    rejected_date = fields.Datetime(string='Rejected On', tracking=True, copy=False)
+
+    reject_reason = fields.Text(string='Reject Reason', tracking=True, copy=False)
 
     company_id = fields.Many2one(
         'res.company', string='Company', default=lambda self: self.env.company)
@@ -182,10 +185,12 @@ class OdVendorRegistration(models.Model):
     # ------------------------------------------------------------------
 
     def action_reset_to_register(self):
-        """Internal user sends the registration back for vendor correction."""
+        """Internal user rejects the submission / sends it back for
+        vendor correction. A reason is mandatory and is logged on the
+        chatter so there is always a record of why it was sent back."""
         for rec in self:
-            if rec.state not in ('review', 'cancel'):
-                raise UserError(_('Only registrations in the "Registered" state can be reviewed.'))
+            if rec.state not in ('review', 'reject'):
+                raise UserError(_('Only registrations in the "Reviewed" or "Rejected" records can be reset to the "Register".'))
             rec.write({'state': 'register'})
 
     def action_review(self):
@@ -217,12 +222,7 @@ class OdVendorRegistration(models.Model):
         """Approve the registration and create/link a res.partner vendor."""
         for rec in self:
             if rec.state != 'review':
-                raise UserError(_('Only registrations under Review can be approved.'))
-            if not rec.name:
-                raise UserError(_('Vendor Name is required before approval.'))
-
-
-            vendor_id = self.env['ir.sequence'].next_by_code('od.vendor.code')
+                raise UserError(_('Only registrations under "Reviewed" records can be approved.'))
 
             partner_vals = {
                 'name': rec.name,
@@ -238,7 +238,7 @@ class OdVendorRegistration(models.Model):
                 'od_cr_number': rec.cr_number,
                 'od_category': rec.category,
                 'company_type': 'company',
-                'od_vendor_code': vendor_id,
+                'od_vendor_code': self.env['ir.sequence'].next_by_code('od.vendor.code'),
                 'supplier_rank': 1,
             }
             partner = self.env['res.partner'].sudo().create(partner_vals)
@@ -262,25 +262,37 @@ class OdVendorRegistration(models.Model):
                 'approved_date': fields.Datetime.now(),
             })
 
-    def action_cancel(self):
-        """Cancel the registration."""
+    def action_reject(self, reason=None):
+        """Reject the registration. A reason is mandatory and is logged
+        on the chatter."""
+        if not reason or not reason.strip():
+            raise UserError(_('Please provide a reason for rejecting this registration.'))
         for rec in self:
-            if rec.state != 'review':
-                raise UserError(_('Only registrations under Review can be cancelled.'))
-            rec.write({'state': 'cancel'})
+            if rec.state not in ('review', 'register'):
+                raise UserError(_('Only registrations under "Reviewed" or "Registered" records can be rejected.'))
+            rec.write({'state': 'reject', 'reject_reason': reason, 'rejected_date': fields.Datetime.now()})
 
-    def action_copy_link(self):
-        """Convenience action, e.g. wired to a button that just refreshes url."""
+    def action_open_reject_wizard(self):
+        """Opens the mandatory-comment wizard before rejecting."""
         self.ensure_one()
+        return self._open_reason_wizard()
+
+    def _open_reason_wizard(self):
+        view = self.env.ref(
+            'od_vendor_registration.view_od_vendor_registration_reason_wizard_form')
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Registration Link'),
-                'message': self.registration_url,
-                'sticky': False,
+            'type': 'ir.actions.act_window',
+            'name': _('Reject Registration'),
+            'res_model': 'od.vendor.registration.reason.wizard',
+            'view_mode': 'form',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'context': {
+                'default_registration_id': self.id,
             },
         }
+
 
     @api.model
     def action_show_self_service_link(self):
@@ -320,9 +332,9 @@ class OdVendorRegistration(models.Model):
 
     def unlink(self):
         for rec in self:
-            if rec.state not in ('register', 'cancel'):
+            if rec.state not in ('register', 'reject'):
                 raise UserError(_(
                     'You can only delete vendor registrations in '
-                    '"Registered" or "Cancelled" state.'
+                    '"Registered" or "Cancelled" records.'
                 ))
         return super().unlink()

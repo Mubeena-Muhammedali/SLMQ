@@ -15,11 +15,11 @@
                             string="Approve" class="oe_highlight"
                             invisible="state != 'review'"/>
                     <button name="action_reset_to_register" type="object"
-                            string="Reopen for Vendor"
-                            invisible="state in ('register','approve')"/>
-                    <button name="action_cancel" type="object"
-                            string="Cancel"
-                            invisible="state != 'review'"/>
+                            string="Reset to Register"
+                            invisible="state not in ('review','reject')"/>
+                    <button name="action_open_reject_wizard" type="object"
+                            string="Reject"
+                            invisible="state not in ('register','review')"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="register,review,approve"/>
                 </header>
@@ -86,11 +86,17 @@
                         </group>
                     </group>
 
-                    <group string="Status" invisible="1">
-                        <field name="partner_id" readonly="1"/>
-                        <field name="submitted_date" readonly="1" force_save="1"/>
-                        <field name="reviewed_date" readonly="1" force_save="1"/>
-                        <field name="approved_date" readonly="1" force_save="1"/>
+
+                    <group string="Status">
+                        <group string="Submission Dates">
+                            <field name="submitted_date" readonly="1" force_save="1" invisible="not submitted_date"/>
+                            <field name="reviewed_date" readonly="1" force_save="1" invisible="not reviewed_date"/>
+                            <field name="approved_date" readonly="1" force_save="1" invisible="not approved_date"/>
+                        </group>
+                        <group string="Rejection">
+                            <field name="rejected_date" readonly="1" force_save="1" invisible="not rejected_date"/>
+                            <field name="reject_reason" readonly="1" force_save="1" invisible="not reject_reason"/>
+                        </group>
                     </group>
 
                     <notebook>
@@ -163,7 +169,7 @@
                 <filter string="Register" name="filter_register" domain="[('state','=','register')]"/>
                 <filter string="Review" name="filter_review" domain="[('state','=','review')]"/>
                 <filter string="Approved" name="filter_approve" domain="[('state','=','approve')]"/>
-                <filter string="Cancelled" name="filter_cancel" domain="[('state','=','cancel')]"/>
+                <filter string="Rejected" name="filter_reject" domain="[('state','=','reject')]"/>
                 <group>
                     <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
                     <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>

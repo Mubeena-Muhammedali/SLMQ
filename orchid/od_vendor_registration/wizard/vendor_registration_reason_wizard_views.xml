@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od_vendor_registration_reason_wizard_form" model="ir.ui.view">
+        <field name="name">od.vendor.registration.reason.wizard.form</field>
+        <field name="model">od.vendor.registration.reason.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reason">
+                <field name="registration_id" invisible="1"/>
+                <group>
+                    <field name="reason" nolabel="1" placeholder="Enter a reason..."
+                           required="1"/>
+                </group>
+                <footer>
+                    <button string="Reject" name="action_confirm" type="object"
+                            class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
