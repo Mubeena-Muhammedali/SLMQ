@@ -269,6 +269,34 @@
         }
     }
 
+    .o_drr_credit_note_row {
+        background: #fff5f5;
+    }
+
+    .o_drr_negative {
+        color: #c0392b;
+        font-weight: 600;
+    }
+
+    .o_drr_badge {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .o_drr_badge_credit {
+        background: #fdecea;
+        color: #c0392b;
+    }
+
+    .o_drr_badge_invoice {
+        background: #eaf6ee;
+        color: #1e7d4a;
+    }
+
     .o_drr_link_btn {
         border: none;
         background: none;

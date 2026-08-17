@@ -113,7 +113,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
             LEFT JOIN product_category pcateg ON pcateg.id = pt.categ_id
             LEFT JOIN res_partner rp ON rp.id = pay.partner_id
-            WHERE ml.reverse_line_id IS NULL
+            WHERE 1=1
         """
         return from_sql, where, params
 
@@ -130,7 +130,7 @@ class OdDeferredRevenueReport(models.TransientModel):
         query = """
             SELECT
                 {account_sql} AS account_id,
-                CASE WHEN ml.invoice_line_id IS NULL THEN 'not_started'
+                CASE WHEN ml.invoice_line_id IS NULL AND ml.reverse_line_id IS NULL THEN 'not_started'
                      WHEN ml.recognition_date < %(period_start)s THEN 'before'
                      WHEN ml.recognition_date > %(period_end)s THEN 'later'
                      ELSE 'period'
@@ -224,10 +224,10 @@ class OdDeferredRevenueReport(models.TransientModel):
         from_sql, where, params = self._base_from_where(payload, start, end)
 
         bucket_sql = {
-            "not_started": "ml.invoice_line_id IS NULL",
-            "before": "ml.invoice_line_id IS NOT NULL AND ml.recognition_date < %(period_start)s",
-            "period": "ml.invoice_line_id IS NOT NULL AND ml.recognition_date >= %(period_start)s AND ml.recognition_date <= %(period_end)s",
-            "later": "ml.invoice_line_id IS NOT NULL AND ml.recognition_date > %(period_end)s",
+            "not_started": "ml.invoice_line_id IS NULL AND ml.reverse_line_id IS NULL",
+            "before": "(ml.invoice_line_id IS NOT NULL OR ml.reverse_line_id IS NOT NULL) AND ml.recognition_date < %(period_start)s",
+            "period": "(ml.invoice_line_id IS NOT NULL OR ml.reverse_line_id IS NOT NULL) AND ml.recognition_date >= %(period_start)s AND ml.recognition_date <= %(period_end)s",
+            "later": "(ml.invoice_line_id IS NOT NULL OR ml.reverse_line_id IS NOT NULL) AND ml.recognition_date > %(period_end)s",
         }.get(bucket)
         if not bucket_sql:
             raise UserError(_("Unknown bucket: %s") % bucket)
@@ -248,6 +248,8 @@ class OdDeferredRevenueReport(models.TransientModel):
                 ml.amount AS amount,
                 ml.recognition_date AS recognition_date,
                 ml.invoiced AS invoiced,
+                ml.reverse_line_id AS reverse_line_id,
+                ml.reverse_date AS reverse_date,
                 pay.contract_id AS contract_id
             {from_sql}
             AND {where_sql}
@@ -266,6 +268,8 @@ class OdDeferredRevenueReport(models.TransientModel):
                 "amount": float(row["amount"] or 0.0),
                 "recognition_date": str(row["recognition_date"] or ""),
                 "invoiced": bool(row["invoiced"]),
+                "is_credit_note": bool(row["reverse_line_id"]),
+                "reverse_date": str(row["reverse_date"] or ""),
                 "contract_id": row["contract_id"],
             })
         return {"lines": lines}

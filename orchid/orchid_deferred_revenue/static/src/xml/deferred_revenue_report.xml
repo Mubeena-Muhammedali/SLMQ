@@ -110,19 +110,25 @@
                                                         <th>Contract</th>
                                                         <th>Customer</th>
                                                         <th>Service</th>
+                                                        <th>Type</th>
                                                         <th>Period</th>
                                                         <th>Recognition Date</th>
                                                         <th class="text-end">Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr t-foreach="state.details[row.account_id + '|' + bucket] || []" t-as="line" t-key="line_index">
+                                                    <tr t-foreach="state.details[row.account_id + '|' + bucket] || []" t-as="line" t-key="line_index"
+                                                        t-att-class="line.is_credit_note ? 'o_drr_credit_note_row' : ''">
                                                         <td><t t-esc="line.contract_name"/></td>
                                                         <td><t t-esc="line.partner_name"/></td>
                                                         <td><t t-esc="line.service_name"/></td>
+                                                        <td>
+                                                            <span t-if="line.is_credit_note" class="o_drr_badge o_drr_badge_credit">Credit Note</span>
+                                                            <span t-else="" class="o_drr_badge o_drr_badge_invoice">Invoice</span>
+                                                        </td>
                                                         <td><t t-esc="line.period_from"/> - <t t-esc="line.period_to"/></td>
                                                         <td><t t-esc="line.recognition_date"/></td>
-                                                        <td class="text-end"><t t-esc="_fmt(line.amount)"/></td>
+                                                        <td class="text-end" t-att-class="line.amount &lt; 0 ? 'o_drr_negative' : ''"><t t-esc="_fmt(line.amount)"/></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
