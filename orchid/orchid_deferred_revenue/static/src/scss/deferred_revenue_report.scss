@@ -1,0 +1,285 @@
+.o_drr {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: #f5f7fb;
+    color: #101828;
+
+    .o_drr_shell {
+        height: 100%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px 20px;
+        overflow: auto;
+    }
+
+    .o_drr_hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 13px 18px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #5b2a86 0%, #2563eb 60%, #0f766e 100%);
+        color: #fff;
+        box-shadow: 0 14px 34px rgba(20, 33, 61, 0.16);
+
+        h1 {
+            margin: 4px 0 7px;
+            font-size: 22px;
+            font-weight: 800;
+        }
+    }
+
+    .o_drr_eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 11px;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.76);
+    }
+
+    .o_drr_subtitle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .o_drr_period_nav {
+        border: none;
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        border-radius: 6px;
+        width: 26px;
+        height: 26px;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    .o_drr_period_input {
+        border: none;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-weight: 600;
+    }
+
+    .o_drr_actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .o_drr_btn {
+        border: none;
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+    }
+
+    .o_drr_btn_pdf {
+        background: #c0392b;
+    }
+
+    .o_drr_btn_xlsx {
+        background: #1e7d4a;
+    }
+
+    .o_drr_filters {
+        display: flex;
+        gap: 14px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 16px;
+    }
+
+    .o_drr_field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 220px;
+
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #667085;
+            text-transform: uppercase;
+        }
+    }
+
+    .o_drr_autocomplete_field {
+        position: relative;
+    }
+
+    .o_drr_autocomplete {
+        position: relative;
+    }
+
+    .o_drr_autocomplete_dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        max-height: 260px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #d0d5dd;
+        border-radius: 6px;
+        box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+        z-index: 20;
+    }
+
+    .o_drr_autocomplete_option {
+        padding: 7px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover {
+            background: #f2f4f7;
+        }
+    }
+
+    .o_drr_autocomplete_selected {
+        background: #eef2ff;
+        font-weight: 600;
+    }
+
+    .o_drr_autocomplete_empty {
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #98a2b3;
+    }
+
+    .o_drr_table_wrap {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+
+    .o_drr_table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 10px 12px;
+            font-weight: 700;
+            color: #344054;
+            z-index: 1;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .o_drr_col_account {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .o_drr_period_col {
+            background: #fef6e0;
+            font-weight: 700;
+        }
+
+        .o_drr_clickable {
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .o_drr_total_row {
+            font-weight: 800;
+            background: #f9fafb;
+
+            td {
+                border-top: 2px solid #d0d5dd;
+            }
+        }
+    }
+
+    .o_drr_empty {
+        text-align: center;
+        color: #98a2b3;
+        padding: 24px;
+    }
+
+    .o_drr_loading, .o_drr_loading_small {
+        padding: 16px;
+        color: #667085;
+    }
+
+    .o_drr_detail_row td {
+        background: #fbfbfd;
+        padding: 10px 12px 14px 32px;
+    }
+
+    .o_drr_detail_table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-bottom: 6px;
+
+        th {
+            text-align: left;
+            color: #667085;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+    }
+
+    .o_drr_link_btn {
+        border: none;
+        background: none;
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0 8px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

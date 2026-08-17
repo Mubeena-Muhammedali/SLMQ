@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="orchid_deferred_revenue.DeferredRevenueReport">
+        <div class="o_drr">
+            <div class="o_drr_shell">
+                <div class="o_drr_hero">
+                    <div>
+                        <div class="o_drr_eyebrow">ASP Gulf</div>
+                        <h1>Deferred Revenue</h1>
+                        <div class="o_drr_subtitle">
+                            <button type="button" class="o_drr_period_nav" t-on-click="() => this.onPeriodShift(-1)">&lt;</button>
+                            <input type="month" class="o_drr_period_input" t-att-value="state.period" t-on-change="(ev) => this.onPeriodChange(ev)"/>
+                            <button type="button" class="o_drr_period_nav" t-on-click="() => this.onPeriodShift(1)">&gt;</button>
+                        </div>
+                    </div>
+                    <div class="o_drr_actions">
+                        <button type="button" class="o_drr_btn" t-on-click="() => this.onToggleGroupByAccount()">
+                            <t t-if="state.group_by_account">Grouped by Account</t>
+                            <t t-else="">All Accounts</t>
+                        </button>
+                        <button type="button" class="o_drr_btn" t-on-click="() => this.onToggleFilters()">
+                            <t t-if="state.showFilters">Hide Filters</t>
+                            <t t-else="">Filters</t>
+                        </button>
+                        <button type="button" class="o_drr_btn" t-on-click="() => this.onReload()">Refresh</button>
+                        <button type="button" class="o_drr_btn o_drr_btn_pdf" t-on-click="() => this.onExportPdf()">PDF</button>
+                        <button type="button" class="o_drr_btn o_drr_btn_xlsx" t-on-click="() => this.onExportXlsx()">XLSX</button>
+                    </div>
+                </div>
+
+                <div t-if="state.showFilters" class="o_drr_filters">
+                    <div class="o_drr_field">
+                        <label>Customer</label>
+                        <select class="form-control form-control-sm" t-on-change="(ev) => this.onPartnerChange(ev)">
+                            <option value="">All Customers</option>
+                            <t t-foreach="state.partners" t-as="partner" t-key="partner.id">
+                                <option t-att-value="partner.id" t-att-selected="partner.id === (+state.partner_id || 0)">
+                                    <t t-esc="partner.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="o_drr_field o_drr_autocomplete_field">
+                        <label>Contract</label>
+                        <div class="o_drr_autocomplete">
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   placeholder="Search contract..."
+                                   t-att-value="state.contractSearch"
+                                   t-on-input="(ev) => this.onContractSearchInput(ev)"
+                                   t-on-focus="() => this.onContractFocus()"
+                                   t-on-blur="() => this.onContractBlur()"/>
+                            <div t-if="state.showContractDropdown" class="o_drr_autocomplete_dropdown">
+                                <div class="o_drr_autocomplete_option"
+                                     t-on-mousedown.prevent="() => this.onContractSelect(null)">
+                                    All Contracts
+                                </div>
+                                <t t-if="!filteredContracts().length">
+                                    <div class="o_drr_autocomplete_empty">No contracts found</div>
+                                </t>
+                                <t t-foreach="filteredContracts()" t-as="contract" t-key="contract.id">
+                                    <div class="o_drr_autocomplete_option"
+                                         t-att-class="{ 'o_drr_autocomplete_selected': contract.id === (+state.contract_id || 0) }"
+                                         t-on-mousedown.prevent="() => this.onContractSelect(contract)">
+                                        <t t-esc="contract.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_drr_table_wrap">
+                    <div t-if="state.loadingPage" class="o_drr_loading">Loading...</div>
+                    <table t-else="" class="o_drr_table">
+                        <thead>
+                            <tr>
+                                <th class="o_drr_col_account">Account</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-end">Not Started</th>
+                                <th class="text-end">Before</th>
+                                <th class="text-end"><t t-esc="state.period_label"/></th>
+                                <th class="text-end">Recognized</th>
+                                <th class="text-end">Later</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="!state.rows.length">
+                                <tr><td colspan="7" class="o_drr_empty">No deferred revenue lines for this period.</td></tr>
+                            </t>
+                            <t t-foreach="state.rows" t-as="row" t-key="row.account_id">
+                                <tr class="o_drr_row">
+                                    <td class="o_drr_col_account">
+                                        <t t-esc="row.account_code"/> <t t-esc="row.account_name"/>
+                                    </td>
+                                    <td class="text-end"><t t-esc="_fmt(row.total)"/></td>
+                                    <td class="text-end o_drr_clickable" t-on-click="() => this.onToggle(row, 'not_started')"><t t-esc="_fmt(row.not_started)"/></td>
+                                    <td class="text-end o_drr_clickable" t-on-click="() => this.onToggle(row, 'before')"><t t-esc="_fmt(row.before)"/></td>
+                                    <td class="text-end o_drr_clickable o_drr_period_col" t-on-click="() => this.onToggle(row, 'period')"><t t-esc="_fmt(row.period)"/></td>
+                                    <td class="text-end"><t t-esc="_fmt(row.recognized)"/></td>
+                                    <td class="text-end o_drr_clickable" t-on-click="() => this.onToggle(row, 'later')"><t t-esc="_fmt(row.later)"/></td>
+                                </tr>
+                                <t t-foreach="['not_started', 'before', 'period', 'later']" t-as="bucket" t-key="bucket">
+                                    <tr t-if="state.unfolded[row.account_id + '|' + bucket]" class="o_drr_detail_row">
+                                        <td colspan="7">
+                                            <div t-if="state.loading[row.account_id + '|' + bucket]" class="o_drr_loading_small">Loading...</div>
+                                            <table t-else="" class="o_drr_detail_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Contract</th>
+                                                        <th>Customer</th>
+                                                        <th>Service</th>
+                                                        <th>Period</th>
+                                                        <th>Recognition Date</th>
+                                                        <th class="text-end">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="state.details[row.account_id + '|' + bucket] || []" t-as="line" t-key="line_index">
+                                                        <td><t t-esc="line.contract_name"/></td>
+                                                        <td><t t-esc="line.partner_name"/></td>
+                                                        <td><t t-esc="line.service_name"/></td>
+                                                        <td><t t-esc="line.period_from"/> - <t t-esc="line.period_to"/></td>
+                                                        <td><t t-esc="line.recognition_date"/></td>
+                                                        <td class="text-end"><t t-esc="_fmt(line.amount)"/></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <button type="button" class="o_drr_link_btn" t-on-click="() => this.onOpenContracts(row, bucket)">Open Contracts</button>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                        <tfoot t-if="state.rows.length">
+                            <tr class="o_drr_total_row">
+                                <td class="o_drr_col_account">Total</td>
+                                <td class="text-end"><t t-esc="_fmt(state.totals.total)"/></td>
+                                <td class="text-end"><t t-esc="_fmt(state.totals.not_started)"/></td>
+                                <td class="text-end"><t t-esc="_fmt(state.totals.before)"/></td>
+                                <td class="text-end o_drr_period_col"><t t-esc="_fmt(state.totals.period)"/></td>
+                                <td class="text-end"><t t-esc="_fmt(state.totals.recognized)"/></td>
+                                <td class="text-end"><t t-esc="_fmt(state.totals.later)"/></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

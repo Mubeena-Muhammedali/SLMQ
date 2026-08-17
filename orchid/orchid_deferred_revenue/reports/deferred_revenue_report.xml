@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_od_deferred_revenue" model="ir.actions.report">
+        <field name="name">Deferred Revenue</field>
+        <field name="model">od.deferred.revenue.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">orchid_deferred_revenue.report_od_deferred_revenue_document</field>
+        <field name="report_file">orchid_deferred_revenue.report_od_deferred_revenue_document</field>
+        <field name="print_report_name">'Deferred Revenue - %s' % (object.period or '')</field>
+    </record>
+
+    <template id="report_od_deferred_revenue_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="report" t-value="o.get_report_for_pdf()"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Deferred Revenue</h2>
+                        <p>
+                            Period: <span t-esc="report['period']['label']"/>
+                        </p>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th class="text-end">Total</th>
+                                    <th class="text-end">Not Started</th>
+                                    <th class="text-end">Before</th>
+                                    <th class="text-end" t-esc="report['period']['label']"/>
+                                    <th class="text-end">Recognized</th>
+                                    <th class="text-end">Later</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="report['rows']" t-as="row">
+                                    <td>
+                                        <span t-esc="row['account_code']"/> <span t-esc="row['account_name']"/>
+                                    </td>
+                                    <td class="text-end" t-esc="'%.2f' % row['total']"/>
+                                    <td class="text-end" t-esc="'%.2f' % row['not_started']"/>
+                                    <td class="text-end" t-esc="'%.2f' % row['before']"/>
+                                    <td class="text-end" t-esc="'%.2f' % row['period']"/>
+                                    <td class="text-end" t-esc="'%.2f' % row['recognized']"/>
+                                    <td class="text-end" t-esc="'%.2f' % row['later']"/>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td>Total</td>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['total']"/>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['not_started']"/>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['before']"/>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['period']"/>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['recognized']"/>
+                                    <td class="text-end" t-esc="'%.2f' % report['totals']['later']"/>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

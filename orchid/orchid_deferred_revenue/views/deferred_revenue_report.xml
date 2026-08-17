@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="od_deferred_revenue_report_action" model="ir.actions.client">
+        <field name="name">Deferred Revenue</field>
+        <field name="tag">od_deferred_revenue_report_action</field>
+    </record>
+
+    <!-- Under this module's own ASP Dashboard / Reporting menu -->
+    <menuitem id="od_deferred_revenue_report_menu"
+              name="Deferred Revenue"
+              parent="orchid_asp_gulf.od_asp_dashboard_root_menu"
+              action="od_deferred_revenue_report_action"
+              sequence="3"
+              groups="orchid_asp_gulf.group_asp_dashboard_sales,orchid_asp_gulf.group_asp_dashboard_accounts,orchid_asp_gulf.group_asp_dashboard_admin"/>
+
+    <record id="od_deferred_revenue_report_menu" model="ir.ui.menu">
+        <field name="web_icon" eval="False"/>
+    </record>
+
+    <!-- Also alongside the base Accounting > Reporting menu -->
+    <menuitem id="od_deferred_revenue_report_accounting_menu"
+              name="Deferred Revenue (ASP)"
+              parent="account.account_reports_management_menu"
+              action="od_deferred_revenue_report_action"
+              sequence="3"/>
+</odoo>
