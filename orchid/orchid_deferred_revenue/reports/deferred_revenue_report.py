@@ -40,6 +40,11 @@ class OdDeferredRevenueReport(models.TransientModel):
     contract_id = fields.Many2one("od.asp.contract", string="Contract")
     journal_id = fields.Many2one("account.journal", string="Journal")
     group_by_account = fields.Boolean(string="Group by Account", default=True)
+    # web.external_layout looks for this field on the record it's printing
+    # to resolve the header/footer logo, address, VAT, bank details, etc.
+    # Without it, the layout falls back silently and the PDF prints with
+    # no company info at all.
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
 
     def init(self):
         self.env.cr.execute("""
@@ -393,6 +398,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             "contract_id": payload["contract_id"],
             "journal_id": payload["journal_id"],
             "group_by_account": payload["group_by_account"],
+            "company_id": self.env.company.id,
         })
         report = self.env.ref("orchid_deferred_revenue.action_report_od_deferred_revenue")
         return report.report_action(record)

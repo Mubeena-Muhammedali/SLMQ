@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="paperformat_od_deferred_revenue" model="report.paperformat">
+        <field name="name">Deferred Revenue</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">15</field>
+        <field name="dpi">90</field>
+    </record>
+
     <record id="action_report_od_deferred_revenue" model="ir.actions.report">
         <field name="name">Deferred Revenue</field>
         <field name="model">od.deferred.revenue.report</field>
@@ -8,57 +22,78 @@
         <field name="report_name">orchid_deferred_revenue.report_od_deferred_revenue_document</field>
         <field name="report_file">orchid_deferred_revenue.report_od_deferred_revenue_document</field>
         <field name="print_report_name">'Deferred Revenue - %s' % (object.period or '')</field>
+        <field name="paperformat_id" ref="paperformat_od_deferred_revenue"/>
     </record>
 
     <template id="report_od_deferred_revenue_document">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-set="report" t-value="o.get_report_for_pdf()"/>
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <h2>Deferred Revenue</h2>
-                        <p>
-                            Period: <span t-esc="report['period']['label']"/>
-                        </p>
-                        <table class="table table-sm table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Account</th>
-                                    <th class="text-end">Total</th>
-                                    <th class="text-end">Not Started</th>
-                                    <th class="text-end">Before</th>
-                                    <th class="text-end" t-esc="report['period']['label']"/>
-                                    <th class="text-end">Recognized</th>
-                                    <th class="text-end">Later</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="report['rows']" t-as="row">
-                                    <td>
-                                        <span t-esc="row['account_code']"/> <span t-esc="row['account_name']"/>
-                                    </td>
-                                    <td class="text-end" t-esc="'%.2f' % row['total']"/>
-                                    <td class="text-end" t-esc="'%.2f' % row['not_started']"/>
-                                    <td class="text-end" t-esc="'%.2f' % row['before']"/>
-                                    <td class="text-end" t-esc="'%.2f' % row['period']"/>
-                                    <td class="text-end" t-esc="'%.2f' % row['recognized']"/>
-                                    <td class="text-end" t-esc="'%.2f' % row['later']"/>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr class="fw-bold">
-                                    <td>Total</td>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['total']"/>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['not_started']"/>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['before']"/>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['period']"/>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['recognized']"/>
-                                    <td class="text-end" t-esc="'%.2f' % report['totals']['later']"/>
-                                </tr>
-                            </tfoot>
-                        </table>
+                <div class="page">
+                    <t t-set="company" t-value="o.company_id"/>
+                    <div class="row mb-4">
+                        <div class="col-2" t-if="company.logo">
+                            <img t-att-src="image_data_uri(company.logo)" style="max-height:70px;"/>
+                        </div>
+                        <br/>
+                        <div t-attf-class="col-#{'10' if company.logo else '12'}">
+                            <div style="font-weight:bold; font-size:14px;" t-esc="company.name"/>
+                            <div t-if="company.street" t-esc="company.street"/>
+                            <div t-if="company.street2" t-esc="company.street2"/>
+                            <div t-if="company.city or company.zip">
+                                <span t-if="company.city" t-esc="company.city"/><span t-if="company.city and company.zip">, </span><span t-if="company.zip" t-esc="company.zip"/>
+                            </div>
+                            <div t-if="company.state_id or company.country_id">
+                                <span t-if="company.state_id" t-esc="company.state_id.name"/><span t-if="company.state_id and company.country_id">, </span><span t-if="company.country_id" t-esc="company.country_id.name"/>
+                            </div>
+                            <div t-if="company.vat">VAT/TRN: <span t-esc="company.vat"/></div>
+                            <div t-if="company.phone">Phone: <span t-esc="company.phone"/></div>
+                            <div t-if="company.email">Email: <span t-esc="company.email"/></div>
+                        </div>
                     </div>
-                </t>
+                    <hr style="margin-top:0; margin-bottom:16px;"/>
+                    <h2>Deferred Revenue</h2>
+                    <p class="mb-3">
+                        Period: <span t-esc="report['period']['label']"/>
+                    </p>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Account</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-end">Not Started</th>
+                                <th class="text-end">Before</th>
+                                <th class="text-end" t-esc="report['period']['label']"/>
+                                <th class="text-end">Recognized</th>
+                                <th class="text-end">Later</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="report['rows']" t-as="row">
+                                <td>
+                                    <span t-esc="row['account_code']"/> <span t-esc="row['account_name']"/>
+                                </td>
+                                <td class="text-end" t-esc="'%.2f' % row['total']"/>
+                                <td class="text-end" t-esc="'%.2f' % row['not_started']"/>
+                                <td class="text-end" t-esc="'%.2f' % row['before']"/>
+                                <td class="text-end" t-esc="'%.2f' % row['period']"/>
+                                <td class="text-end" t-esc="'%.2f' % row['recognized']"/>
+                                <td class="text-end" t-esc="'%.2f' % row['later']"/>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td>Total</td>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['total']"/>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['not_started']"/>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['before']"/>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['period']"/>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['recognized']"/>
+                                <td class="text-end" t-esc="'%.2f' % report['totals']['later']"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </t>
         </t>
     </template>
