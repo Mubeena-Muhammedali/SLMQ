@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="orchid_deferred_revenue.DeferredRevenueReport">
+    <t t-name="orchid_deferred_revenue.OdDeferredRevenueReport">
         <div class="o_drr">
             <div class="o_drr_shell">
                 <div class="o_drr_hero">
                     <div>
-                        <div class="o_drr_eyebrow">ASP Gulf</div>
                         <h1>Deferred Revenue</h1>
                         <div class="o_drr_subtitle">
                             <button type="button" class="o_drr_period_nav" t-on-click="() => this.onPeriodShift(-1)">&lt;</button>
@@ -29,16 +28,33 @@
                 </div>
 
                 <div t-if="state.showFilters" class="o_drr_filters">
-                    <div class="o_drr_field">
+                    <div class="o_drr_field o_drr_autocomplete_field">
                         <label>Customer</label>
-                        <select class="form-control form-control-sm" t-on-change="(ev) => this.onPartnerChange(ev)">
-                            <option value="">All Customers</option>
-                            <t t-foreach="state.partners" t-as="partner" t-key="partner.id">
-                                <option t-att-value="partner.id" t-att-selected="partner.id === (+state.partner_id || 0)">
-                                    <t t-esc="partner.name"/>
-                                </option>
-                            </t>
-                        </select>
+                        <div class="o_drr_autocomplete">
+                            <input type="text"
+                                   class="form-control form-control-sm"
+                                   placeholder="Search customer..."
+                                   t-att-value="state.partnerSearch"
+                                   t-on-input="(ev) => this.onPartnerSearchInput(ev)"
+                                   t-on-focus="() => this.onPartnerFocus()"
+                                   t-on-blur="() => this.onPartnerBlur()"/>
+                            <div t-if="state.showPartnerDropdown" class="o_drr_autocomplete_dropdown">
+                                <div class="o_drr_autocomplete_option"
+                                     t-on-mousedown.prevent="() => this.onPartnerSelect(null)">
+                                    All Customers
+                                </div>
+                                <t t-if="!filteredPartners().length">
+                                    <div class="o_drr_autocomplete_empty">No customers found</div>
+                                </t>
+                                <t t-foreach="filteredPartners()" t-as="partner" t-key="partner.id">
+                                    <div class="o_drr_autocomplete_option"
+                                         t-att-class="{ 'o_drr_autocomplete_selected': partner.id === (+state.partner_id || 0) }"
+                                         t-on-mousedown.prevent="() => this.onPartnerSelect(partner)">
+                                        <t t-esc="partner.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
                     </div>
                     <div class="o_drr_field o_drr_autocomplete_field">
                         <label>Contract</label>
@@ -67,6 +83,17 @@
                                 </t>
                             </div>
                         </div>
+                    </div>
+                    <div class="o_drr_field">
+                        <label>Journal</label>
+                        <select class="form-control form-control-sm" t-on-change="(ev) => this.onJournalChange(ev)">
+                            <option value="">All Journals</option>
+                            <t t-foreach="state.journals" t-as="journal" t-key="journal.id">
+                                <option t-att-value="journal.id" t-att-selected="journal.id === (+state.journal_id || 0)">
+                                    <t t-esc="journal.name"/>
+                                </option>
+                            </t>
+                        </select>
                     </div>
                 </div>
 

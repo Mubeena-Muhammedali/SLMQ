@@ -4,8 +4,8 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
-export class DeferredRevenueReport extends Component {
-    static template = "orchid_deferred_revenue.DeferredRevenueReport";
+export class OdDeferredRevenueReport extends Component {
+    static template = "orchid_deferred_revenue.OdDeferredRevenueReport";
     static props = { ...standardActionServiceProps };
 
     setup() {
@@ -17,15 +17,19 @@ export class DeferredRevenueReport extends Component {
         this.state = useState({
             period: defaultPeriod,
             partner_id: "",
+            partnerSearch: "",
+            showPartnerDropdown: false,
             contract_id: "",
             contractSearch: "",
             showContractDropdown: false,
+            journal_id: "",
             group_by_account: true,
             period_label: "",
             rows: [],
             totals: {},
             partners: [],
             contracts: [],
+            journals: [],
             unfolded: {},
             details: {},
             loading: {},
@@ -40,6 +44,7 @@ export class DeferredRevenueReport extends Component {
             period: this.state.period,
             partner_id: this.state.partner_id || null,
             contract_id: this.state.contract_id || null,
+            journal_id: this.state.journal_id || null,
             group_by_account: this.state.group_by_account,
             only_active: true,
         };
@@ -65,6 +70,7 @@ export class DeferredRevenueReport extends Component {
             this.state.totals = res.totals || {};
             this.state.partners = res.filters?.partners || [];
             this.state.contracts = res.filters?.contracts || [];
+            this.state.journals = res.filters?.journals || [];
             this.state.unfolded = {};
             this.state.details = {};
             this.state.loading = {};
@@ -107,8 +113,39 @@ export class DeferredRevenueReport extends Component {
         }
     }
 
-    async onPartnerChange(ev) {
-        this.state.partner_id = ev.currentTarget.value || "";
+    filteredPartners() {
+        const q = (this.state.partnerSearch || "").trim().toLowerCase();
+        if (!q) {
+            return this.state.partners;
+        }
+        return this.state.partners.filter((p) => (p.name || "").toLowerCase().includes(q));
+    }
+
+    onPartnerFocus() {
+        this.state.showPartnerDropdown = true;
+    }
+
+    onPartnerSearchInput(ev) {
+        this.state.partnerSearch = ev.currentTarget.value || "";
+        this.state.showPartnerDropdown = true;
+    }
+
+    onPartnerBlur() {
+        // small delay so the mousedown on an option fires before we close the dropdown
+        setTimeout(() => {
+            this.state.showPartnerDropdown = false;
+        }, 150);
+    }
+
+    async onPartnerSelect(partner) {
+        this.state.partner_id = partner ? String(partner.id) : "";
+        this.state.partnerSearch = partner ? partner.name : "";
+        this.state.showPartnerDropdown = false;
+        await this.loadReport();
+    }
+
+    async onJournalChange(ev) {
+        this.state.journal_id = ev.currentTarget.value || "";
         await this.loadReport();
     }
 
@@ -199,4 +236,4 @@ export class DeferredRevenueReport extends Component {
     }
 }
 
-registry.category("actions").add("od_deferred_revenue_report_action", DeferredRevenueReport);
+registry.category("actions").add("od_deferred_revenue_report_action", OdDeferredRevenueReport);

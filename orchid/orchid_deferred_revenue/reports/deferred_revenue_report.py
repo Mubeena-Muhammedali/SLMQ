@@ -38,6 +38,7 @@ class OdDeferredRevenueReport(models.TransientModel):
     period = fields.Char(string="Period", default=lambda self: fields.Date.context_today(self).strftime("%Y-%m"))
     partner_id = fields.Many2one("res.partner", string="Customer")
     contract_id = fields.Many2one("od.asp.contract", string="Contract")
+    journal_id = fields.Many2one("account.journal", string="Journal")
     group_by_account = fields.Boolean(string="Group by Account", default=True)
 
     def init(self):
@@ -60,6 +61,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             "period": period,
             "partner_id": payload.get("partner_id") or None,
             "contract_id": payload.get("contract_id") or None,
+            "journal_id": payload.get("journal_id") or None,
             "group_by_account": payload.get("group_by_account", True),
             "only_active": payload.get("only_active", True),
         }
@@ -104,6 +106,9 @@ class OdDeferredRevenueReport(models.TransientModel):
         if payload["contract_id"]:
             params["contract_id"] = int(payload["contract_id"])
             where.append("cont.id = %(contract_id)s")
+        if payload["journal_id"]:
+            params["journal_id"] = int(payload["journal_id"])
+            where.append("aml.journal_id = %(journal_id)s")
         from_sql = """
             FROM od_contract_monthly_line ml
             JOIN od_contract_payment pay ON pay.id = ml.service_id
@@ -113,6 +118,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
             LEFT JOIN product_category pcateg ON pcateg.id = pt.categ_id
             LEFT JOIN res_partner rp ON rp.id = pay.partner_id
+            LEFT JOIN account_move_line aml ON aml.id = COALESCE(ml.invoice_line_id, ml.reverse_line_id)
             WHERE 1=1
         """
         return from_sql, where, params
@@ -211,9 +217,21 @@ class OdDeferredRevenueReport(models.TransientModel):
             [("company_id", "=", self.env.company.id)], ["id", "name"], limit=None
         )
         contracts.sort(key=lambda c: (c["name"] or "").lower())
+
+        # Sale journals are what deferred-revenue invoices are posted
+        # through; keep the list scoped to the current company like the
+        # other filters.
+        journals = self.env["account.journal"].sudo().search_read(
+            [("company_id", "=", self.env.company.id), ("type", "=", "sale")],
+            ["id", "name"],
+            limit=None,
+        )
+        journals.sort(key=lambda j: (j["name"] or "").lower())
+
         return {
             "partners": partners,
             "contracts": [{"id": c["id"], "name": c["name"]} for c in contracts],
+            "journals": [{"id": j["id"], "name": j["name"]} for j in journals],
         }
 
     @api.model
@@ -361,6 +379,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             "period": self.period,
             "partner_id": self.partner_id.id or None,
             "contract_id": self.contract_id.id or None,
+            "journal_id": self.journal_id.id or None,
             "group_by_account": self.group_by_account,
         }
         return self.get_report(payload)
@@ -372,6 +391,7 @@ class OdDeferredRevenueReport(models.TransientModel):
             "period": payload["period"],
             "partner_id": payload["partner_id"],
             "contract_id": payload["contract_id"],
+            "journal_id": payload["journal_id"],
             "group_by_account": payload["group_by_account"],
         })
         report = self.env.ref("orchid_deferred_revenue.action_report_od_deferred_revenue")
