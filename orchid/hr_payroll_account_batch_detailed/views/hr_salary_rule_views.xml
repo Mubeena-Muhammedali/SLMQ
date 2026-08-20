@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="od_hr_salary_rule_view_form_inherit" model="ir.ui.view">
+        <field name="name">od.hr.salary.rule.form.inherit</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll_account.hr_salary_rule_view_form"/>
+        <field name="arch" type="xml">
+            <field name="employee_move_line" position="attributes">
+                <attribute name="invisible">batch_payroll_move_lines and not od_batch_payroll_move_lines_detailed</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

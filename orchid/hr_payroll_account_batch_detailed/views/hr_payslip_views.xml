@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="od_hr_payslip_view_form_inherit" model="ir.ui.view">
+        <field name="name">od.hr.payslip.form.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll_account.hr_payslip_view_form"/>
+        <field name="arch" type="xml">
+            <button name="action_register_payment" position="attributes">
+                <attribute name="invisible">state != 'validated' or not move_id or batch_payroll_move_lines or od_batch_payroll_move_lines_detailed</attribute>
+            </button>
+            <field name="batch_payroll_move_lines" position="after">
+                <field name="od_batch_payroll_move_lines_detailed" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>
