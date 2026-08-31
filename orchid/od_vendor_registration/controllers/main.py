@@ -115,7 +115,7 @@ class OdVendorRegistrationController(http.Controller):
 
     @http.route(
         ['/vendor/register/create'],
-        type='http', auth='public', methods=['POST'], csrf=True)
+        type='http', auth='public', methods=['POST'], csrf=False)
     def od_vendor_registration_create(self, **post):
         if not post.get('name') or not post.get('iban') or not post.get('bank_name'):
             values = self._od_render_values(
@@ -160,7 +160,7 @@ class OdVendorRegistrationController(http.Controller):
 
     @http.route(
         ['/vendor/register/<int:reg_id>/<string:token>/submit'],
-        type='http', auth='public', methods=['POST'], csrf=True)
+        type='http', auth='public', methods=['POST'], csrf=False)
     def od_vendor_registration_submit(self, reg_id, token, **post):
         registration = self._od_get_registration(reg_id, token)
         if not registration:
@@ -168,6 +168,7 @@ class OdVendorRegistrationController(http.Controller):
 
         if registration.state != 'register':
             # Locked: silently show the (now read-only) form.
+            self._od_save_documents(registration, post)
             return request.redirect('/vendor/register/%s/%s' % (reg_id, token))
 
         if not post.get('name') or not post.get('iban') or not post.get('bank_name'):

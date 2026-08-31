@@ -136,13 +136,13 @@
                 <div class="ovr-alert ovr-alert-danger" t-esc="error"/>
             </t>
 
-            <t t-if="readonly and reg">
+            <!-- <t t-if="readonly and reg">
                 <div class="ovr-alert ovr-alert-warning">
                     This registration is currently
                     <strong t-esc="reg.state"/>
                     and can no longer be edited.
                 </div>
-            </t>
+            </t> -->
 
             <form t-att-action="'/vendor/register/create' if is_new else '/vendor/register/%s/%s/submit' % (reg.id, reg.access_token)"
                   method="post" enctype="multipart/form-data">
@@ -332,7 +332,6 @@
                                     <div class="ovr-doc-file">
                                         <input type="file"
                                                t-att-name="'doc_%s' % dt.id"
-                                               t-att-disabled="'disabled' if readonly else None"
                                                t-att-data-required-if-visible="'1' if file_needed else None"
                                                t-att-required="'required' if (file_needed and bucket == 'all') else None"/>
                                     </div>
@@ -341,7 +340,6 @@
                                         <input type="date"
                                                t-att-name="'doc_%s_expiry' % dt.id"
                                                t-att-value="existing_doc.expiry_date if existing_doc else None"
-                                               t-att-disabled="'disabled' if readonly else None"
                                                t-att-data-required-if-visible="'1' if expiry_needed else None"
                                                t-att-required="'required' if (expiry_needed and bucket == 'all') else None"/>
                                     </div>
@@ -353,7 +351,7 @@
 
                 <hr/>
 
-                <t t-if="not readonly">
+                <t>
                     <button type="submit" class="ovr-btn">Submit Registration</button>
                 </t>
             </form>

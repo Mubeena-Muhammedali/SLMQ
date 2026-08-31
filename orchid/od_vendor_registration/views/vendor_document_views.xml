@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od_vendor_document_list" model="ir.ui.view">
+        <field name="name">od.vendor.document.list</field>
+        <field name="model">od.vendor.document</field>
+        <field name="arch" type="xml">
+            <list string="Documents"
+                  decoration-danger="is_missing_mandatory"
+                  decoration-warning="is_expiry_incomplete">
+                <field name="document_type_id"/>
+                <field name="partner_id"/>
+                <field name="level" widget="badge"
+                       decoration-danger="level == 'mandatory'"
+                       decoration-warning="level == 'conditional'"
+                       decoration-success="level == 'recommended'"/>
+                <field name="attachment" widget="binary" filename="attachment_filename"/>
+                <field name="attachment_filename" column_invisible="1"/>
+                <field name="expiry_date" invisible="not has_expiry"/>
+                <field name="has_expiry" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state == 'missing'"
+                       decoration-success="state == 'uploaded'"/>
+                <field name="is_missing_mandatory" column_invisible="1"/>
+                <field name="is_expiry_incomplete" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od_vendor_document_form" model="ir.ui.view">
+        <field name="name">od.vendor.document.form</field>
+        <field name="model">od.vendor.document</field>
+        <field name="arch" type="xml">
+            <form string="Document">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" readonly="1" force_save="1"/>
+                            <field name="registration_id" required="1" readonly="1" force_save="1"/>
+                            <field name="document_type_id" required="1"/>
+                            <field name="level"/>
+                            <field name="applies_to"/>
+                        </group>
+                        <group>
+                            <field name="attachment" widget="binary" filename="attachment_filename" required="level == 'mandatory'"/>
+                            <field name="attachment_filename" invisible="1"/>
+                            <field name="has_expiry"/>
+                            <field name="expiry_date" invisible="not has_expiry" required="has_expiry"/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+</odoo>

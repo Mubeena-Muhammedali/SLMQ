@@ -102,9 +102,19 @@ class OdVendorRegistration(models.Model):
         compute='_compute_document_stats',
         help='Mandatory documents (for this vendor Category) not yet uploaded.')
 
+    od_vendor_document_count = fields.Integer(
+        compute='_compute_od_vendor_document_count', string='Documents',
+        help='Count of Vendor Registration documents linked to this Partner.')
+
     # ------------------------------------------------------------------
     # Compute
     # ------------------------------------------------------------------
+    def _compute_od_vendor_document_count(self):
+        for rec in self:
+            rec.od_vendor_document_count = self.env[
+                'od.vendor.document'].sudo().search_count(
+                [('registration_id', '=', rec.id)])
+                
     @api.depends('document_ids.state', 'document_ids.level')
     def _compute_document_stats(self):
         for rec in self:
@@ -238,8 +248,10 @@ class OdVendorRegistration(models.Model):
                 'od_cr_number': rec.cr_number,
                 'od_category': rec.category,
                 'company_type': 'company',
+                'od_registration_url':rec.registration_url,
                 'od_vendor_code': self.env['ir.sequence'].next_by_code('od.vendor.code'),
                 'supplier_rank': 1,
+                
             }
             partner = self.env['res.partner'].sudo().create(partner_vals)
 
@@ -265,6 +277,9 @@ class OdVendorRegistration(models.Model):
                     'partner_id': partner.id,
                     'bank_id': bank.id if bank else False,
                 })
+            
+            if rec.document_ids:
+                rec.document_ids.write({'partner_id': partner.id})
 
             rec.write({
                 'state': 'approve',
@@ -338,6 +353,22 @@ class OdVendorRegistration(models.Model):
             'view_mode': 'form',
             'res_id': self.partner_id.id,
             'target': 'current',
+        }
+
+    def action_od_vendor_document_view(self):
+        """Opens a view listing all Vendor Registration documents linked
+        to this Partner."""
+        self.ensure_one()
+        return {
+            'name': _('Documents'),
+            'domain': [('registration_id', '=', self.id)],
+            'res_model': 'od.vendor.document',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list,form',
+            'help': _('''<p class="oe_view_nocontent_create">
+                           Click to Create for New Documents
+                        </p>'''),
+            'context': "{'default_registration_id': %s}" % self.id,
         }
 
     def unlink(self):

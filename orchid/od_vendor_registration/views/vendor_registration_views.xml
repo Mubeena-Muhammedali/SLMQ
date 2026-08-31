@@ -34,6 +34,12 @@
                                 widget="statinfo"
                                 string="Vendor"/>
                         </button>
+                         <button class="oe_stat_button" name="action_od_vendor_document_view"
+                                type="object" icon="fa-list-ol"
+                                invisible="od_vendor_document_count == 0">
+                            <field string="Documents" name="od_vendor_document_count"
+                                widget="statinfo"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Vendor Name"/>
@@ -47,9 +53,7 @@
                         <strong>Share this link with the vendor:</strong>
                         <field name="registration_url" widget="CopyClipboardChar" readonly="1"/>
                         <div class="text-muted">
-                            The vendor can only edit their data while the record
-                            is in the <b>Register</b> state. Once submitted, it
-                            moves to <b>Review</b> and is locked for them.
+                            The vendor can only edit their data.
                         </div>
                     </div>
 
