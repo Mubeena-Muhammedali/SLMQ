@@ -39,7 +39,7 @@ Key points
     'author': 'Your Company',
     'website': '',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail', 'contacts'],
+    'depends': ['base', 'mail', 'contacts', 'purchase'],
     'data': [
         'data/sequence.xml',
         'data/ir_cron_data.xml',

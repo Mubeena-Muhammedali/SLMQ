@@ -1,5 +1,6 @@
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
@@ -49,3 +50,33 @@ class ResPartner(models.Model):
                         </p>'''),
             'context': "{'default_partner_id': %s}" % self.id,
         }
+
+    def _get_expired_vendor_documents(self):
+        """Return expired documents for the vendor."""
+        self.ensure_one()
+
+        today = fields.Date.today()
+
+        return self.env['od.vendor.document'].sudo().search([
+            ('partner_id', '=', self.id),
+            ('has_expiry', '=', True),
+            ('expiry_date', '<', today),
+        ])
+
+    def _check_vendor_document_expiry(self):
+        """Block purchasing if any vendor document has expired."""
+        for partner in self:
+            expired_documents = partner._get_expired_vendor_documents()
+
+            if expired_documents:
+                document_names = '\n- '.join(
+                    expired_documents.mapped('document_type_id.name')
+                )
+
+                raise UserError(_(
+                    'Purchase Order cannot be created for this vendor.\n\n'
+                    'The following vendor document(s) have expired:\n'
+                    '- %s\n\n'
+                    'Please renew the expired document(s) before creating '
+                    'a Purchase Order.'
+                ) % document_names)
