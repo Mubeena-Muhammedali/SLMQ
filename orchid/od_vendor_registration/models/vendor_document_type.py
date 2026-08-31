@@ -12,7 +12,7 @@ class OdVendorDocumentType(models.Model):
     level = fields.Selection([
         ('mandatory', 'Mandatory'),
         ('recommended', 'Recommended'),
-        ('conditional', 'Conditional'),
+        ('conditional', 'Optional'),
     ], string='Level', required=True, default='mandatory',
         help='Mandatory documents block Approval when missing. Recommended '
              'and Conditional documents are shown on the checklist but do '

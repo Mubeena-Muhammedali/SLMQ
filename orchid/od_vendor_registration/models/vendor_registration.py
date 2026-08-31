@@ -243,6 +243,16 @@ class OdVendorRegistration(models.Model):
             }
             partner = self.env['res.partner'].sudo().create(partner_vals)
 
+            if rec.contact_person:
+                self.env['res.partner'].sudo().create({
+                    'name': rec.contact_person,
+                    'parent_id': partner.id,
+                    'type': 'contact',
+                    'company_type': 'person',
+                    'phone': rec.phone,
+                    'email': rec.email,
+                })
+
             if rec.iban or rec.bank_name:
                 bank = False
                 if rec.bank_name:

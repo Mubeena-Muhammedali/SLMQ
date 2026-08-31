@@ -205,19 +205,10 @@
         <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'create': 0}</field>
     </record>
 
-    <!-- Menu -->
-    <menuitem id="menu_od_vendor_registration_root"
-              name="Vendor Registration"
-              sequence="60"/>
     <menuitem id="menu_od_vendor_registration"
-              name="Registrations"
-              parent="menu_od_vendor_registration_root"
+              name="Vendor Request"
+              parent="purchase.menu_procurement_management"
               action="action_od_vendor_registration"
               sequence="10"/>
-    <menuitem id="menu_od_vendor_master"
-            name="Vendors"
-            parent="menu_od_vendor_registration_root"
-            action="action_od_vendor_master"
-            sequence="20"/>
 
 </odoo>

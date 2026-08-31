@@ -72,8 +72,8 @@
 
     <menuitem id="menu_od_vendor_document_type"
               name="Document Types"
-              parent="menu_od_vendor_registration_root"
+              parent="purchase.menu_purchase_config"
               action="action_od_vendor_document_type"
-              sequence="30"/>
+              sequence="2"/>
 
 </odoo>

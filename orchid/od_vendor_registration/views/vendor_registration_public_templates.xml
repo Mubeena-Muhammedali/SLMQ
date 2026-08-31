@@ -303,7 +303,7 @@
                 <t t-set="level_labels" t-value="{
                     'mandatory': 'Mandatory',
                     'recommended': 'Recommended',
-                    'conditional': 'Conditional',
+                    'conditional': 'Optional',
                 }"/>
 
                 <t t-foreach="['all', 'ksa_based_vendor', 'onsite_work_vendor', 'technical_engineering_vendor']" t-as="bucket">
