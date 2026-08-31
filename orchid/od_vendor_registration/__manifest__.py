@@ -42,6 +42,7 @@ Key points
     'depends': ['base', 'mail', 'contacts'],
     'data': [
         'data/sequence.xml',
+        'data/ir_cron_data.xml',
         'security/ir.model.access.csv',
         'data/vendor_document_type_data.xml',
         'wizard/vendor_registration_link_wizard_views.xml',
